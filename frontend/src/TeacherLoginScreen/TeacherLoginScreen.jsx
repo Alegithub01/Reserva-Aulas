@@ -1,8 +1,13 @@
+import { useNavigate } from 'react-router-dom';
 import SplitScreenLayout from "../Components/SplitScreenLayout";
 import TextInput from "../Utils/TextInput";
 import StyledText from "../StyledText";
 import Button from "../Utils/Button";
 const TeacherLoginScreen = () => {
+  const navigate = useNavigate();
+  const handleLogin = () => {
+    navigate('/dashboard');
+  };
   const leftContent = 
   <div 
   style={{
@@ -50,7 +55,11 @@ const TeacherLoginScreen = () => {
         validationMessage="Por favor, ingrese su contrasena."
         // onChange={handleNameChange}
       />
-      <Button fullWidth={true}>Inicio de Sesion</Button>
+      <Button onClick={handleLogin} fullWidth={true}>Inicio de Sesión</Button>
+        
+{/* <Button onClick={miFuncionManejadora} fullWidth={true}>Mi Botón</Button> */}
+
+
       <div
         style={{
           height: "15%",
