@@ -27,8 +27,8 @@ sudo apt install nodejs npm
 descargar de este link: https://nodejs.org/en
 
 # Luego en terminal:
-npm i
-npm init -y
+npm i  ,
+npm init -y  ,
 npm install react-scripts --save
 
 ### SI ME OLVIDE ALGUNAS DEPENDENCIAS DEL BACKEND PONER LOS ERRORES AL CHAT GPT O INFORMARLO EN EL GRUPO O AL PRIVADO POR WHATSAPP :V
