@@ -17,7 +17,6 @@ function App() {
                 style={{
                   width: "100vw",
                   height: "100vh",
-                  // overflow: "auto",
                 }}
               >
                 <TeacherLoginScreen />
@@ -31,7 +30,6 @@ function App() {
                 <div
                   style={{
                     width: "100vw",
-                    // height: "100vh",
                     height: "calc(100vh - 50px)",
                     overflow: "auto",
                   }}

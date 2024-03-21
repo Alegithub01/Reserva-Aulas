@@ -18,7 +18,10 @@ const BarraSuperior = () => {
         </Box>
         <Box sx={{ display: 'flex' }}>
           <Tooltip title="Notificaciones">
-            <IconButton color="inherit" size="large">
+            <IconButton 
+              color="inherit" 
+            size="large"
+            >
               <NotificationsIcon />
             </IconButton>
           </Tooltip>
