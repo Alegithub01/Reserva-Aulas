@@ -1,4 +1,5 @@
 // esp
+import { useNavigate } from 'react-router-dom';
 import { useState } from "react";
 import {
   AppBar,
@@ -19,7 +20,10 @@ const BarraSuperior = () => {
   const { theme } = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
   const abierto = Boolean(anchorEl);
-
+  const navigate = useNavigate();
+  const manejarCierreSesion = () => {
+    navigate('/');
+  };
   const manejarAperturaMenuPerfil = (evento) => {
     setAnchorEl(evento.currentTarget);
   };
@@ -87,7 +91,7 @@ const BarraSuperior = () => {
               Cuenta de Usuario
             </Typography>
             <Divider />
-            <MenuItem onClick={manejarCierreMenu}>Cerrar sesión</MenuItem>
+            <MenuItem onClick={manejarCierreSesion}>Cerrar sesión</MenuItem>
           </Menu>
         </Box>
       </Toolbar>
