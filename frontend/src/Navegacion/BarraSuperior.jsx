@@ -78,7 +78,7 @@ const BarraSuperior = ({ onToggleSidebar }) => {
             onClose={manejarCierreMenu}
           >
             <Typography color="textSecondary" display="block" variant="body1" sx={{ paddingX: 2, paddingY: 1 }}>
-              Cuenta de Usuario
+              Jhon Doe
             </Typography>
             <Divider />
             <MenuItem onClick={manejarCierreSesion}>Cerrar sesión</MenuItem>

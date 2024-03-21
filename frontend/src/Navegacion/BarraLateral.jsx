@@ -1,16 +1,54 @@
-// Nuevo componente para la barra lateral
-import { Drawer, List, ListItem, ListItemText } from '@mui/material';
-import PropTypes from 'prop-types';
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+} from "@mui/material";
+import {
+  AccountCircle,
+  BookOnline,
+  RoomService,
+  Group,
+  ChevronRight,
+} from "@mui/icons-material";
+import PropTypes from "prop-types";
 
-const BarraLateral = ({ isOpen, onClose }) => {
+const BarraLateral = ({ isOpen, onClose, username }) => {
+  const handleListItemClick = () => {
+    onClose();
+  };
+
   return (
     <Drawer anchor="left" open={isOpen} onClose={onClose}>
+      <div style={{ padding: 16, textAlign: "center" }}>
+        <AccountCircle style={{ fontSize: 60 }} />
+        <p>{username}</p>
+      </div>
+      <Divider />
+
       <List>
-        <ListItem button>
-          <ListItemText primary="a" />
+        <ListItem button onClick={handleListItemClick}>
+          <ListItemIcon>
+            <BookOnline />
+          </ListItemIcon>
+          <ListItemText primary="Gestión de reservas" />
+          <ChevronRight />
         </ListItem>
-        <ListItem button>
-          <ListItemText primary="b" />
+        <ListItem button onClick={handleListItemClick}>
+          <ListItemIcon>
+            <RoomService />
+          </ListItemIcon>
+          <ListItemText primary="Gestión de ambientes" />
+          <ChevronRight />
+        </ListItem>
+        <ListItem button onClick={handleListItemClick}>
+          <ListItemIcon>
+            <Group />
+          </ListItemIcon>
+          <ListItemText primary="Gestión de Usuarios" />
+          <ChevronRight />
         </ListItem>
       </List>
     </Drawer>
@@ -19,7 +57,8 @@ const BarraLateral = ({ isOpen, onClose }) => {
 
 BarraLateral.propTypes = {
   isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired
+  onClose: PropTypes.func.isRequired,
+  username: PropTypes.string.isRequired,
 };
 
 export default BarraLateral;
