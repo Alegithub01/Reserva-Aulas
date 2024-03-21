@@ -1,18 +1,42 @@
-import { AppBar, Toolbar, IconButton, Typography, Tooltip, Box } from '@mui/material';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import MenuIcon from '@mui/icons-material/Menu';
-import { useTheme } from '../Contexts/ThemeContext';
+import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Tooltip,
+  Box,
+  Menu,
+  MenuItem,
+  Divider,
+} from "@mui/material";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import MenuIcon from "@mui/icons-material/Menu";
+import { useTheme } from "../Contexts/ThemeContext";
 import PropTypes from 'prop-types';
 
 const BarraSuperior = ({ onToggleSidebar }) => {
   const { theme } = useTheme();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const abierto = Boolean(anchorEl);
+  const navigate = useNavigate();
+  
+  const manejarCierreSesion = () => {
+    navigate('/');
+  };
+
+  const manejarAperturaMenuPerfil = (evento) => {
+    setAnchorEl(evento.currentTarget);
+  };
+
+  const manejarCierreMenu = () => {
+    setAnchorEl(null);
+  };
 
   return (
-    <AppBar 
-      elevation={2} 
-      sx={{ bgcolor: theme.highlight }}
-    >
+    <AppBar elevation={2} sx={{ bgcolor: theme.highlight }}>
       <Toolbar variant="dense">
         <IconButton color="inherit" onClick={onToggleSidebar}>
           <MenuIcon />
@@ -29,10 +53,36 @@ const BarraSuperior = ({ onToggleSidebar }) => {
             </IconButton>
           </Tooltip>
           <Tooltip title="Perfil">
-            <IconButton color="inherit" size="large">
+            <IconButton
+              edge="end"
+              color="inherit"
+              size="large"
+              onClick={manejarAperturaMenuPerfil}
+            >
               <AccountCircle />
             </IconButton>
           </Tooltip>
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={abierto}
+            onClose={manejarCierreMenu}
+          >
+            <Typography color="textSecondary" display="block" variant="body1" sx={{ paddingX: 2, paddingY: 1 }}>
+              Cuenta de Usuario
+            </Typography>
+            <Divider />
+            <MenuItem onClick={manejarCierreSesion}>Cerrar sesión</MenuItem>
+          </Menu>
         </Box>
       </Toolbar>
     </AppBar>
@@ -40,7 +90,7 @@ const BarraSuperior = ({ onToggleSidebar }) => {
 };
 
 BarraSuperior.propTypes = {
-  onToggleSidebar: PropTypes.func.isRequired
+  onToggleSidebar: PropTypes.func.isRequired,
 };
 
 export default BarraSuperior;
