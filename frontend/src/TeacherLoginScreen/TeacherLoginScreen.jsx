@@ -1,14 +1,16 @@
+// esp
 import { useNavigate } from 'react-router-dom';
 import SplitScreenLayout from "../Components/SplitScreenLayout";
 import TextInput from "../Utils/TextInput";
 import StyledText from "../StyledText";
 import Button from "../Utils/Button";
 const TeacherLoginScreen = () => {
-  const navigate = useNavigate();
-  const handleLogin = () => {
-    navigate('/dashboard');
+  const navegar = useNavigate();
+  const iniciarSesion = () => {
+    navegar('/dashboard');
   };
-  const leftContent = 
+
+  const contenidoIzquierdo = 
   <div 
   style={{
     display: "flex",
@@ -23,7 +25,7 @@ const TeacherLoginScreen = () => {
   </StyledText>
 </div>;
 
-  const rightContent = (
+  const contenidoDerecho = (
     <div
       style={{
         width: "100%",
@@ -44,21 +46,18 @@ const TeacherLoginScreen = () => {
         <StyledText boldText>Inicio de Sesión</StyledText>
       </div>
       <TextInput
-        label="Correo Electronico"
+        label="Correo Electrónico"
         isRequired={true}
         validationMessage="Por favor, ingrese su correo."
         // onChange={handleNameChange}
       />
       <TextInput
-        label="Contrasena"
+        label="Contraseña"
         isRequired={true}
-        validationMessage="Por favor, ingrese su contrasena."
+        validationMessage="Por favor, ingrese su contraseña."
         // onChange={handleNameChange}
       />
-      <Button onClick={handleLogin} fullWidth={true}>Inicio de Sesión</Button>
-        
-{/* <Button onClick={miFuncionManejadora} fullWidth={true}>Mi Botón</Button> */}
-
+      <Button onClick={iniciarSesion} fullWidth={true}>Inicio de Sesion</Button>
 
       <div
         style={{
@@ -69,12 +68,12 @@ const TeacherLoginScreen = () => {
           flexDirection: 'column',
         }}
       >
-        <StyledText enlaceText> registrarse </StyledText>
+        <StyledText enlaceText> Registrarse </StyledText>
       </div>
     </div>
   );
 
-  return <SplitScreenLayout left={leftContent} right={rightContent} />;
+  return <SplitScreenLayout left={contenidoIzquierdo} right={contenidoDerecho} />;
 };
 
 export default TeacherLoginScreen;
