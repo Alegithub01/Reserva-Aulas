@@ -6,7 +6,7 @@ const StyledResponsiveContainer = styled.div`
   flex-direction: row;
   width: 100%;
   ${'' /* height: 100vh; */}
-  height: calc(100vh - 64px);
+  height: calc(100vh - 50px);
   @media (max-width: 900px) {
     flex-direction: column;
     height: auto;

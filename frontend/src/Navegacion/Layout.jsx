@@ -13,7 +13,7 @@ const Layout = ({ children }) => {
         component="main"
         sx={{ flexGrow: 1, p: 0 }}
       >
-        <Toolbar />
+        <Toolbar variant="dense"/>
         {children}
       </Box>
     </Box>

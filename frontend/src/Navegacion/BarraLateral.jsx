@@ -28,11 +28,11 @@ const BarraLateral = () => {
         [`& .MuiDrawer-paper`]: { width: open ? drawerWidth : 0, boxSizing: 'border-box' },
       }}
     >
-      <Toolbar>
+      {/* <Toolbar>
         <IconButton onClick={open ? handleDrawerClose : handleDrawerOpen}>
-          {/* {open ? <ChevronLeftIcon /> : <ChevronRightIcon />} */}
+          {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
         </IconButton>
-      </Toolbar>
+      </Toolbar> */}
       <Divider />
       <List>
         <ListItem button>
