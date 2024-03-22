@@ -39,7 +39,7 @@ const AdminHomeModule2 = () => {
 
 
         </div>
-        <RowPercentage firstChildPercentage={60} gap="10px"> 
+        <RowPercentage firstChildPercentage={60} gap="10px">
           <div>
             <TextInput
               label="Nombre"
@@ -64,18 +64,20 @@ const AdminHomeModule2 = () => {
             <Dropdown
               label="Tipo de Ambiente"
               options={[
-                { value: "", label: "None" },
+                { value: "", label: "Ninguno" },
                 { value: "10", label: "Aula" },
                 { value: "20", label: "Auditorio" },
                 { value: "30", label: "Laboratorio" },
               ]}
+              isRequired={true}
+              validationMessage="Por favor. Seleccione alguna opción"
             />
           </div>
           <div>
             <Dropdown
               label="Planta"
               options={[
-                { value: "", label: "None" },
+                { value: "", label: "Planta 0" },
                 { value: "10", label: "Planta 1" },
                 { value: "20", label: "Planta 2" },
                 { value: "30", label: "Planta 3" },
@@ -88,19 +90,24 @@ const AdminHomeModule2 = () => {
           onChange={(e) => console.log(e.target.value)}
           isRequired={false}
         />
+        <TextInput
+          label="Servicios"
+          onChange={(e) => console.log(e.target.value)}
+          isRequired={false}
+        />
 
         <RowPercentage firstChildPercentage={45} gap="10px">
           <div>
             <Dropdown
               label="Dia"
               options={[
-                { value: ""  , label: "None" },
                 { value: "10", label: "Lunes" },
                 { value: "20", label: "Martes" },
                 { value: "30", label: "Miercoles" },
                 { value: "40", label: "Jueves" },
                 { value: "50", label: "Viernes" },
                 { value: "60", label: "Sabado" },
+                { value: "70", label: "Domingo" },
               ]}
             />
           </div>

@@ -6,11 +6,25 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { useTheme } from '../Contexts/ThemeContext';
 
-function Dropdown({ label, options }) {
+function Dropdown({ label, options, validationMessage = '', isRequired }) {
   const [selectedValue, setSelectedValue] = useState('');
+  const [showValidationMessage, setShowValidationMessage] = useState(false);
   const { theme } = useTheme();
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
+    if (isRequired){
+      setShowValidationMessage(event.target.value.trim() === '' || event.target.value === None);
+      console.log(event.target.value);
+    }
+  };
+
+  const validationMessageStyle = {
+    color: 'red',
+    fontSize: '12px',
+    transition: 'opacity 0.3s ease',
+    opacity: showValidationMessage ? 1 : 0,
+    height: showValidationMessage ? 'auto' : 0,
+    overflow: 'hidden',
   };
 
   return (
@@ -69,6 +83,9 @@ function Dropdown({ label, options }) {
           </MenuItem>
         ))}
       </Select>
+      {showValidationMessage && (
+          <div style={validationMessageStyle}>{validationMessage || 'Este campo es obligatorio'}</div>
+        )}
     </FormControl>
   );
 }
