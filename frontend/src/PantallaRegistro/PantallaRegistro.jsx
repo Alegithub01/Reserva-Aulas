@@ -4,6 +4,10 @@ import SplitScreenLayout from "../Components/SplitScreenLayout";
 import TextInput from "../Utils/ValidationTextInput";
 import StyledText from "../StyledText";
 import Button from "../Utils/Button";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 
 const RegistroDocente = () => {
   const navegar = useNavigate();
@@ -12,8 +16,8 @@ const RegistroDocente = () => {
   const [confirmarContrasena, setConfirmarContrasena] = useState('');
   const [errores, setErrores] = useState({ nombre: '', contrasena: '', confirmarContrasena: '' });
   const [camposVacios, setCamposVacios] = useState({ nombre: false, contrasena: false });
+  const [dialogoAbierto, setDialogoAbierto] = useState(false);
 
-  // Manejar cambio en el campo de nombre
   const manejarCambioNombre = (e) => {
     const valor = e.target.value;
     const regexNombre = /^[a-zA-Z\s]*$/;
@@ -22,7 +26,6 @@ const RegistroDocente = () => {
     }
   };
 
-  // Manejar cambio en el campo de contraseña
   const manejarCambioContrasena = (e) => {
     const valor = e.target.value;
     if (valor.length <= 20) {
@@ -37,7 +40,6 @@ const RegistroDocente = () => {
     }
   };
 
-  // Validar el campo de nombre
   const validarNombreCompleto = () => {
     const regexNombre = /^[a-zA-Z\s]*$/;
     let mensajeError = '';
@@ -49,7 +51,6 @@ const RegistroDocente = () => {
     setErrores(erroresActuales => ({ ...erroresActuales, nombre: mensajeError }));
   };
 
-  // Validar la contraseña
   const validarContrasena = () => {
     const regexNumeros = /\d.*\d/;
     let mensajeError = '';
@@ -61,7 +62,6 @@ const RegistroDocente = () => {
     setErrores(erroresActuales => ({ ...erroresActuales, contrasena: mensajeError }));
   };
 
-  // Validar la confirmación de la contraseña
   const validarConfirmacionContrasena = () => {
     let mensajeError = '';
     if (confirmarContrasena !== contrasena) {
@@ -84,13 +84,13 @@ const RegistroDocente = () => {
     const formularioEsValido = Object.values(errores).every(error => error === '') && !Object.values(campos).some(empty => empty);
 
     if (formularioEsValido) {
-      // Registrar en la base de datos y mostrar mensaje de éxito
-      alert('Registrado exitósamente');
-      navegar('/');
+      // BACKEND
+      setDialogoAbierto(true);
+    } else {
+      // no
     }
   };
 
-  // Contenido del lado izquierdo
   const contenidoIzquierdo = (
     <div 
       style={{
@@ -107,7 +107,6 @@ const RegistroDocente = () => {
     </div>
   );
 
-  // Contenido del lado derecho
   const contenidoDerecho = (
     <div
       style={{
@@ -173,7 +172,44 @@ const RegistroDocente = () => {
     </div>
   );
 
-  return <SplitScreenLayout left={contenidoIzquierdo} right={contenidoDerecho} />;
+  return (
+    <>
+      <SplitScreenLayout left={contenidoIzquierdo} right={contenidoDerecho} />
+      <Dialog
+        open={dialogoAbierto}
+        onClose={() => setDialogoAbierto(false)}
+        aria-describedby="alert-dialog-description"
+        sx={{
+          '& .MuiDialog-paper': {
+            borderRadius: '20px',
+          }
+        }}
+      >
+        <DialogContent
+          sx={{
+            borderRadius: '20px',
+          }}
+        >
+          <DialogContentText id="alert-dialog-description">
+            Registrado exitósamente.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            justifyContent: 'center',
+            padding: '8px 24px', 
+          }}
+        >
+          <Button onClick={() => {
+            setDialogoAbierto(false);
+            navegar('/');
+          }} color="primary" autoFocus>
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
 };
 
 export default RegistroDocente;
