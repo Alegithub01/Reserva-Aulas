@@ -7,36 +7,61 @@ import Button from "../Utils/Button";
 
 const RegistroDocente = () => {
   const navegar = useNavigate();
-  const [nombre, setNombre] = useState('');
+  const [nombreCompleto, setNombreCompleto] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [confirmarContrasena, setConfirmarContrasena] = useState('');
   const [errores, setErrores] = useState({ nombre: '', contrasena: '', confirmarContrasena: '' });
+  const [camposVacios, setCamposVacios] = useState({ nombre: false, contrasena: false });
 
-  // Valida el campo de nombre
-  const validarNombre = () => {
+  // Manejar cambio en el campo de nombre
+  const manejarCambioNombre = (e) => {
+    const valor = e.target.value;
+    const regexNombre = /^[a-zA-Z\s]*$/;
+    if (valor.length <= 50 && regexNombre.test(valor)) {
+      setNombreCompleto(valor);
+    }
+  };
+
+  // Manejar cambio en el campo de contraseña
+  const manejarCambioContrasena = (e) => {
+    const valor = e.target.value;
+    if (valor.length <= 20) {
+      setContrasena(valor);
+    }
+  };
+
+  const manejarCambioConfirmarContrasena = (e) => {
+    const valor = e.target.value;
+    if (valor.length <= 20) {
+      setConfirmarContrasena(valor);
+    }
+  };
+
+  // Validar el campo de nombre
+  const validarNombreCompleto = () => {
     const regexNombre = /^[a-zA-Z\s]*$/;
     let mensajeError = '';
-    if (nombre.length > 50) {
+    if (nombreCompleto.length > 50) {
       mensajeError = 'El nombre no puede exceder los 50 caracteres.';
-    } else if (!regexNombre.test(nombre)) {
+    } else if (!regexNombre.test(nombreCompleto)) {
       mensajeError = 'El nombre solo puede contener letras y espacios.';
     }
     setErrores(erroresActuales => ({ ...erroresActuales, nombre: mensajeError }));
   };
 
-  // Valida la contraseña
+  // Validar la contraseña
   const validarContrasena = () => {
     const regexNumeros = /\d.*\d/;
     let mensajeError = '';
     if (contrasena.length < 8 || !regexNumeros.test(contrasena)) {
-      mensajeError = 'La contraseña debe tener más de 8 caracteres y contener al menos dos dígitos numéricos.';
+      mensajeError = 'mínimo 8 caracteres y al menos 2 números.';
     } else if (contrasena.length > 20) {
       mensajeError = 'La contraseña no puede exceder los 20 caracteres.';
     }
     setErrores(erroresActuales => ({ ...erroresActuales, contrasena: mensajeError }));
   };
 
-  // Valida la confirmación de la contraseña
+  // Validar la confirmación de la contraseña
   const validarConfirmacionContrasena = () => {
     let mensajeError = '';
     if (confirmarContrasena !== contrasena) {
@@ -45,19 +70,23 @@ const RegistroDocente = () => {
     setErrores(erroresActuales => ({ ...erroresActuales, confirmarContrasena: mensajeError }));
   };
 
-  // Valida el formulario completo
+  // Validar el formulario completo
   const validarFormulario = () => {
-    validarNombre();
+    validarNombreCompleto();
     validarContrasena();
     validarConfirmacionContrasena();
 
+    // Verificar campos vacíos
+    const campos = { nombre: nombreCompleto === '', contrasena: contrasena === '' };
+    setCamposVacios(campos);
+
     // Comprobar errores
-    const formularioEsValido = Object.values(errores).every(error => error === '');
+    const formularioEsValido = Object.values(errores).every(error => error === '') && !Object.values(campos).some(empty => empty);
 
     if (formularioEsValido) {
-      // Lógica para registrar en la base de datos y mostrar mensaje de éxito
+      // Registrar en la base de datos y mostrar mensaje de éxito
       alert('Registrado exitósamente');
-      navegar('/inicio-sesion-docente'); // Redirecciona a inicio de sesión docente
+      navegar('/');
     }
   };
 
@@ -73,11 +102,11 @@ const RegistroDocente = () => {
       }}
     >
       <StyledText boldWhiteText>
-        Bienvenido al Sistema de Registro
+        Reserva de Ambientes
       </StyledText>
     </div>
   );
-  //
+
   // Contenido del lado derecho
   const contenidoDerecho = (
     <div
@@ -102,17 +131,17 @@ const RegistroDocente = () => {
       <TextInput
         label="Nombre Completo"
         isRequired={true}
-        validationMessage={errores.nombre}
-        value={nombre}
-        onChange={(e) => setNombre(e.target.value)}
-        onBlur={validarNombre}
+        validationMessage={camposVacios.nombre ? 'Ingrese su nombre.' : errores.nombre}
+        value={nombreCompleto}
+        onChange={manejarCambioNombre}
+        onBlur={validarNombreCompleto}
       />
       <TextInput
         label="Contraseña"
         isRequired={true}
-        validationMessage={errores.contrasena}
+        validationMessage={camposVacios.contrasena ? 'Ingrese su contraseña.' : errores.contrasena}
         value={contrasena}
-        onChange={(e) => setContrasena(e.target.value)}
+        onChange={manejarCambioContrasena}
         onBlur={validarContrasena}
       />
       <TextInput
@@ -120,8 +149,9 @@ const RegistroDocente = () => {
         isRequired={true}
         validationMessage={errores.confirmarContrasena}
         value={confirmarContrasena}
-        onChange={(e) => setConfirmarContrasena(e.target.value)}
+        onChange={manejarCambioConfirmarContrasena}
         onBlur={validarConfirmacionContrasena}
+        maxLength={20}
       />
       <Button onClick={validarFormulario} fullWidth={true}>Registro</Button>
 
@@ -134,26 +164,16 @@ const RegistroDocente = () => {
           cursor: "pointer",
           marginTop: "20px",
         }}
+        onClick={() => navegar('/')}
+        onMouseOver={(e) => e.target.style.color = "#3661EB"}
+        onMouseOut={(e) => e.target.style.color = 'black'}
       >
-        <StyledText
-          enlaceText
-          onClick={() => navegar('/inicio-sesion-admin')}
-        >
-          Iniciar sesión como administrador
-        </StyledText>
-        <StyledText
-          enlaceText
-          onClick={() => navegar('/inicio-sesion-docente')}
-          style={{ marginTop: "10px" }}
-        >
-          Iniciar Sesión
-        </StyledText>
+        <StyledText enlaceText> Iniciar sesion </StyledText>
       </div>
     </div>
   );
 
   return <SplitScreenLayout left={contenidoIzquierdo} right={contenidoDerecho} />;
 };
-
 
 export default RegistroDocente;
