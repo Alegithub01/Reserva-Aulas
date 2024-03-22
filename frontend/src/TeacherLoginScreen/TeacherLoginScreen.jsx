@@ -68,9 +68,9 @@ const PantallaInicioSesionProfesor = () => {
 
   // Inicia sesión si el formulario es válido
   const iniciarSesion = () => {
-    // if (validarFormulario()) {  // Desactivado para no afectar el flujo de la aplicacion en desarrollo
+    if (validarFormulario()) {  // Desactivado para no afectar el flujo de la aplicacion en desarrollo
       navegar('/dashboard');
-    // }
+    }
   };
 
   // Contenido del lado izquierdo
