@@ -15,7 +15,7 @@ const Layout = ({ children }) => {
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <BarraSuperior onToggleSidebar={toggleSidebar} />
-      <BarraLateral isOpen={isSidebarOpen} onClose={toggleSidebar} username='Jhon Doe'/>
+      <BarraLateral isOpen={isSidebarOpen} onClose={toggleSidebar}/>
       <Box component="main" sx={{ flexGrow: 1, p: 0 }}>
         <Toolbar variant="dense" />
         {children}

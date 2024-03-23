@@ -14,8 +14,10 @@ import {
   ChevronRight,
 } from "@mui/icons-material";
 import PropTypes from "prop-types";
+import UsuarioStore from '../Contexts/UsuarioStore'
 
-const BarraLateral = ({ isOpen, onClose, username }) => {
+const BarraLateral = ({ isOpen, onClose}) => {
+  const { nombre, correo } = UsuarioStore();
   const handleListItemClick = () => {
     onClose();
   };
@@ -24,7 +26,8 @@ const BarraLateral = ({ isOpen, onClose, username }) => {
     <Drawer anchor="left" open={isOpen} onClose={onClose}>
       <div style={{ padding: 16, textAlign: "center" }}>
         <AccountCircle style={{ fontSize: 60 }} />
-        <p>{username}</p>
+        <p>{nombre}</p>
+        <p>{correo}</p>
       </div>
       <Divider />
 
