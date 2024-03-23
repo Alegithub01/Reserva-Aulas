@@ -121,20 +121,29 @@ const PantallaInicioSesionProfesor = () => {
       <Button onClick={iniciarSesion} fullWidth={true}>Inicio de Sesion</Button>
       
       <div
-        style={{
+      style={{
           height: "15%",
           display: "flex",
           justifyContent: 'flex-end',
           alignItems: "center",
           flexDirection: 'column',
-          cursor: 'pointer',
           color: 'black',
-        }}
-        onClick={() => navegar('/registro')}
-        onMouseOver={(e) => e.target.style.color = "#3661EB"}
-        onMouseOut={(e) => e.target.style.color = 'black'}
-      >
-        <StyledText enlaceText> Registrarse como docente </StyledText>
+        }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: 'flex-end',
+            alignItems: "center",
+            flexDirection: 'column',
+            cursor: 'pointer',
+            color: 'black',
+          }}
+          onClick={() => navegar('/registro')}
+          onMouseOver={(e) => e.target.style.color = "#3661EB"}
+          onMouseOut={(e) => e.target.style.color = 'black'}
+        >
+          <StyledText enlaceText> Registrarse como docente </StyledText>
+        </div>
       </div>
     </div>
   );

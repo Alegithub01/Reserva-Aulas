@@ -80,7 +80,6 @@ const RegistroDocente = () => {
     const campos = { nombre: nombreCompleto === '', contrasena: contrasena === '' };
     setCamposVacios(campos);
 
-    // Comprobar errores
     const formularioEsValido = Object.values(errores).every(error => error === '') && !Object.values(campos).some(empty => empty);
 
     if (formularioEsValido) {
