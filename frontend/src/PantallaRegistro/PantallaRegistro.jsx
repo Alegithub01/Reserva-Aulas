@@ -5,17 +5,19 @@ import TextInput from "../Utils/ValidationTextInput";
 import StyledText from "../StyledText";
 import Button from "../Utils/Button";
 
-const PantallaInicioSesionProfesor = () => {
+const PantallaRegistro = () => {
   const navegar = useNavigate();
   const [correoElectronico, setCorreoElectronico] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [errores, setErrores] = useState({ correoElectronico: '', contrasena: '' });
 
+  // Datos de usuario para validar
   const usuariosValidos = [
     { email: 'JhonDoe@gmail.com', password: '12345678' },
-    { email: 'eurekasolutionsrl@gmail.com', password: 'TIS12024' }
+    { email: 'SeleneDelgado@gmail.com', password: 'martillo' }
   ];
 
+  // Valida el campo de correo electrónico
   const validarCorreoElectronico = () => {
     let mensajeError = '';
     if (!correoElectronico) {
@@ -31,10 +33,12 @@ const PantallaInicioSesionProfesor = () => {
     }));
   };
 
+  // Valida el formulario completo
   const validarFormulario = () => {
     let mensajesError = { correoElectronico: '', contrasena: '' };
     let formularioEsValido = true;
 
+    // Valida el correo electrónico
     if (!correoElectronico) {
         mensajesError.correoElectronico = 'Ingrese su correo electrónico.';
         formularioEsValido = false;
@@ -46,6 +50,7 @@ const PantallaInicioSesionProfesor = () => {
         formularioEsValido = false;
     }
 
+    // Valida la contraseña
     if (!contrasena) {
         mensajesError.contrasena = 'Ingrese su contraseña.';
         formularioEsValido = false;
@@ -61,12 +66,14 @@ const PantallaInicioSesionProfesor = () => {
     return formularioEsValido;
   };
 
+  // Inicia sesión si el formulario es válido
   const iniciarSesion = () => {
     if (validarFormulario()) {  // Desactivado para no afectar el flujo de la aplicacion en desarrollo
       navegar('/dashboard');
     }
   };
 
+  // Contenido del lado izquierdo
   const contenidoIzquierdo = (
     <div 
       style={{
@@ -83,6 +90,7 @@ const PantallaInicioSesionProfesor = () => {
     </div>
   );
 
+  // Contenido del lado derecho
   const contenidoDerecho = (
     <div
       style={{
@@ -95,13 +103,13 @@ const PantallaInicioSesionProfesor = () => {
     >
       <div
         style={{
-          height: "25%",
+          height: "15%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        <StyledText boldText>Inicio de Sesión</StyledText>
+        <StyledText boldText>Registro de Docente</StyledText>
       </div>
       <TextInput
         label="Correo Electrónico"
@@ -112,17 +120,26 @@ const PantallaInicioSesionProfesor = () => {
         onBlur={() => validarCorreoElectronico()}
       />
       <TextInput
-        label="Contraseña"
+        label="Correo Electrónico"
         isRequired={true}
-        validationMessage={errores.contrasena}
-        value={contrasena}
-        onChange={(e) => setContrasena(e.target.value)}
+        validationMessage={errores.correoElectronico}
+        value={correoElectronico}
+        onChange={(e) => setCorreoElectronico(e.target.value)}
+        onBlur={() => validarCorreoElectronico()}
+      />
+      <TextInput
+        label="Correo Electrónico"
+        isRequired={true}
+        validationMessage={errores.correoElectronico}
+        value={correoElectronico}
+        onChange={(e) => setCorreoElectronico(e.target.value)}
+        onBlur={() => validarCorreoElectronico()}
       />
       <Button onClick={iniciarSesion} fullWidth={true}>Inicio de Sesion</Button>
-      
+
       <div
         style={{
-          height: "15%",
+          height: "5%",
           display: "flex",
           justifyContent: 'flex-end',
           alignItems: "center",
@@ -130,16 +147,17 @@ const PantallaInicioSesionProfesor = () => {
           cursor: 'pointer',
           color: 'black',
         }}
-        onClick={() => navegar('/registro')}
+        onClick={() => navegar('/')}
         onMouseOver={(e) => e.target.style.color = "#3661EB"}
         onMouseOut={(e) => e.target.style.color = 'black'}
       >
-        <StyledText enlaceText> Registrarse como docente </StyledText>
+        <StyledText enlaceText> Iniciar sesión </StyledText>
       </div>
     </div>
   );
 
+  // Renderiza el diseño dividido con los contenidos izquierdo y derecho
   return <SplitScreenLayout left={contenidoIzquierdo} right={contenidoDerecho} />;
 };
 
-export default PantallaInicioSesionProfesor;
+export default PantallaRegistro;

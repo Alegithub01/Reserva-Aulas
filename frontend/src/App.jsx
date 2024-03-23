@@ -4,6 +4,7 @@ import { ThemeProvider } from "./Contexts/ThemeContext";
 import Layout from "./Navegacion/Layout";
 import AdminHomeScreen from "./AdminHomeScreen/AdminHomeScreen";
 import TeacherLoginScreen from "./TeacherLoginScreen/TeacherLoginScreen";
+import PantallaRegistro from "./PantallaRegistro/PantallaRegistro";
 
 function App() {
   return (
@@ -20,6 +21,19 @@ function App() {
                 }}
               >
                 <TeacherLoginScreen />
+              </div>
+            }
+          />
+          <Route
+            path="/registro"
+            element={
+              <div
+                style={{
+                  width: "100vw",
+                  height: "100vh",
+                }}
+              >
+                <PantallaRegistro/>
               </div>
             }
           />
