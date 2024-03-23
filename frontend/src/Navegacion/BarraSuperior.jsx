@@ -15,9 +15,11 @@ import {
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useTheme } from "../Contexts/ThemeContext";
+import UsuarioStore from '../Contexts/UsuarioStore';
 
 const BarraSuperior = () => {
   const { theme } = useTheme();
+  const { nombre, correo } = UsuarioStore();
   const [anchorEl, setAnchorEl] = useState(null);
   const abierto = Boolean(anchorEl);
   const navigate = useNavigate();
@@ -88,7 +90,9 @@ const BarraSuperior = () => {
                 paddingY: 1,
               }}
             >
-              Cuenta de Usuario
+              {nombre}
+              <br />
+              {correo}
             </Typography>
             <Divider />
             <MenuItem onClick={manejarCierreSesion}>Cerrar sesión</MenuItem>
