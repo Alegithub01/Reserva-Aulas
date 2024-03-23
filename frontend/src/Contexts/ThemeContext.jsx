@@ -1,7 +1,7 @@
 // ThemeContext.js
-import { createContext, useState, useContext } from 'react';
-import PropTypes from 'prop-types';
-import { userColors, adminColors } from '../colors';
+import { createContext, useState, useContext } from "react";
+import PropTypes from "prop-types";
+import { userColors, adminColors } from "../colors";
 
 const ThemeContext = createContext();
 
