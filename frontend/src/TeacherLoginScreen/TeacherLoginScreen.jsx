@@ -11,13 +11,11 @@ const PantallaInicioSesionProfesor = () => {
   const [contrasena, setContrasena] = useState('');
   const [errores, setErrores] = useState({ correoElectronico: '', contrasena: '' });
 
-  // Datos de usuario para validar
   const usuariosValidos = [
     { email: 'JhonDoe@gmail.com', password: '12345678' },
-    { email: 'SeleneDelgado@gmail.com', password: 'martillo' }
+    { email: 'eurekasolutionsrl@gmail.com', password: 'TIS12024' }
   ];
 
-  // Valida el campo de correo electrónico
   const validarCorreoElectronico = () => {
     let mensajeError = '';
     if (!correoElectronico) {
@@ -33,12 +31,10 @@ const PantallaInicioSesionProfesor = () => {
     }));
   };
 
-  // Valida el formulario completo
   const validarFormulario = () => {
     let mensajesError = { correoElectronico: '', contrasena: '' };
     let formularioEsValido = true;
 
-    // Valida el correo electrónico
     if (!correoElectronico) {
         mensajesError.correoElectronico = 'Ingrese su correo electrónico.';
         formularioEsValido = false;
@@ -50,7 +46,6 @@ const PantallaInicioSesionProfesor = () => {
         formularioEsValido = false;
     }
 
-    // Valida la contraseña
     if (!contrasena) {
         mensajesError.contrasena = 'Ingrese su contraseña.';
         formularioEsValido = false;
@@ -66,14 +61,12 @@ const PantallaInicioSesionProfesor = () => {
     return formularioEsValido;
   };
 
-  // Inicia sesión si el formulario es válido
   const iniciarSesion = () => {
     if (validarFormulario()) {  // Desactivado para no afectar el flujo de la aplicacion en desarrollo
       navegar('/dashboard');
     }
   };
 
-  // Contenido del lado izquierdo
   const contenidoIzquierdo = (
     <div 
       style={{
@@ -90,7 +83,6 @@ const PantallaInicioSesionProfesor = () => {
     </div>
   );
 
-  // Contenido del lado derecho
   const contenidoDerecho = (
     <div
       style={{
@@ -127,7 +119,7 @@ const PantallaInicioSesionProfesor = () => {
         onChange={(e) => setContrasena(e.target.value)}
       />
       <Button onClick={iniciarSesion} fullWidth={true}>Inicio de Sesion</Button>
-
+      
       <div
         style={{
           height: "15%",
@@ -147,7 +139,6 @@ const PantallaInicioSesionProfesor = () => {
     </div>
   );
 
-  // Renderiza el diseño dividido con los contenidos izquierdo y derecho
   return <SplitScreenLayout left={contenidoIzquierdo} right={contenidoDerecho} />;
 };
 
