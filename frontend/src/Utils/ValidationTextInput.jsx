@@ -18,8 +18,8 @@ const ValidationTextInput = ({
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => {
     setIsFocused(false);
-    if (onBlur) { // Asegúrate de invocar onBlur solo si se proporciona
-      onBlur(value); // Pasa el valor actual del input a la función onBlur
+    if (onBlur) {
+      onBlur(value);
     }
   };
   const handleChange = (event) => {
@@ -46,7 +46,8 @@ const ValidationTextInput = ({
     top: isFocused || value ? '0px' : '50%',
     transform: 'translateY(-50%)',
     backgroundColor: theme.primary,
-    padding: '5px',
+    paddingLeft: '5px',
+    paddingRight: '5px',
     color: isFocused ? theme.highlight : theme.secondary,
     transition: 'all 0.3s ease',
     pointerEvents: 'none',
@@ -56,7 +57,7 @@ const ValidationTextInput = ({
   const validationMessageStyle = {
     color: 'red',
     fontSize: '12px',
-    marginTop: '4px', // Ajuste para mantener el espacio
+    marginTop: '4px',
   };
 
   return (
@@ -76,7 +77,7 @@ const ValidationTextInput = ({
         <label style={labelStyle}>{label}</label>
       </div>
       <div style={validationMessageStyle}>
-        {validationMessage || ' '} {/* Muestra un espacio en blanco si no hay mensaje */}
+        {validationMessage || ' '} 
       </div>
     </div>
   );

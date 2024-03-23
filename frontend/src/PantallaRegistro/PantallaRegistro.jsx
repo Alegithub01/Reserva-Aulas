@@ -4,76 +4,92 @@ import SplitScreenLayout from "../Components/SplitScreenLayout";
 import TextInput from "../Utils/ValidationTextInput";
 import StyledText from "../StyledText";
 import Button from "../Utils/Button";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 
-const PantallaRegistro = () => {
+const RegistroDocente = () => {
   const navegar = useNavigate();
-  const [correoElectronico, setCorreoElectronico] = useState('');
+  const [nombreCompleto, setNombreCompleto] = useState('');
   const [contrasena, setContrasena] = useState('');
-  const [errores, setErrores] = useState({ correoElectronico: '', contrasena: '' });
+  const [confirmarContrasena, setConfirmarContrasena] = useState('');
+  const [errores, setErrores] = useState({ nombre: '', contrasena: '', confirmarContrasena: '' });
+  const [camposVacios, setCamposVacios] = useState({ nombre: false, contrasena: false });
+  const [dialogoAbierto, setDialogoAbierto] = useState(false);
 
-  // Datos de usuario para validar
-  const usuariosValidos = [
-    { email: 'JhonDoe@gmail.com', password: '12345678' },
-    { email: 'SeleneDelgado@gmail.com', password: 'martillo' }
-  ];
+  const manejarCambioNombre = (e) => {
+    const valor = e.target.value;
+    const regexNombre = /^[a-zA-Z\s]*$/;
+    if (valor.length <= 50 && regexNombre.test(valor)) {
+      setNombreCompleto(valor);
+    }
+  };
 
-  // Valida el campo de correo electrónico
-  const validarCorreoElectronico = () => {
+  const manejarCambioContrasena = (e) => {
+    const valor = e.target.value;
+    if (valor.length <= 20) {
+      setContrasena(valor);
+    }
+  };
+
+  const manejarCambioConfirmarContrasena = (e) => {
+    const valor = e.target.value;
+    if (valor.length <= 20) {
+      setConfirmarContrasena(valor);
+    }
+  };
+
+  const validarNombreCompleto = () => {
+    const regexNombre = /^[a-zA-Z\s]*$/;
     let mensajeError = '';
-    if (!correoElectronico) {
-      mensajeError = 'Ingrese su correo electrónico.';
-    } else if (!/\S+@\S+\.\S+/.test(correoElectronico)) {
-      mensajeError = 'Ingrese un correo electrónico válido.';
-    } else if (!usuariosValidos.some(usuario => usuario.email === correoElectronico)) {
-      mensajeError = 'Correo electrónico no registrado.';
+    if (nombreCompleto.length > 50) {
+      mensajeError = 'El nombre no puede exceder los 50 caracteres.';
+    } else if (!regexNombre.test(nombreCompleto)) {
+      mensajeError = 'El nombre solo puede contener letras y espacios.';
     }
-    setErrores((erroresActuales) => ({
-      ...erroresActuales,
-      correoElectronico: mensajeError,
-    }));
+    setErrores(erroresActuales => ({ ...erroresActuales, nombre: mensajeError }));
   };
 
-  // Valida el formulario completo
+  const validarContrasena = () => {
+    const regexNumeros = /\d.*\d/;
+    let mensajeError = '';
+    if (contrasena.length < 8 || !regexNumeros.test(contrasena)) {
+      mensajeError = 'mínimo 8 caracteres y al menos 2 números.';
+    } else if (contrasena.length > 20) {
+      mensajeError = 'La contraseña no puede exceder los 20 caracteres.';
+    }
+    setErrores(erroresActuales => ({ ...erroresActuales, contrasena: mensajeError }));
+  };
+
+  const validarConfirmacionContrasena = () => {
+    let mensajeError = '';
+    if (confirmarContrasena !== contrasena) {
+      mensajeError = 'Las contraseñas no coinciden.';
+    }
+    setErrores(erroresActuales => ({ ...erroresActuales, confirmarContrasena: mensajeError }));
+  };
+
+  // Validar el formulario completo
   const validarFormulario = () => {
-    let mensajesError = { correoElectronico: '', contrasena: '' };
-    let formularioEsValido = true;
+    validarNombreCompleto();
+    validarContrasena();
+    validarConfirmacionContrasena();
 
-    // Valida el correo electrónico
-    if (!correoElectronico) {
-        mensajesError.correoElectronico = 'Ingrese su correo electrónico.';
-        formularioEsValido = false;
-    } else if (!/\S+@\S+\.\S+/.test(correoElectronico)) {
-        mensajesError.correoElectronico = 'Ingrese un correo electrónico válido.';
-        formularioEsValido = false;
-    } else if (!usuariosValidos.some(usuario => usuario.email === correoElectronico)) {
-        mensajesError.correoElectronico = 'Correo electrónico no registrado.';
-        formularioEsValido = false;
-    }
+    // Verificar campos vacíos
+    const campos = { nombre: nombreCompleto === '', contrasena: contrasena === '' };
+    setCamposVacios(campos);
 
-    // Valida la contraseña
-    if (!contrasena) {
-        mensajesError.contrasena = 'Ingrese su contraseña.';
-        formularioEsValido = false;
+    const formularioEsValido = Object.values(errores).every(error => error === '') && !Object.values(campos).some(empty => empty);
+
+    if (formularioEsValido) {
+      // BACKEND
+      setDialogoAbierto(true);
     } else {
-        const usuario = usuariosValidos.find(usuario => usuario.email === correoElectronico);
-        if (usuario && usuario.password !== contrasena) {
-            mensajesError.contrasena = 'Contraseña incorrecta.';
-            formularioEsValido = false;
-        }
-    }
-
-    setErrores(mensajesError);
-    return formularioEsValido;
-  };
-
-  // Inicia sesión si el formulario es válido
-  const iniciarSesion = () => {
-    if (validarFormulario()) {  // Desactivado para no afectar el flujo de la aplicacion en desarrollo
-      navegar('/dashboard');
+      // no
     }
   };
 
-  // Contenido del lado izquierdo
   const contenidoIzquierdo = (
     <div 
       style={{
@@ -90,7 +106,6 @@ const PantallaRegistro = () => {
     </div>
   );
 
-  // Contenido del lado derecho
   const contenidoDerecho = (
     <div
       style={{
@@ -103,61 +118,97 @@ const PantallaRegistro = () => {
     >
       <div
         style={{
-          height: "15%",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          margin: "20px 0",
         }}
       >
         <StyledText boldText>Registro de Docente</StyledText>
       </div>
       <TextInput
-        label="Correo Electrónico"
+        label="Nombre Completo"
         isRequired={true}
-        validationMessage={errores.correoElectronico}
-        value={correoElectronico}
-        onChange={(e) => setCorreoElectronico(e.target.value)}
-        onBlur={() => validarCorreoElectronico()}
+        validationMessage={camposVacios.nombre ? 'Ingrese su nombre.' : errores.nombre}
+        value={nombreCompleto}
+        onChange={manejarCambioNombre}
+        onBlur={validarNombreCompleto}
       />
       <TextInput
-        label="Correo Electrónico"
+        label="Contraseña"
         isRequired={true}
-        validationMessage={errores.correoElectronico}
-        value={correoElectronico}
-        onChange={(e) => setCorreoElectronico(e.target.value)}
-        onBlur={() => validarCorreoElectronico()}
+        validationMessage={camposVacios.contrasena ? 'Ingrese su contraseña.' : errores.contrasena}
+        value={contrasena}
+        onChange={manejarCambioContrasena}
+        onBlur={validarContrasena}
       />
       <TextInput
-        label="Correo Electrónico"
+        label="Confirmar Contraseña"
         isRequired={true}
-        validationMessage={errores.correoElectronico}
-        value={correoElectronico}
-        onChange={(e) => setCorreoElectronico(e.target.value)}
-        onBlur={() => validarCorreoElectronico()}
+        validationMessage={errores.confirmarContrasena}
+        value={confirmarContrasena}
+        onChange={manejarCambioConfirmarContrasena}
+        onBlur={validarConfirmacionContrasena}
+        maxLength={20}
       />
-      <Button onClick={iniciarSesion} fullWidth={true}>Inicio de Sesion</Button>
+      <Button onClick={validarFormulario} fullWidth={true}>Registro</Button>
 
       <div
         style={{
-          height: "5%",
           display: "flex",
-          justifyContent: 'flex-end',
+          justifyContent: "center",
           alignItems: "center",
-          flexDirection: 'column',
-          cursor: 'pointer',
-          color: 'black',
+          flexDirection: "column",
+          cursor: "pointer",
+          marginTop: "20px",
         }}
         onClick={() => navegar('/')}
         onMouseOver={(e) => e.target.style.color = "#3661EB"}
         onMouseOut={(e) => e.target.style.color = 'black'}
       >
-        <StyledText enlaceText> Iniciar sesión </StyledText>
+        <StyledText enlaceText> Iniciar sesion </StyledText>
       </div>
     </div>
   );
 
-  // Renderiza el diseño dividido con los contenidos izquierdo y derecho
-  return <SplitScreenLayout left={contenidoIzquierdo} right={contenidoDerecho} />;
+  return (
+    <>
+      <SplitScreenLayout left={contenidoIzquierdo} right={contenidoDerecho} />
+      <Dialog
+        open={dialogoAbierto}
+        onClose={() => setDialogoAbierto(false)}
+        aria-describedby="alert-dialog-description"
+        sx={{
+          '& .MuiDialog-paper': {
+            borderRadius: '20px',
+          }
+        }}
+      >
+        <DialogContent
+          sx={{
+            borderRadius: '20px',
+          }}
+        >
+          <DialogContentText id="alert-dialog-description">
+            Registrado exitósamente.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            justifyContent: 'center',
+            padding: '8px 24px', 
+          }}
+        >
+          <Button onClick={() => {
+            setDialogoAbierto(false);
+            navegar('/');
+          }} color="primary" autoFocus>
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
 };
 
-export default PantallaRegistro;
+export default RegistroDocente;

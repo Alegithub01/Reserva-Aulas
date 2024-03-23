@@ -43,7 +43,7 @@ const SplitScreenLayout = ({ left, right, style }) => {
       display: 'flex',
       width: '80%',
       minWidth: '500px',
-      minHeight: '400px',
+      minHeight: '450px',
       maxWidth: '700px',
       boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', 
       borderRadius: '20px',
