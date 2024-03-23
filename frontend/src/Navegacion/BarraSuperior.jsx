@@ -1,3 +1,4 @@
+// esp
 import { useNavigate } from 'react-router-dom';
 import { useState } from "react";
 import {
@@ -14,19 +15,19 @@ import {
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
+import UsuarioStore from '../Contexts/UsuarioStore';
 import { useTheme } from "../Contexts/ThemeContext";
 import PropTypes from 'prop-types';
 
 const BarraSuperior = ({ onToggleSidebar }) => {
   const { theme } = useTheme();
+  const { nombre, correo } = UsuarioStore();
   const [anchorEl, setAnchorEl] = useState(null);
   const abierto = Boolean(anchorEl);
   const navigate = useNavigate();
-  
   const manejarCierreSesion = () => {
     navigate('/');
   };
-
   const manejarAperturaMenuPerfil = (evento) => {
     setAnchorEl(evento.currentTarget);
   };
@@ -41,12 +42,20 @@ const BarraSuperior = ({ onToggleSidebar }) => {
         <IconButton color="inherit" onClick={onToggleSidebar}>
           <MenuIcon />
         </IconButton>
-        <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', marginLeft: 2, marginRight: 2 }}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: "flex",
+            justifyContent: "center",
+            marginLeft: 2,
+            marginRight: 2,
+          }}
+        >
           <Typography variant="h6" noWrap>
             GESTIÓN DE AMBIENTES
           </Typography>
         </Box>
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: "flex" }}>
           <Tooltip title="Notificaciones">
             <IconButton color="inherit" size="large">
               <NotificationsIcon />
@@ -77,8 +86,18 @@ const BarraSuperior = ({ onToggleSidebar }) => {
             open={abierto}
             onClose={manejarCierreMenu}
           >
-            <Typography color="textSecondary" display="block" variant="body1" sx={{ paddingX: 2, paddingY: 1 }}>
-              Jhon Doe
+            <Typography
+              color="textSecondary"
+              display="block"
+              variant="body1"
+              sx={{
+                paddingX: 2,
+                paddingY: 1,
+              }}
+            >
+              {nombre}
+              <br />
+              {correo}
             </Typography>
             <Divider />
             <MenuItem onClick={manejarCierreSesion}>Cerrar sesión</MenuItem>

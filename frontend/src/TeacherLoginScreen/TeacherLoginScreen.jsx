@@ -1,29 +1,87 @@
-// esp
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SplitScreenLayout from "../Components/SplitScreenLayout";
-import TextInput from "../Utils/TextInput";
+import TextInput from "../Utils/ValidationTextInput";
 import StyledText from "../StyledText";
 import Button from "../Utils/Button";
-const TeacherLoginScreen = () => {
+
+const PantallaInicioSesionProfesor = () => {
   const navegar = useNavigate();
-  const iniciarSesion = () => {
-    navegar('/dashboard');
+  const [correoElectronico, setCorreoElectronico] = useState('');
+  const [contrasena, setContrasena] = useState('');
+  const [errores, setErrores] = useState({ correoElectronico: '', contrasena: '' });
+
+  const usuariosValidos = [
+    { email: 'JhonDoe@gmail.com', password: '12345678' },
+    { email: 'eurekasolutionsrl@gmail.com', password: 'TIS12024' }
+  ];
+
+  const validarCorreoElectronico = () => {
+    let mensajeError = '';
+    if (!correoElectronico) {
+      mensajeError = 'Ingrese su correo electrónico.';
+    } else if (!/\S+@\S+\.\S+/.test(correoElectronico)) {
+      mensajeError = 'Ingrese un correo electrónico válido.';
+    } else if (!usuariosValidos.some(usuario => usuario.email === correoElectronico)) {
+      mensajeError = 'Correo electrónico no registrado.';
+    }
+    setErrores((erroresActuales) => ({
+      ...erroresActuales,
+      correoElectronico: mensajeError,
+    }));
   };
 
-  const contenidoIzquierdo = 
-  <div 
-  style={{
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "20%",
-  }}
->
-  <StyledText boldWhiteText>
-    Reserva de Ambientes
-  </StyledText>
-</div>;
+  const validarFormulario = () => {
+    let mensajesError = { correoElectronico: '', contrasena: '' };
+    let formularioEsValido = true;
+
+    if (!correoElectronico) {
+        mensajesError.correoElectronico = 'Ingrese su correo electrónico.';
+        formularioEsValido = false;
+    } else if (!/\S+@\S+\.\S+/.test(correoElectronico)) {
+        mensajesError.correoElectronico = 'Ingrese un correo electrónico válido.';
+        formularioEsValido = false;
+    } else if (!usuariosValidos.some(usuario => usuario.email === correoElectronico)) {
+        mensajesError.correoElectronico = 'Correo electrónico no registrado.';
+        formularioEsValido = false;
+    }
+
+    if (!contrasena) {
+        mensajesError.contrasena = 'Ingrese su contraseña.';
+        formularioEsValido = false;
+    } else {
+        const usuario = usuariosValidos.find(usuario => usuario.email === correoElectronico);
+        if (usuario && usuario.password !== contrasena) {
+            mensajesError.contrasena = 'Contraseña incorrecta.';
+            formularioEsValido = false;
+        }
+    }
+
+    setErrores(mensajesError);
+    return formularioEsValido;
+  };
+
+  const iniciarSesion = () => {
+    if (validarFormulario()) {  // Desactivado para no afectar el flujo de la aplicacion en desarrollo
+      navegar('/dashboard');
+    }
+  };
+
+  const contenidoIzquierdo = (
+    <div 
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "20%",
+      }}
+    >
+      <StyledText boldWhiteText>
+        Reserva de Ambientes
+      </StyledText>
+    </div>
+  );
 
   const contenidoDerecho = (
     <div
@@ -48,27 +106,44 @@ const TeacherLoginScreen = () => {
       <TextInput
         label="Correo Electrónico"
         isRequired={true}
-        validationMessage="Por favor, ingrese su correo."
-        // onChange={handleNameChange}
+        validationMessage={errores.correoElectronico}
+        value={correoElectronico}
+        onChange={(e) => setCorreoElectronico(e.target.value)}
+        onBlur={() => validarCorreoElectronico()}
       />
       <TextInput
         label="Contraseña"
         isRequired={true}
-        validationMessage="Por favor, ingrese su contraseña."
-        // onChange={handleNameChange}
+        validationMessage={errores.contrasena}
+        value={contrasena}
+        onChange={(e) => setContrasena(e.target.value)}
       />
       <Button onClick={iniciarSesion} fullWidth={true}>Inicio de Sesion</Button>
-
+      
       <div
-        style={{
+      style={{
           height: "15%",
           display: "flex",
           justifyContent: 'flex-end',
           alignItems: "center",
           flexDirection: 'column',
-        }}
-      >
-        <StyledText enlaceText> Registrarse </StyledText>
+          color: 'black',
+        }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: 'flex-end',
+            alignItems: "center",
+            flexDirection: 'column',
+            cursor: 'pointer',
+            color: 'black',
+          }}
+          onClick={() => navegar('/registro')}
+          onMouseOver={(e) => e.target.style.color = "#3661EB"}
+          onMouseOut={(e) => e.target.style.color = 'black'}
+        >
+          <StyledText enlaceText> Registrarse como docente </StyledText>
+        </div>
       </div>
     </div>
   );
@@ -76,4 +151,4 @@ const TeacherLoginScreen = () => {
   return <SplitScreenLayout left={contenidoIzquierdo} right={contenidoDerecho} />;
 };
 
-export default TeacherLoginScreen;
+export default PantallaInicioSesionProfesor;
