@@ -1,49 +1,67 @@
-import { useState } from 'react';
-import { IconButton, Toolbar, Drawer, List, ListItem, ListItemIcon, ListItemText, Divider } from '@mui/material';
-// import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-// import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-// import MailIcon from '@mui/icons-material/Mail';
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+} from "@mui/material";
+import {
+  AccountCircle,
+  BookOnline,
+  RoomService,
+  Group,
+  ChevronRight,
+} from "@mui/icons-material";
+import PropTypes from "prop-types";
+import UsuarioStore from '../Contexts/UsuarioStore'
 
-
-const drawerWidth = 240;
-
-const BarraLateral = () => {
-  const [open, setOpen] = useState(false);
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
+const BarraLateral = ({ isOpen, onClose}) => {
+  const { nombre, correo } = UsuarioStore();
+  const handleListItemClick = () => {
+    onClose();
   };
 
   return (
-    <Drawer
-      variant="permanent"
-      open={open}
-      sx={{
-        width: open ? drawerWidth : 0,
-        flexShrink: 0,
-        [`& .MuiDrawer-paper`]: { width: open ? drawerWidth : 0, boxSizing: 'border-box' },
-      }}
-    >
-      {/* <Toolbar>
-        <IconButton onClick={open ? handleDrawerClose : handleDrawerOpen}>
-          {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-        </IconButton>
-      </Toolbar> */}
+    <Drawer anchor="left" open={isOpen} onClose={onClose}>
+      <div style={{ padding: 16, textAlign: "center" }}>
+        <AccountCircle style={{ fontSize: 60 }} />
+        <p>{nombre}</p>
+        <p>{correo}</p>
+      </div>
       <Divider />
+
       <List>
-        <ListItem button>
+        <ListItem button onClick={handleListItemClick}>
           <ListItemIcon>
-            {/* <MailIcon /> */}
+            <BookOnline />
           </ListItemIcon>
-          <ListItemText primary="Correo" />
+          <ListItemText primary="Gestión de reservas" />
+          <ChevronRight />
+        </ListItem>
+        <ListItem button onClick={handleListItemClick}>
+          <ListItemIcon>
+            <RoomService />
+          </ListItemIcon>
+          <ListItemText primary="Gestión de ambientes" />
+          <ChevronRight />
+        </ListItem>
+        <ListItem button onClick={handleListItemClick}>
+          <ListItemIcon>
+            <Group />
+          </ListItemIcon>
+          <ListItemText primary="Gestión de Usuarios" />
+          <ChevronRight />
         </ListItem>
       </List>
     </Drawer>
   );
+};
+
+BarraLateral.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  username: PropTypes.string.isRequired,
 };
 
 export default BarraLateral;

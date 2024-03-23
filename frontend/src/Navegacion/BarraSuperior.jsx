@@ -14,10 +14,12 @@ import {
 } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { useTheme } from "../Contexts/ThemeContext";
+import MenuIcon from "@mui/icons-material/Menu";
 import UsuarioStore from '../Contexts/UsuarioStore';
+import { useTheme } from "../Contexts/ThemeContext";
+import PropTypes from 'prop-types';
 
-const BarraSuperior = () => {
+const BarraSuperior = ({ onToggleSidebar }) => {
   const { theme } = useTheme();
   const { nombre, correo } = UsuarioStore();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -37,6 +39,9 @@ const BarraSuperior = () => {
   return (
     <AppBar elevation={2} sx={{ bgcolor: theme.highlight }}>
       <Toolbar variant="dense">
+        <IconButton color="inherit" onClick={onToggleSidebar}>
+          <MenuIcon />
+        </IconButton>
         <Box
           sx={{
             flexGrow: 1,
@@ -101,6 +106,10 @@ const BarraSuperior = () => {
       </Toolbar>
     </AppBar>
   );
+};
+
+BarraSuperior.propTypes = {
+  onToggleSidebar: PropTypes.func.isRequired,
 };
 
 export default BarraSuperior;
