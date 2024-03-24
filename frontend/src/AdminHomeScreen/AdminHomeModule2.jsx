@@ -4,6 +4,7 @@ import TextInput from "../Utils/TextInput";
 import RowPercentage from "../Responsive/RowPercentage";
 import StyledText from "../StyledText";
 import Dropdown from "../Utils/Dropdown";
+import SelectorHora from "../Utils/SelectorHora";
 
 const AdminHomeModule2 = () => {
 
@@ -37,16 +38,20 @@ const AdminHomeModule2 = () => {
         >
           <StyledText boldText>Ambiente</StyledText>
 
-
         </div>
         <RowPercentage firstChildPercentage={60} gap="10px">
           <div>
             <TextInput
               label="Nombre"
               fullWidth={true}
-              onChange={(e) => console.log(e.target.value)}
+              onChange={(e) => {
+                if(/^[a-zA-Z\s]+$/.test(e.target.value)){
+                  console.log(e.target.value);
+                }
+              }}
               isRequired={true}
               validationMessage="Por favor. Ingrese su nombre"
+              pattern= "^[a-zA-Z\s]*$" 
             />
           </div>
           <div>
@@ -56,32 +61,35 @@ const AdminHomeModule2 = () => {
               onChange={(e) => console.log(e.target.value)}
               isRequired={true}
               validationMessage="Por favor. Ingrese la capacidad"
+              pattern="^[0-9]*$"
+              rango={{min:10 , max:300}}
             />
           </div>
         </RowPercentage>
         <RowPercentage firstChildPercentage={40} gap="10px">
           <div>
             <Dropdown
-              label="Tipo de Ambiente"
-              options={[
-                { value: "", label: "Ninguno" },
+              etiqueta="Tipo de Ambiente"
+              opciones={[
                 { value: "10", label: "Aula" },
                 { value: "20", label: "Auditorio" },
                 { value: "30", label: "Laboratorio" },
               ]}
-              isRequired={true}
-              validationMessage="Por favor. Seleccione alguna opción"
+              esRequerido={true}
+              mensajeValidacion="Por favor. Seleccione el tipo de ambiente"
             />
           </div>
           <div>
             <Dropdown
-              label="Planta"
-              options={[
-                { value: "", label: "Planta 0" },
-                { value: "10", label: "Planta 1" },
-                { value: "20", label: "Planta 2" },
-                { value: "30", label: "Planta 3" },
+              etiqueta="Planta"
+              opciones={[
+                { value: "10", label: "Planta 0" },
+                { value: "20", label: "Planta 1" },
+                { value: "30", label: "Planta 2" },
+                { value: "40", label: "Planta 3" },
               ]}
+              esRequerido={true}
+              mensajeValidacion="Por favor. Seleccione la planta"
             />
           </div>
         </RowPercentage>
@@ -89,35 +97,49 @@ const AdminHomeModule2 = () => {
           label="Ubicacion"
           onChange={(e) => console.log(e.target.value)}
           isRequired={false}
+          pattern="\w*"
         />
         <TextInput
           label="Servicios"
           onChange={(e) => console.log(e.target.value)}
           isRequired={false}
+          pattern="\w*"
         />
 
         <RowPercentage firstChildPercentage={45} gap="10px">
           <div>
             <Dropdown
-              label="Dia"
-              options={[
+              etiqueta="Día"
+              opciones={[
                 { value: "10", label: "Lunes" },
                 { value: "20", label: "Martes" },
-                { value: "30", label: "Miercoles" },
+                { value: "30", label: "Miércoles" },
                 { value: "40", label: "Jueves" },
                 { value: "50", label: "Viernes" },
-                { value: "60", label: "Sabado" },
+                { value: "60", label: "Sábado" },
                 { value: "70", label: "Domingo" },
               ]}
+              esRequerido={true}
+              mensajeValidacion="Por favor. Seleccione el día."
             />
           </div>
           <div>
-            <TextInput
+            {/* <TextInput
               label="Horas"
               fullWidth={true}
               onChange={(e) => console.log(e.target.value)}
               isRequired={true}
               validationMessage="Por favor introduzca la hora"
+            /> */}
+            <SelectorHora
+              etiqueta= "Hora inicio:"
+              esRequerido= {true}
+            />
+          </div>
+          <div>
+            <SelectorHora
+              etiqueta= "Hora fin:"
+              esRequerido= {true}
             />
           </div>
         </RowPercentage>
