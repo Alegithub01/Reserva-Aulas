@@ -106,7 +106,7 @@ const AdminHomeModule2 = () => {
           pattern="\w*"
         />
 
-        <RowPercentage firstChildPercentage={45} gap="10px">
+        <RowPercentage firstChildPercentage={30} gap="20px">
           <div>
             <Dropdown
               etiqueta="Día"
@@ -124,22 +124,19 @@ const AdminHomeModule2 = () => {
             />
           </div>
           <div>
-            {/* <TextInput
-              label="Horas"
-              fullWidth={true}
-              onChange={(e) => console.log(e.target.value)}
-              isRequired={true}
-              validationMessage="Por favor introduzca la hora"
-            /> */}
             <SelectorHora
               etiqueta= "Hora inicio:"
               esRequerido= {true}
+              fullWidth={true}
+              mensajeValidacion="Por favor. Ingrese la hora de inicio."
             />
           </div>
           <div>
             <SelectorHora
               etiqueta= "Hora fin:"
               esRequerido= {true}
+              fullWidth={true}
+              mensajeValidacion="Por favor. Ingrese la hora de fin."
             />
           </div>
         </RowPercentage>
