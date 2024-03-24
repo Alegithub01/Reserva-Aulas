@@ -1,28 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { useTheme } from '../Contexts/ThemeContext';
 
-const SelectorHora = ({ etiqueta, esRequerido, ventanaCompleta, mensajeValidacion = '', min = '06:45' }) => {
+const SelectorHora = ({ etiqueta, esRequerido, ventanaCompleta, mensajeValidacion = '', enCambio, minimaHora }) => {
   const [valorTipeado, ponerValorTipeado] = useState('');
   const [hayMensajeValidacion, ponerMensajeValidacion] = useState({
     noLlenado: false,
     rangoIncumplido: false,
+    rangoIncumplido2: false,
   });
 
   const manejarPresionado = () => {
     ponerMensajeValidacion({ ...hayMensajeValidacion, noLlenado: esRequerido && valorTipeado === "" });
-    console.log(hayMensajeValidacion.noLlenado);
   }
+
   const manejarCambio = (event) => {
     if (event.target.value < '06:45' || event.target.value > '21:45') {
       ponerMensajeValidacion({ ...hayMensajeValidacion, rangoIncumplido: true });
       return;
     }
+    if (minimaHora && event.target.value < minimaHora) {
+      ponerMensajeValidacion({ ...hayMensajeValidacion, rangoIncumplido2: true });
+      return;
+    }
     ponerValorTipeado(event.target.value);
-    ponerMensajeValidacion({ ...hayMensajeValidacion, rangoIncumplido: false });
+    ponerMensajeValidacion({ ...hayMensajeValidacion, rangoIncumplido: false, rangoIncumplido2: false });
   }
+
+  useEffect(() => {
+    enCambio && enCambio(valorTipeado);
+  }, [valorTipeado, enCambio]);
+
   const estiloContenedor = {
     width: ventanaCompleta ? 'calc(100% - 0px)' : 'auto',
   }
@@ -76,7 +85,9 @@ const SelectorHora = ({ etiqueta, esRequerido, ventanaCompleta, mensajeValidacio
       {hayMensajeValidacion.rangoIncumplido && (
         <div style={mensajeErrorEstilo}>'La hora ingresada está fuera de servicio.'</div>
       )}
-
+      {hayMensajeValidacion.rangoIncumplido2 && (
+        <div style={mensajeErrorEstilo}>'La hora de fin debe ser mayor a la hora de inicio.'</div>
+      )}
       {hayMensajeValidacion.noLlenado && (
         <div style={mensajeErrorEstilo}>{mensajeValidacion || 'No'}</div>
       )}

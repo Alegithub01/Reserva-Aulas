@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import Card from "../Utils/Card";
 import Button from "../Utils/Button";
 import TextInput from "../Utils/TextInput";
@@ -7,6 +8,11 @@ import Dropdown from "../Utils/Dropdown";
 import SelectorHora from "../Utils/SelectorHora";
 
 const AdminHomeModule2 = () => {
+  const [horaInicio, cambiarHoraInicio] = useState("");
+
+  const cambiarPresionado = () => {
+    cambiarHoraInicio(true);
+  };
 
   return (
     <Card
@@ -129,6 +135,7 @@ const AdminHomeModule2 = () => {
               esRequerido= {true}
               fullWidth={true}
               mensajeValidacion="Por favor. Ingrese la hora de inicio."
+              enCambio={cambiarHoraInicio}
             />
           </div>
           <div>
@@ -136,7 +143,8 @@ const AdminHomeModule2 = () => {
               etiqueta= "Hora fin:"
               esRequerido= {true}
               fullWidth={true}
-              mensajeValidacion="Por favor. Ingrese la hora de fin."
+              mensajeValidacion="Por favor. Ingrese la hora de fin." 
+              minimaHora={horaInicio}   
             />
           </div>
         </RowPercentage>
