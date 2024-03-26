@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./Contexts/ThemeContext";
 import Layout from "./Navegacion/Layout";
 import AdminHomeScreen from "./AdminHomeScreen/AdminHomeScreen";
-import TeacherLoginScreen from "./TeacherLoginScreen/TeacherLoginScreen";
+import PantallaInicioSesion from "./PantallaInicioSesion/PantallaInicioSesion";
 import PantallaRegistro from "./PantallaRegistro/PantallaRegistro";
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
                   height: "100vh",
                 }}
               >
-                <TeacherLoginScreen />
+                <PantallaInicioSesion />
               </div>
             }
           />
