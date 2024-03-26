@@ -98,7 +98,8 @@ const AdminHomeModule2 = () => {
     cambiarMensajeError(previo => ({ ...previo, horaInicio: ""}));
   };
   const validarVacioHoraInicio = () => {
-    if(horaInicio === false){
+    console.log(horaInicio, typeof horaInicio, "horaInicio");
+    if(horaInicio === ""){
       cambiarMensajeError(previo => ({ ...previo, horaInicio: "Seleccione la hora de inicio"}));
     }
   };
@@ -109,7 +110,7 @@ const AdminHomeModule2 = () => {
   }
   const validarVacioHoraFin = () => {
     console.log(horaFin, typeof horaFin, "horaFin");
-    if(horaFin === false){
+    if(horaFin === ""){
       cambiarMensajeError(previo => ({ ...previo, horaFin: "Seleccione la hora de fin"}));
     }
   };
@@ -239,7 +240,7 @@ const AdminHomeModule2 = () => {
               fullWidth={true}
               enCambio={cambiarHoraInicio}
               onBlur={validarVacioHoraInicio}
-              mensajeValidacion={mensajeError.horaInicio}
+              mensajeValidacion={horaInicio===""? mensajeError.horaInicio: ""}
             />
           </div>
           <div>
@@ -250,7 +251,7 @@ const AdminHomeModule2 = () => {
               minimaHora={horaInicio}
               enCambio={cambiarHoraFin}
               onBlur={validarVacioHoraFin}
-              mensajeValidacion={mensajeError.horaFin}
+              mensajeValidacion={horaFin === ""? mensajeError.horaFin: ""}
             />
           </div>
         </RowPercentage>
