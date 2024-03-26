@@ -87,8 +87,10 @@ const RegistroDocente = () => {
   const validarContrasena = () => {
     const regexNumeros = /\d.*\d/;
     let mensajeError = "";
-    if (contrasena.length < 8 || !regexNumeros.test(contrasena)) {
-      mensajeError = "mínimo 8 caracteres y al menos 2 números.";
+    if (!contrasena) {
+      mensajeError = "Ingrese su contraseña.";
+    } else if (contrasena.length < 8 || !regexNumeros.test(contrasena)) {
+      mensajeError = "La contraseña debe tener mínimo 8 caracteres y al menos 2 números.";
     } else if (contrasena.length > 20) {
       mensajeError = "La contraseña no puede exceder los 20 caracteres.";
     }
