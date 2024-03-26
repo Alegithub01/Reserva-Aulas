@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -6,11 +6,33 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { useTheme } from '../Contexts/ThemeContext';
 
-function Dropdown({ label, options }) {
-  const [selectedValue, setSelectedValue] = useState('');
+function Dropdown({ etiqueta, opciones, mensajeValidacion = '', esRequerido, cambio, onBlur=null, ...otherProps }) {
+  const [valorSeleccionado, cambiarValorSeleccionado] = useState("");
+  const [presionado, cambiarPresionado] = useState(false);
   const { theme } = useTheme();
-  const handleChange = (event) => {
-    setSelectedValue(event.target.value);
+
+  const manejarCambio = (event) => {
+    cambiarValorSeleccionado(event.target.value);
+  }
+  const manejarPresionado = () => {
+    if(onBlur){
+      onBlur(valorSeleccionado);
+    }
+    cambiarPresionado(true);
+  }
+  const mostrarMensajeDeError = esRequerido && presionado && !valorSeleccionado;
+
+  useEffect(() => {
+    cambio && cambio(valorSeleccionado);
+  }, [valorSeleccionado]);
+
+  const mensajeValidacionEstilo = {
+    color: 'red',
+    fontSize: '12px',
+    transition: 'opacity 0.3s ease',
+    opacity: mostrarMensajeDeError ? 1 : 0,
+    height: mostrarMensajeDeError ? 'auto' : 0,
+    overflow: 'hidden',
   };
 
   return (
@@ -27,14 +49,15 @@ function Dropdown({ label, options }) {
           },
         }}
       >
-        {label}
+        {etiqueta}
       </InputLabel>
       <Select
         labelId="custom-dropdown-label"
         id="custom-dropdown"
-        value={selectedValue}
-        label={label}
-        onChange={handleChange}
+        value={valorSeleccionado}
+        label={etiqueta}
+        onChange={manejarCambio}
+        onBlur={manejarPresionado}
         sx={{
           '.MuiOutlinedInput-notchedOutline': {
             borderRadius: '15px',
@@ -49,7 +72,7 @@ function Dropdown({ label, options }) {
             borderColor: theme.highlight,
           },
           '.MuiSelect-select': {
-            color: selectedValue ? theme.primaryText : theme.secondary,
+            color: valorSeleccionado ? theme.primaryText : theme.secondary,
             padding: '10px 20px',
           },
           '.MuiPaper-root': {
@@ -60,15 +83,16 @@ function Dropdown({ label, options }) {
           }
         }}
       >
-        {options.map((option) => (
+        {opciones.map((opcion) => (
           <MenuItem 
-            key={option.value} 
-            value={option.value}
+            key={opcion.value} 
+            value={opcion.value}
             style={{ color: theme.primaryText, padding: '10px 20px' }}>
-            {option.label}
+            {opcion.label}
           </MenuItem>
         ))}
       </Select>
+      <div style={mensajeValidacionEstilo}>{mensajeValidacion}</div>
     </FormControl>
   );
 }

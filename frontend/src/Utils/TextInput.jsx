@@ -1,38 +1,59 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '../Contexts/ThemeContext';
 
 const TextInput = ({
   label,
   onChange,
+  onBlur = null,
   fullWidth = false,
   isRequired = false,
   validationMessage = '',
+  pattern = ".*",
+  rango,
+  cambio,
   ...otherProps
 }) => {
   const { theme } = useTheme();
   const [isFocused, setIsFocused] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [value, setValue] = useState('');
-  const [showValidationMessage, setShowValidationMessage] = useState(false);
+  const [showValidationMessage, setShowValidationMessage] = useState({
+    noLlenado: false,
+    rangoIncumplido: false
+  });
 
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => {
     setIsFocused(false);
-    setShowValidationMessage(isRequired && value.trim() === '');
+    if (onBlur) {
+      onBlur(value);
+    }
+    // setShowValidationMessage({ ...showValidationMessage, noLlenado: isRequired && value.trim() === ''});
   };
+
   const handleChange = (event) => {
+    const valor = event.target.value;
     if (onChange) {
       onChange(event);
     }
-    setValue(event.target.value);
+    if (pattern && RegExp(pattern).test(valor)) {
+      setValue(valor);
+    }
+    if (rango) {
+      setShowValidationMessage(previo => ({ ...previo, rangoIncumplido: (rango.min > parseInt(valor) || rango.max < parseInt(valor)) }));
+    }
     if (isRequired) {
-      setShowValidationMessage(event.target.value.trim() === '');
+      setShowValidationMessage(previo => ({ ...previo, noLlenado: valor.trim() === '' }));
     }
   };
 
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
+
+  useEffect(() => {
+    cambio && cambio(value);
+  }, [value]);
 
   const containerStyle = {
     width: fullWidth ? 'calc(100% - 0px)' : 'auto',
@@ -67,7 +88,7 @@ const TextInput = ({
     transition: 'all 0.3s ease',
     pointerEvents: 'none',
     fontSize: isFocused || value ? '12px' : '16px',
-    
+
   };
 
   const validationMessageStyle = {
@@ -85,6 +106,7 @@ const TextInput = ({
         <input
           type="text"
           required={isRequired}
+          pattern={pattern}
           autoComplete="off"
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -97,9 +119,14 @@ const TextInput = ({
         />
         <label style={labelStyle}>{label}</label>
       </div>
-      {showValidationMessage && (
-          <div style={validationMessageStyle}>{validationMessage || 'Este campo es obligatorio'}</div>
-        )}
+      {
+        showValidationMessage.rangoIncumplido ?
+          (
+            <div style={validationMessageStyle}>La cantidad debe ser mayor a {rango.min} y menor a {rango.max}.</div>
+          ) : (
+            <div style={validationMessageStyle}>{validationMessage}</div>
+          )
+      }
     </div>
   );
 };
