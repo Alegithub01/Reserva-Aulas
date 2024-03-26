@@ -83,30 +83,18 @@ const AdminHomeModule2 = () => {
     }
   };
 
-  const manejarCambioDia = (event) => {
-    cambiarDia(event.target.value);
-    cambiarMensajeError({ ...mensajeError, dia: ""});
-  }
   const validarSeleccionDia = () => {
     if(dia.trim() === ''){
       cambiarMensajeError(previo => ({ ...previo, dia: "Seleccione el día"}));
     }
   };
 
-  const manejarCambioHoraInicio = () => {
-    cambiarHoraInicio(true);
-    cambiarMensajeError(previo => ({ ...previo, horaInicio: ""}));
-  };
   const validarVacioHoraInicio = () => {
     if(horaInicio === ""){
       cambiarMensajeError(previo => ({ ...previo, horaInicio: "Seleccione la hora de inicio"}));
     }
   };
 
-  const manejarCambioHoraFin = () => {
-    cambiarHoraFin(true);
-    cambiarMensajeError(previo => ({ ...previo, horaFin: ""}));
-  }
   const validarVacioHoraFin = () => {
     if(horaFin === ""){
       cambiarMensajeError(previo => ({ ...previo, horaFin: "Seleccione la hora de fin"}));
