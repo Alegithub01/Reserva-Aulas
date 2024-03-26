@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SplitScreenLayout from "../Components/SplitScreenLayout";
-import TextInput from "../Utils/ValidationTextInput";
+import TextInput from "../Utils/CampoValidado";
 import StyledText from "../StyledText";
 import Button from "../Utils/Button";
 
