@@ -177,7 +177,7 @@ const AdminHomeModule2 = () => {
                 { value: "20", label: "Auditorio" },
                 { value: "30", label: "Laboratorio" },
               ]}
-              onChange={(event) => manejarCambioTipo(event)}
+              onChange={cambiarTipo}
               onBlur={validarSeleccionTipo}
               esRequerido={true}
               mensajeValidacion={mensajeError.tipo}
@@ -192,7 +192,7 @@ const AdminHomeModule2 = () => {
                 { value: "30", label: "Planta 2" },
                 { value: "40", label: "Planta 3" },
               ]}
-              onChange={(event) => manejarCambioPlanta(event)}
+              onChange={(event) => manejarCambioPlanta(event.target.value)}
               onBlur={validarSeleccionPlanta}
               esRequerido={true}
               mensajeValidacion={mensajeError.planta}
@@ -201,15 +201,9 @@ const AdminHomeModule2 = () => {
         </RowPercentage>
         <TextInput
           label="Ubicacion"
-          onChange={(event) => manejarCambioEntrada(event, ".*", null, false)}
-          isRequired={false}
-          // onBlur={() => {}}
         />
         <TextInput
           label="Servicios"
-          onChange={(event) => manejarCambioEntrada(event, ".*", null, false)}
-          isRequired={false}
-          // onBlur={() => {}}
         />
 
         <RowPercentage firstChildPercentage={30} gap="20px">
@@ -225,7 +219,7 @@ const AdminHomeModule2 = () => {
                 { value: "60", label: "Sábado" },
                 { value: "70", label: "Domingo" },
               ]}
-              onChange={(event) => manejarCambioDia(event)}
+              onChange={cambiarDia}
               onBlur={validarSeleccionDia}
               esRequerido={true}
               mensajeValidacion={mensajeError.dia}

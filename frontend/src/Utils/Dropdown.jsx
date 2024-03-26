@@ -8,7 +8,6 @@ import { useTheme } from '../Contexts/ThemeContext';
 
 function Dropdown({ etiqueta, opciones, mensajeValidacion = '', esRequerido, cambio, onBlur=null, ...otherProps }) {
   const [valorSeleccionado, cambiarValorSeleccionado] = useState("");
-  const [presionado, cambiarPresionado] = useState(false);
   const { theme } = useTheme();
 
   const manejarCambio = (event) => {
@@ -18,9 +17,8 @@ function Dropdown({ etiqueta, opciones, mensajeValidacion = '', esRequerido, cam
     if(onBlur){
       onBlur(valorSeleccionado);
     }
-    cambiarPresionado(true);
   }
-  const mostrarMensajeDeError = esRequerido && presionado && !valorSeleccionado;
+  const mostrarMensajeDeError = esRequerido  && !valorSeleccionado;
 
   useEffect(() => {
     cambio && cambio(valorSeleccionado);
@@ -103,6 +101,7 @@ Dropdown.propTypes = {
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     label: PropTypes.string.isRequired,
   })).isRequired,
+  mensajeValidacion: PropTypes.string,
 };
 
 export default Dropdown;
