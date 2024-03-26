@@ -9,7 +9,7 @@ const TextInput = ({
   fullWidth = false,
   isRequired = false,
   validationMessage = '',
-  pattern=".*",
+  pattern = ".*",
   rango,
   cambio,
   ...otherProps
@@ -31,21 +31,20 @@ const TextInput = ({
     }
     // setShowValidationMessage({ ...showValidationMessage, noLlenado: isRequired && value.trim() === ''});
   };
-  
+
   const handleChange = (event) => {
     const valor = event.target.value;
     if (onChange) {
       onChange(event);
     }
-    if(pattern && RegExp(pattern).test(valor)){
+    if (pattern && RegExp(pattern).test(valor)) {
       setValue(valor);
     }
-    if(rango){
-      setShowValidationMessage(previo => ({...previo, rangoIncumplido:(rango.min > parseInt(valor) || rango.max < parseInt(valor))}));
-      console.log(showValidationMessage.rangoIncumplido);
+    if (rango) {
+      setShowValidationMessage(previo => ({ ...previo, rangoIncumplido: (rango.min > parseInt(valor) || rango.max < parseInt(valor)) }));
     }
     if (isRequired) {
-      setShowValidationMessage(previo => ({ ...previo, noLlenado: valor.trim() === ''}));
+      setShowValidationMessage(previo => ({ ...previo, noLlenado: valor.trim() === '' }));
     }
   };
 
@@ -89,7 +88,7 @@ const TextInput = ({
     transition: 'all 0.3s ease',
     pointerEvents: 'none',
     fontSize: isFocused || value ? '12px' : '16px',
-    
+
   };
 
   const validationMessageStyle = {
@@ -120,13 +119,14 @@ const TextInput = ({
         />
         <label style={labelStyle}>{label}</label>
       </div>
-      <div style={validationMessageStyle}>{validationMessage}</div>
-      {/* {showValidationMessage.noLlenado && (
-          <div style={validationMessageStyle}>{validationMessage || 'Este campo es obligatorio'}</div>
-        )} */}
-      {showValidationMessage.rangoIncumplido && (
-          <div style={validationMessageStyle}>La cantidad debe ser mayor a {rango.min} y menor a {rango.max}.</div>
-        )}
+      {
+        showValidationMessage.rangoIncumplido ?
+          (
+            <div style={validationMessageStyle}>La cantidad debe ser mayor a {rango.min} y menor a {rango.max}.</div>
+          ) : (
+            <div style={validationMessageStyle}>{validationMessage}</div>
+          )
+      }
     </div>
   );
 };

@@ -98,7 +98,6 @@ const AdminHomeModule2 = () => {
     cambiarMensajeError(previo => ({ ...previo, horaInicio: ""}));
   };
   const validarVacioHoraInicio = () => {
-    console.log(horaInicio, typeof horaInicio, "horaInicio");
     if(horaInicio === ""){
       cambiarMensajeError(previo => ({ ...previo, horaInicio: "Seleccione la hora de inicio"}));
     }
@@ -109,7 +108,6 @@ const AdminHomeModule2 = () => {
     cambiarMensajeError(previo => ({ ...previo, horaFin: ""}));
   }
   const validarVacioHoraFin = () => {
-    console.log(horaFin, typeof horaFin, "horaFin");
     if(horaFin === ""){
       cambiarMensajeError(previo => ({ ...previo, horaFin: "Seleccione la hora de fin"}));
     }

@@ -86,14 +86,15 @@ const SelectorHora = ({ etiqueta, esRequerido, ventanaCompleta, mensajeValidacio
           value={valorTipeado}
         />
       </form>
-      {hayMensajeValidacion.rangoIncumplido && (
+      {
+        hayMensajeValidacion.rangoIncumplido ? (
         <div style={mensajeErrorEstilo}>'La hora ingresada está fuera de servicio.'</div>
-      )}
-      {hayMensajeValidacion.rangoIncumplido2 && (
+      ):
+       hayMensajeValidacion.rangoIncumplido2 ? (
         <div style={mensajeErrorEstilo}>'La hora de fin debe ser mayor a la hora de inicio.'</div>
-      )}
-      
-        <div style={mensajeErrorEstilo}>{mensajeValidacion}</div>
+      ):
+      (<div style={mensajeErrorEstilo}>{mensajeValidacion}</div>)
+    }
 
     </div>
   )
