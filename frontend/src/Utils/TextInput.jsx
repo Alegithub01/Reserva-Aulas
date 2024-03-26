@@ -1,15 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '../Contexts/ThemeContext';
 
 const TextInput = ({
   label,
   onChange,
+  onBlur = null,
   fullWidth = false,
   isRequired = false,
   validationMessage = '',
-  pattern,
+  pattern=".*",
   rango,
+  cambio,
   ...otherProps
 }) => {
   const { theme } = useTheme();
@@ -24,7 +26,10 @@ const TextInput = ({
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => {
     setIsFocused(false);
-    setShowValidationMessage({ ...showValidationMessage, noLlenado: isRequired && value.trim() === ''});
+    if (onBlur) {
+      onBlur(value);
+    }
+    // setShowValidationMessage({ ...showValidationMessage, noLlenado: isRequired && value.trim() === ''});
   };
   
   const handleChange = (event) => {
@@ -46,6 +51,10 @@ const TextInput = ({
 
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
+
+  useEffect(() => {
+    cambio && cambio(value);
+  }, [value]);
 
   const containerStyle = {
     width: fullWidth ? 'calc(100% - 0px)' : 'auto',
@@ -111,9 +120,10 @@ const TextInput = ({
         />
         <label style={labelStyle}>{label}</label>
       </div>
-      {showValidationMessage.noLlenado && (
+      <div style={validationMessageStyle}>{validationMessage}</div>
+      {/* {showValidationMessage.noLlenado && (
           <div style={validationMessageStyle}>{validationMessage || 'Este campo es obligatorio'}</div>
-        )}
+        )} */}
       {showValidationMessage.rangoIncumplido && (
           <div style={validationMessageStyle}>La cantidad debe ser mayor a {rango.min} y menor a {rango.max}.</div>
         )}

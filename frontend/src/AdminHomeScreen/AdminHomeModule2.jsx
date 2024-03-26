@@ -8,12 +8,111 @@ import Dropdown from "../Utils/Dropdown";
 import SelectorHora from "../Utils/SelectorHora";
 
 const AdminHomeModule2 = () => {
-  const [horaInicio, cambiarHoraInicio] = useState("");
+  const [nombre, cambiarNombre] = useState("");
+  const [capacidad, cambiarCapacidad] = useState("");
+  const [tipo, cambiarTipo] = useState("");
+  const [planta, cambiarPlanta] = useState("");
+  const [dia, cambiarDia] = useState("");
+  const [horaInicio, cambiarHoraInicio] = useState(false);
+  const [horaFin, cambiarHoraFin] = useState(false);
+  const [mensajeError, cambiarMensajeError] = useState({
+    nombre: "",
+    capacidad: "",
+    tipo: "",
+    planta: "",
+    dia: "",
+    horaInicio: "",
+    horaFin: "",
+  });
 
-  const cambiarPresionado = () => {
-    cambiarHoraInicio(true);
+  const validarInfoOblig = () => {
+    validarVacioNombre();
+    validarVacioCapacidad();
+    validarSeleccionTipo();
+    validarSeleccionPlanta();
+    validarSeleccionDia();
+    validarVacioHoraInicio();
+    validarVacioHoraFin();
+  }
+
+  const manejarCambioNombre = (event, pattern) => {
+    const valor = event.target.value;
+    if(pattern && RegExp(pattern).test(valor)){
+      cambiarNombre(valor);
+      cambiarMensajeError({ ...mensajeError, nombre: ""});
+    }
+  };
+  const validarVacioNombre = () => {
+    if(nombre.trim() === "" ){
+      cambiarMensajeError(previo => ({ ...previo, nombre: "Ingrese nombre del ambiente"}));
+    }
+  }
+
+  const manejarCambioCapacidad = (event, pattern) => {
+    const valor = event.target.value;
+    if(pattern && RegExp(pattern).test(valor)){
+      cambiarCapacidad(valor);
+      cambiarMensajeError({ ...mensajeError, capacidad: ""});
+    }
+  };
+  const validarVacioCapacidad= () => {
+    if(capacidad.trim() === "" ){
+      cambiarMensajeError(previo =>({ ...previo, capacidad: "Ingrese la capacidad del ambiente"}));
+    }
   };
 
+  const manejarCambioTipo = (event) => {
+    cambiarTipo(event.target.value);
+    cambiarMensajeError({ ...mensajeError, tipo: ""});
+  };
+  const validarSeleccionTipo = () => {
+    if(tipo.trim() === ''){
+      cambiarMensajeError(previo => ({ ...previo, tipo: "Seleccione el tipo de ambiente"}));
+    }
+  };
+
+  const manejarCambioPlanta = (event) => {
+    cambiarPlanta(event.target.value);
+    cambiarMensajeError({ ...mensajeError, planta: ""});
+  };
+  const validarSeleccionPlanta = () => {
+    if(planta.trim() === ''){
+      cambiarMensajeError(previo => ({ ...previo, planta: "Seleccione la planta"}));
+    }else{
+      cambiarMensajeError(previo => ({ ...previo, planta: ""}));
+    }
+  };
+
+  const manejarCambioDia = (event) => {
+    cambiarDia(event.target.value);
+    cambiarMensajeError({ ...mensajeError, dia: ""});
+  }
+  const validarSeleccionDia = () => {
+    if(dia.trim() === ''){
+      cambiarMensajeError(previo => ({ ...previo, dia: "Seleccione el día"}));
+    }
+  };
+
+  const manejarCambioHoraInicio = () => {
+    cambiarHoraInicio(true);
+    cambiarMensajeError(previo => ({ ...previo, horaInicio: ""}));
+  };
+  const validarVacioHoraInicio = () => {
+    if(horaInicio === false){
+      cambiarMensajeError(previo => ({ ...previo, horaInicio: "Seleccione la hora de inicio"}));
+    }
+  };
+
+  const manejarCambioHoraFin = () => {
+    cambiarHoraFin(true);
+    cambiarMensajeError(previo => ({ ...previo, horaFin: ""}));
+  }
+  const validarVacioHoraFin = () => {
+    console.log(horaFin, typeof horaFin, "horaFin");
+    if(horaFin === false){
+      cambiarMensajeError(previo => ({ ...previo, horaFin: "Seleccione la hora de fin"}));
+    }
+  };
   return (
     <Card
       minWidth="300px"
@@ -50,25 +149,23 @@ const AdminHomeModule2 = () => {
             <TextInput
               label="Nombre"
               fullWidth={true}
-              onChange={(e) => {
-                if(/^[a-zA-Z\s]+$/.test(e.target.value)){
-                  console.log(e.target.value);
-                }
-              }}
+              onChange={(event) => manejarCambioNombre(event, "^[0-9(A-Z)+]*$")}
+              onBlur={validarVacioNombre}
               isRequired={true}
-              validationMessage="Por favor. Ingrese su nombre"
-              pattern= "^[a-zA-Z\s]*$" 
+              validationMessage={mensajeError.nombre}
+              pattern="^[0-9(A-Z)+]*$"
             />
           </div>
           <div>
             <TextInput
               label="Capacidad"
               fullWidth={true}
-              onChange={(e) => console.log(e.target.value)}
+              onChange={(event) => manejarCambioCapacidad(event, "^[0-9]*$", {min: 10, max: 300})}
+              onBlur={validarVacioCapacidad}
               isRequired={true}
-              validationMessage="Por favor. Ingrese la capacidad"
+              validationMessage={mensajeError.capacidad}
               pattern="^[0-9]*$"
-              rango={{min:10 , max:300}}
+              rango={{ min: 10, max: 300 }}
             />
           </div>
         </RowPercentage>
@@ -81,8 +178,10 @@ const AdminHomeModule2 = () => {
                 { value: "20", label: "Auditorio" },
                 { value: "30", label: "Laboratorio" },
               ]}
+              onChange={(event) => manejarCambioTipo(event)}
+              onBlur={validarSeleccionTipo}
               esRequerido={true}
-              mensajeValidacion="Por favor. Seleccione el tipo de ambiente"
+              mensajeValidacion={mensajeError.tipo}
             />
           </div>
           <div>
@@ -94,22 +193,24 @@ const AdminHomeModule2 = () => {
                 { value: "30", label: "Planta 2" },
                 { value: "40", label: "Planta 3" },
               ]}
+              onChange={(event) => manejarCambioPlanta(event)}
+              onBlur={validarSeleccionPlanta}
               esRequerido={true}
-              mensajeValidacion="Por favor. Seleccione la planta"
+              mensajeValidacion={mensajeError.planta}
             />
           </div>
         </RowPercentage>
         <TextInput
           label="Ubicacion"
-          onChange={(e) => console.log(e.target.value)}
+          onChange={(event) => manejarCambioEntrada(event, ".*", null, false)}
           isRequired={false}
-          pattern="\w*"
+          // onBlur={() => {}}
         />
         <TextInput
           label="Servicios"
-          onChange={(e) => console.log(e.target.value)}
+          onChange={(event) => manejarCambioEntrada(event, ".*", null, false)}
           isRequired={false}
-          pattern="\w*"
+          // onBlur={() => {}}
         />
 
         <RowPercentage firstChildPercentage={30} gap="20px">
@@ -125,30 +226,35 @@ const AdminHomeModule2 = () => {
                 { value: "60", label: "Sábado" },
                 { value: "70", label: "Domingo" },
               ]}
+              onChange={(event) => manejarCambioDia(event)}
+              onBlur={validarSeleccionDia}
               esRequerido={true}
-              mensajeValidacion="Por favor. Seleccione el día."
+              mensajeValidacion={mensajeError.dia}
             />
           </div>
           <div>
             <SelectorHora
-              etiqueta= "Hora inicio:"
-              esRequerido= {true}
+              etiqueta="Hora inicio:"
+              esRequerido={true}
               fullWidth={true}
-              mensajeValidacion="Por favor. Ingrese la hora de inicio."
               enCambio={cambiarHoraInicio}
+              onBlur={validarVacioHoraInicio}
+              mensajeValidacion={mensajeError.horaInicio}
             />
           </div>
           <div>
             <SelectorHora
-              etiqueta= "Hora fin:"
-              esRequerido= {true}
+              etiqueta="Hora fin:"
+              esRequerido={true}
               fullWidth={true}
-              mensajeValidacion="Por favor. Ingrese la hora de fin." 
-              minimaHora={horaInicio}   
+              minimaHora={horaInicio}
+              enCambio={cambiarHoraFin}
+              onBlur={validarVacioHoraFin}
+              mensajeValidacion={mensajeError.horaFin}
             />
           </div>
         </RowPercentage>
-        <Button fullWidth={true}>Guardar Cambios</Button>
+        <Button fullWidth={true} onClick={validarInfoOblig}>Guardar Cambios</Button>
       </div>
     </Card>
   );

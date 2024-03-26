@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';
 import { useTheme } from '../Contexts/ThemeContext';
 
-const SelectorHora = ({ etiqueta, esRequerido, ventanaCompleta, mensajeValidacion = '', enCambio, minimaHora }) => {
+const SelectorHora = ({ etiqueta, esRequerido, ventanaCompleta, mensajeValidacion = "", enCambio, minimaHora, vacio=false, onBlur=null }) => {
   const [valorTipeado, ponerValorTipeado] = useState('');
   const [hayMensajeValidacion, ponerMensajeValidacion] = useState({
     noLlenado: false,
@@ -12,7 +12,10 @@ const SelectorHora = ({ etiqueta, esRequerido, ventanaCompleta, mensajeValidacio
   });
 
   const manejarPresionado = () => {
-    ponerMensajeValidacion({ ...hayMensajeValidacion, noLlenado: esRequerido && valorTipeado === "" });
+    if(onBlur){
+      onBlur(valorTipeado);
+    }
+    // ponerMensajeValidacion({ ...hayMensajeValidacion, noLlenado: esRequerido && valorTipeado === "" });
   }
 
   const manejarCambio = (event) => {
@@ -27,6 +30,7 @@ const SelectorHora = ({ etiqueta, esRequerido, ventanaCompleta, mensajeValidacio
     ponerValorTipeado(event.target.value);
     ponerMensajeValidacion({ ...hayMensajeValidacion, rangoIncumplido: false, rangoIncumplido2: false });
   }
+
 
   useEffect(() => {
     enCambio && enCambio(valorTipeado);
@@ -88,9 +92,9 @@ const SelectorHora = ({ etiqueta, esRequerido, ventanaCompleta, mensajeValidacio
       {hayMensajeValidacion.rangoIncumplido2 && (
         <div style={mensajeErrorEstilo}>'La hora de fin debe ser mayor a la hora de inicio.'</div>
       )}
-      {hayMensajeValidacion.noLlenado && (
-        <div style={mensajeErrorEstilo}>{mensajeValidacion || 'No'}</div>
-      )}
+      
+        <div style={mensajeErrorEstilo}>{mensajeValidacion}</div>
+
     </div>
   )
 };

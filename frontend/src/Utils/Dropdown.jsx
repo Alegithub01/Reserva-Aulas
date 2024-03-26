@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -6,8 +6,8 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { useTheme } from '../Contexts/ThemeContext';
 
-function Dropdown({ etiqueta, opciones, mensajeValidacion = '', esRequerido }) {
-  const [valorSeleccionado, cambiarValorSeleccionado] = useState('');
+function Dropdown({ etiqueta, opciones, mensajeValidacion = '', esRequerido, cambio, onBlur=null, ...otherProps }) {
+  const [valorSeleccionado, cambiarValorSeleccionado] = useState("");
   const [presionado, cambiarPresionado] = useState(false);
   const { theme } = useTheme();
 
@@ -15,10 +15,17 @@ function Dropdown({ etiqueta, opciones, mensajeValidacion = '', esRequerido }) {
     cambiarValorSeleccionado(event.target.value);
   }
   const manejarPresionado = () => {
+    if(onBlur){
+      onBlur(valorSeleccionado);
+    }
     cambiarPresionado(true);
   }
   const mostrarMensajeDeError = esRequerido && presionado && !valorSeleccionado;
-  
+
+  useEffect(() => {
+    cambio && cambio(valorSeleccionado);
+  }, [valorSeleccionado]);
+
   const mensajeValidacionEstilo = {
     color: 'red',
     fontSize: '12px',
@@ -85,9 +92,7 @@ function Dropdown({ etiqueta, opciones, mensajeValidacion = '', esRequerido }) {
           </MenuItem>
         ))}
       </Select>
-      {mostrarMensajeDeError && (
-          <div style={mensajeValidacionEstilo}>{mensajeValidacion || 'Este campo es obligatorio'}</div>
-        )}
+      <div style={mensajeValidacionEstilo}>{mensajeValidacion}</div>
     </FormControl>
   );
 }
