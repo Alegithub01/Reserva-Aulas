@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import {useState} from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -30,22 +30,22 @@ function EditarFilas(props) {
     const id = randomId();
     setFilas((filasAnteriores)=>[...filasAnteriores, {id, nombre: "", capacidad: 0, tipo: "", planta: "", dia: "", horaInicio: "", horaFin: "", esNuevo: true}]);
     setFilasModificadas((filasModificadasAnteriores)=>({
-      ...filasAnteriores,
+      ...filasModificadasAnteriores,
       [id]: {mode: GridRowModes.edit, fieldToFocus: "nombre"},
   }));    
   };
 
-  // return (
-  //   <GridToolbarContainer>
-  //     <Button
-  //       color="primary"
-  //       startIcon={<AddIcon />}
-  //       onClick={manejoClick}
-  //     >
-  //       Agregar
-  //     </Button>
-  //   </GridToolbarContainer>
-  // );
+  return (
+    <GridToolbarContainer>
+      <Button
+        color="primary"
+        startIcon={<AddIcon />}
+        onClick={manejoClick}
+      >
+        Agregar
+      </Button>
+    </GridToolbarContainer>
+  );
 }
 
 export default function GridTablaCrud() {
@@ -226,37 +226,3 @@ export default function GridTablaCrud() {
   );
 }
 
-
-
-
-
-//   return (
-//     <Box sx={{ height: 400, width: '100%' }}>
-//       <DataGrid
-//         rows={filas}
-//         columns={[
-//           { field: 'nombre', headerName: 'Nombre', width: 150, editable: true },
-//           { field: 'capacidad', headerName: 'Capacidad', type: 'number', width: 150, editable: true },
-//           { field: 'tipo', headerName: 'Tipo', width: 150, editable: true },
-//           { field: 'planta', headerName: 'Planta', width: 150, editable: true },
-//           { field: 'dia', headerName: 'Dia', width: 150, editable: true },
-//           { field: 'horaInicio', headerName: 'Hora Inicio', width: 150, editable: true },
-//           { field: 'horaFin', headerName: 'Hora Fin', width: 150, editable: true },
-//           {
-//             field: 'acciones',
-//             headerName: 'Acciones',
-//             width: 150,
-//             sortable: false,
-//             renderCell: (params) => {
-//               if (params.row.esNuevo) {
-//                 return (
-//                   <GridActionsCellItem
-//                     icon={<SaveIcon />}
-//                     label="Guardar"
-//                     onClick={() => manejoGuardar(params.row)}
-//                   />
-//                 );
-//               }
-//               return (
-//                 <Grid
-// }

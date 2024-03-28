@@ -194,7 +194,7 @@ const AdminHomeModule2 = () => {
           label="Servicios"
         />
 
-        <RowPercentage firstChildPercentage={30} gap="20px">
+        <RowPercentage firstChildPercentage={45} gap="20px">
           <div>
             <Dropdown
               etiqueta="Día"
