@@ -63,7 +63,7 @@ const PantallaInicioSesionProfesor = () => {
 
   const iniciarSesion = () => {
     if (validarFormulario()) {  // Desactivado para no afectar el flujo de la aplicacion en desarrollo
-      navegar('/dashboard');
+      navegar('/ModulosAdmin');
     }
   };
 

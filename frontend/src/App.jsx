@@ -5,6 +5,7 @@ import Layout from "./Navegacion/Layout";
 import AdminHomeScreen from "./AdminHomeScreen/AdminHomeScreen";
 import PantallaInicioSesion from "./PantallaInicioSesion/PantallaInicioSesion";
 import PantallaRegistro from "./PantallaRegistro/PantallaRegistro";
+import PantallaModulos from "./PantallaModulos/PantallaModulos";
 
 function App() {
   return (
@@ -34,6 +35,19 @@ function App() {
                 }}
               >
                 <PantallaRegistro/>
+              </div>
+            }
+          />
+          <Route
+            path="/ModulosAdmin"
+            element={
+              <div
+                style={{
+                  width: "100vw",
+                  height: "100vh",
+                }}
+              >
+                <PantallaModulos/>
               </div>
             }
           />
