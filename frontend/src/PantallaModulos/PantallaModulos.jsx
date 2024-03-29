@@ -51,7 +51,7 @@ const PantallaModulos = () => {
             <Card 
                 text="Gestión de Ambientes" 
                 Icon={IconoAmbientes}
-                onClick={() => navegar('/dashboard')}
+                onClick={() => navegar('/GestionAmbientes')}
             />
             <Card 
                 text="Gestión de Reservas" 

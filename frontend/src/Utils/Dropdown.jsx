@@ -62,6 +62,9 @@ function Dropdown({ etiqueta, opciones, mensajeValidacion = '', esRequerido, cam
             borderWidth: '2px',
             borderColor: theme.secondary,
             transition: 'all 0.3s ease 0s',
+            '&:hover': {
+              borderColor: theme.highlight,
+            },
           },
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderColor: theme.highlight,
@@ -69,9 +72,13 @@ function Dropdown({ etiqueta, opciones, mensajeValidacion = '', esRequerido, cam
           '&:hover .MuiOutlinedInput-notchedOutline': {
             borderColor: theme.highlight,
           },
+          '&:active .MuiOutlinedInput-notchedOutline': {
+            borderColor: theme.highlight,
+          },
           '.MuiSelect-select': {
             color: valorSeleccionado ? theme.primaryText : theme.secondary,
             padding: '10px 20px',
+            borderColor: theme.highlight,
           },
           '.MuiPaper-root': {
             backgroundColor: theme.highlight,

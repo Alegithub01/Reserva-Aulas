@@ -2,7 +2,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./Contexts/ThemeContext";
 import Layout from "./Navegacion/Layout";
-import AdminHomeScreen from "./AdminHomeScreen/AdminHomeScreen";
+import PantallaAmbientes from "./PantallaAmbientes/PantallaAmbientes";
 import PantallaInicioSesion from "./PantallaInicioSesion/PantallaInicioSesion";
 import PantallaRegistro from "./PantallaRegistro/PantallaRegistro";
 import PantallaModulos from "./PantallaModulos/PantallaModulos";
@@ -52,7 +52,7 @@ function App() {
             }
           />
           <Route
-            path="/dashboard"
+            path="/GestionAmbientes"
             element={
               <Layout>
                 <div
@@ -62,7 +62,7 @@ function App() {
                     overflow: "auto",
                   }}
                 >
-                  <AdminHomeScreen />
+                  <PantallaAmbientes />
                 </div>
               </Layout>
             }

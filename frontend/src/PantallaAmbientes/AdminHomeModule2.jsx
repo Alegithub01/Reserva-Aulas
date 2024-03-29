@@ -192,7 +192,7 @@ const AdminHomeModule2 = () => {
           pattern='^[A-Za-z0-9, ]{0,50}$'
         />
 
-        <RowPercentage firstChildPercentage={45} gap="20px">
+        <RowPercentage firstChildPercentage={70 } gap="20px">
           <div>
             <Dropdown
               etiqueta="Día"
@@ -211,6 +211,7 @@ const AdminHomeModule2 = () => {
               mensajeValidacion={mensajeError.dia}
             />
           </div>
+          <RowPercentage firstChildPercentage={45} gap="20px">
           <div>
             <SelectorHora
               etiqueta="Hora inicio:"
@@ -232,6 +233,7 @@ const AdminHomeModule2 = () => {
               mensajeValidacion={horaFin === ""? mensajeError.horaFin: ""}
             />
           </div>
+          </RowPercentage>
         </RowPercentage>
         <Button fullWidth={true} onClick={validarInfoOblig}>Guardar Cambios</Button>
       </div>

@@ -1,120 +1,152 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
 import { useTheme } from '../Contexts/ThemeContext';
 
-const SelectorHora = ({ etiqueta, esRequerido, ventanaCompleta, mensajeValidacion = "", enCambio, minimaHora, vacio=false, onBlur=null }) => {
+const SelectorHora = ({
+  etiqueta,
+  esRequerido,
+  ventanaCompleta,
+  mensajeValidacion = "",
+  enCambio,
+  minimaHora,
+  vacio = false,
+  onBlur = null
+}) => {
   const { theme } = useTheme();
   const [valorTipeado, ponerValorTipeado] = useState('');
-  const [hayMensajeValidacion, ponerMensajeValidacion] = useState({
-    noLlenado: false,
-    rangoIncumplido: false,
-    rangoIncumplido2: false,
-  });
-
-  const manejarPresionado = () => {
-    if(onBlur){
-      onBlur(valorTipeado);
-    }
-    // ponerMensajeValidacion({ ...hayMensajeValidacion, noLlenado: esRequerido && valorTipeado === "" });
-  }
-
-  const manejarCambio = (event) => {
-    if (event.target.value < '06:45' || event.target.value > '21:45') {
-      ponerMensajeValidacion({ ...hayMensajeValidacion, rangoIncumplido: true });
-      return;
-    }
-    if (minimaHora && event.target.value < minimaHora) {
-      ponerMensajeValidacion({ ...hayMensajeValidacion, rangoIncumplido2: true });
-      return;
-    }
-    ponerValorTipeado(event.target.value);
-    ponerMensajeValidacion({ ...hayMensajeValidacion, rangoIncumplido: false, rangoIncumplido2: false });
-  }
-
 
   useEffect(() => {
     enCambio && enCambio(valorTipeado);
   }, [valorTipeado, enCambio]);
 
-  const estiloContenedor = {
-    width: ventanaCompleta ? 'calc(100% - 0px)' : 'auto',
-  }
-  const entradaEtiquetaEstilo = {
-    position: 'absolute',
-    padding: 0,
-    margin: 0,
+  const manejarCambio = (event) => {
+    const nuevaHora = event.target.value;
+    if ((minimaHora && nuevaHora < minimaHora) || nuevaHora < '06:45' || nuevaHora > '21:45') {
+      // Se puede añadir una lógica para manejar un mensaje de error aquí
+      // o usar una función externa para la validación
+    } else {
+      ponerValorTipeado(nuevaHora);
+    }
   };
 
-  const entradaEstilo = {
-    marginTop: 0,
-    height: 30,
-    border: `2px solid ? theme.highlight : theme.secondary}`, 
-    marginLeft: 10,
-    // display: 'flex',
-    padding: 0,
-    width: '150px',
-    flexDirection: 'column',
-    // verticalAlign: 'top',
+  const manejarPresionado = () => {
+    onBlur && onBlur(valorTipeado);
   };
-
-  const mensajeErrorEstilo = {
-    color: 'red',
-    fontSize: '12px',
-    transition: 'opacity 0.3s ease',
-    opacity: 1,
-    height: 'auto',
-    overflow: 'hidden'
-  }
 
   const inputStyle = {
-    padding: '10px',
+    padding: '10px 20px',
     fontSize: '16px',
     borderRadius: '15px',
-    transition: 'all 0.3s ease 0s',
+    transition: 'border-color 0.3s ease',
     width: '100%',
     outline: 'none',
     boxSizing: 'border-box',
+    border: `2px solid ${theme.secondary}`,
+    color: theme.primaryText,
+    '&:hover': {
+      borderColor: theme.highlight,
+    },
+    '&.Mui-focused': {
+      borderColor: theme.highlight,
+    },
   };
 
+  const mensajeValidacionEstilo = {
+    color: 'red',
+    fontSize: '12px',
+    transition: 'opacity 0.3s ease',
+    opacity: esRequerido && !valorTipeado ? 1 : 0,
+    height: esRequerido && !valorTipeado ? 'auto' : 0,
+    overflow: 'hidden',
+  };
+  const mostrarMensajeDeError = esRequerido && !valorTipeado;
   return (
-    <div style={estiloContenedor}>
-      <form noValidate sx={{ margin: 10 }}>
-        <TextField
-          id="time"
-          label={etiqueta}
-          type="time"
-          defaultValue="06:45"
-          style={inputStyle}
-          InputLabelProps={{
-            shrink: true,
-            style: entradaEtiquetaEstilo,
-          }}
-          inputProps={{
-            step: 300,
-            style: entradaEstilo,
-            onChange: manejarCambio,
-            onBlur: manejarPresionado,
-          }}
-          value={valorTipeado}
-        />
-      </form>
-      {
-        hayMensajeValidacion.rangoIncumplido ? (
-        <div style={mensajeErrorEstilo}>'La hora ingresada está fuera de servicio.'</div>
-      ):
-       hayMensajeValidacion.rangoIncumplido2 ? (
-        <div style={mensajeErrorEstilo}>'La hora de fin debe ser mayor a la hora de inicio.'</div>
-      ):
-      (<div style={mensajeErrorEstilo}>{mensajeValidacion}</div>)
-    }
+    <FormControl fullWidth size="small">
+      <TextField
+        id="time"
+        label={etiqueta}
+        type="time"
+        defaultValue="06:45"
+        value={valorTipeado}
+        onChange={manejarCambio}
+        onBlur={manejarPresionado}
+        InputLabelProps={{
+          shrink: true,
+          style: {
+            color: theme.secondary,
+            '&.Mui-focused': {
+              color: theme.highlight,
+            },
+            '&:hover': {
+      borderColor: theme.highlight,
+    },
+          },
+        }}
+        inputProps={{
+          step: 300, // 5 minutos
+        }}
+        sx={{
+          '.MuiOutlinedInput-notchedOutline': {
+            borderRadius: '15px',
+            borderWidth: '2px',
+            borderColor: theme.secondary,
+            transition: 'border-color 0.3s ease',
+            '&:hover': {
+              borderColor: theme.highlight,
+            },
+            
+          },
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: theme.highlight,
+          },
+          '&:hover .MuiOutlinedInput-notchedOutline': {
+            borderColor: theme.highlight,
+          },
+          '&:active .MuiOutlinedInput-notchedOutline': {
+            borderColor: theme.highlight,
+          },
 
-    </div>
-  )
+          '.MuiInputBase-input': {
+            color: valorTipeado ? 'black' : 'black',
+            padding: '10px 20px',
+            borderColor: theme.highlight,
+          },
+          '.MuiPaper-root': {
+            backgroundColor: theme.highlight,
+          },
+          '& .MuiMenuItem-root:hover': {
+            backgroundColor: theme.highlight,
+          }
+        }}
+        variant="outlined"
+      />
+      {mostrarMensajeDeError && (
+        <div style={{
+          color: 'red',
+          fontSize: '12px',
+          transition: 'opacity 0.3s ease',
+          opacity: 1,
+          height: 'auto',
+          overflow: 'hidden'
+        }}>
+          {mensajeValidacion}
+        </div>
+      )}
+    </FormControl>
+  );
 };
 
 SelectorHora.propTypes = {
-  label: PropTypes.string,
-  required: PropTypes.bool,
+  etiqueta: PropTypes.string.isRequired,
+  esRequerido: PropTypes.bool,
+  ventanaCompleta: PropTypes.bool,
+  mensajeValidacion: PropTypes.string,
+  enCambio: PropTypes.func,
+  minimaHora: PropTypes.string,
+  vacio: PropTypes.bool,
+  onBlur: PropTypes.func,
 };
+
 export default SelectorHora;
