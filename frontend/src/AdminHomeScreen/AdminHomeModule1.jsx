@@ -13,9 +13,9 @@ const AdminHomeModule1 = () => {
           padding="10px"
           borderColor="blue"
           borderRadius="15px"
+          block
         >
-        <TableGrid />
-        <Button>contenido</Button>
+        <TableGrid/>
         </Card>
   );
 };

@@ -15,6 +15,7 @@ import {
 } from '@mui/x-data-grid';
 import { randomId } from '@mui/x-data-grid-generator';
 import styled from 'styled-components';
+import { useTheme } from '../Contexts/ThemeContext';
 
 const informacion = [
   { id: 1, nombre: "691A", capacidad: 100, tipo: "Aula", planta: "1", servicios: 'Data display', dia: "Lunes", horaInicio: "08:00", horaFin: "10:00" },
@@ -32,6 +33,8 @@ const StyledDataGrid = styled(DataGrid)`
   .MuiDataGrid-root {
     border-width: 3px;
     border-color: pink;
+    width: 100%;
+    height: 100%; 
   }
 `;
 function EditarFilas(props) {
@@ -184,7 +187,7 @@ export default function GridTablaCrud() {
       field: 'horaFin',
       headerName: 'Hora Fin',
       type: 'time',
-      width: 80,
+      width:  80,
       editable: true,
       valueFormatter: (params) => {
         const patronTiempo = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
@@ -199,7 +202,7 @@ export default function GridTablaCrud() {
       field: 'acciones',
       type: 'actions',
       headerName: 'Acciones',
-      width: 80,
+      width: 100,
       cellClassName: 'actions',
       getActions: ({ id }) => {
         const estaModoEdicion = filasModificadas[id]?.mode === GridRowModes.Edit;
@@ -242,10 +245,12 @@ export default function GridTablaCrud() {
       },
     },
   ];
-
+  const {theme} = useTheme();
   return (
     <Box
       sx={{
+        height: '100%',
+        
         '& .actions': {
           color: 'text.secondary',
         },
@@ -270,7 +275,9 @@ export default function GridTablaCrud() {
         }}
         sx={{
           '& .MuiDataGrid-root, .MuiDataGrid-withBorderColor': {
-            bgcolor: '#f5f5f5',
+            bgcolor: theme.headerColor,
+            color: theme.primaryText,
+            fontSize: '0.975rem',
           },
         }}
       />

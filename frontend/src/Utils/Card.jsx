@@ -10,11 +10,12 @@ const Card = ({
   alignCenter = false,
   margin = '5px',
   padding = '20px',
-  borderRadius = '10px'
+  borderRadius = '10px',
+  block = false,
 }) => {
   const styles = {
     card: {
-      display: 'flex',
+      display: block ? 'blocked':'flex',
       flexDirection: 'column',
       backgroundColor: '#fff',
       justifyContent: alignCenter ? 'center' : 'flex-start',
@@ -46,7 +47,8 @@ Card.propTypes = {
   margin: PropTypes.string,
   padding: PropTypes.string,
   borderColor: PropTypes.string,
-  borderRadius: PropTypes.string
+  borderRadius: PropTypes.string,
+  block: PropTypes.bool,
 };
 
 export default Card;
