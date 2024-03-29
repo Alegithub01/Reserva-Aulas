@@ -61,10 +61,6 @@ const AdminHomeModule2 = () => {
     }
   };
 
-  const manejarCambioTipo = (event) => {
-    cambiarTipo(event.target.value);
-    cambiarMensajeError({ ...mensajeError, tipo: ""});
-  };
   const validarSeleccionTipo = () => {
     if(tipo.trim() === ''){
       cambiarMensajeError(previo => ({ ...previo, tipo: "Seleccione el tipo de ambiente"}));
@@ -83,30 +79,18 @@ const AdminHomeModule2 = () => {
     }
   };
 
-  const manejarCambioDia = (event) => {
-    cambiarDia(event.target.value);
-    cambiarMensajeError({ ...mensajeError, dia: ""});
-  }
   const validarSeleccionDia = () => {
     if(dia.trim() === ''){
       cambiarMensajeError(previo => ({ ...previo, dia: "Seleccione el día"}));
     }
   };
 
-  const manejarCambioHoraInicio = () => {
-    cambiarHoraInicio(true);
-    cambiarMensajeError(previo => ({ ...previo, horaInicio: ""}));
-  };
   const validarVacioHoraInicio = () => {
     if(horaInicio === ""){
       cambiarMensajeError(previo => ({ ...previo, horaInicio: "Seleccione la hora de inicio"}));
     }
   };
 
-  const manejarCambioHoraFin = () => {
-    cambiarHoraFin(true);
-    cambiarMensajeError(previo => ({ ...previo, horaFin: ""}));
-  }
   const validarVacioHoraFin = () => {
     if(horaFin === ""){
       cambiarMensajeError(previo => ({ ...previo, horaFin: "Seleccione la hora de fin"}));
@@ -152,7 +136,7 @@ const AdminHomeModule2 = () => {
               onBlur={validarVacioNombre}
               isRequired={true}
               validationMessage={mensajeError.nombre}
-              pattern="^[0-9(A-Z)+]*$"
+              pattern="^[0-9(A-Z)+]{0,8}$"
             />
           </div>
           <div>
@@ -177,7 +161,7 @@ const AdminHomeModule2 = () => {
                 { value: "20", label: "Auditorio" },
                 { value: "30", label: "Laboratorio" },
               ]}
-              onChange={(event) => manejarCambioTipo(event)}
+              onChange={cambiarTipo}
               onBlur={validarSeleccionTipo}
               esRequerido={true}
               mensajeValidacion={mensajeError.tipo}
@@ -192,7 +176,7 @@ const AdminHomeModule2 = () => {
                 { value: "30", label: "Planta 2" },
                 { value: "40", label: "Planta 3" },
               ]}
-              onChange={(event) => manejarCambioPlanta(event)}
+              onChange={(event) => manejarCambioPlanta(event.target.value)}
               onBlur={validarSeleccionPlanta}
               esRequerido={true}
               mensajeValidacion={mensajeError.planta}
@@ -200,19 +184,15 @@ const AdminHomeModule2 = () => {
           </div>
         </RowPercentage>
         <TextInput
-          label="Ubicacion"
-          onChange={(event) => manejarCambioEntrada(event, ".*", null, false)}
-          isRequired={false}
-          // onBlur={() => {}}
+          label="Ubicación"
+          pattern='^[A-Za-z0-9, ]{0,50}$'
         />
         <TextInput
           label="Servicios"
-          onChange={(event) => manejarCambioEntrada(event, ".*", null, false)}
-          isRequired={false}
-          // onBlur={() => {}}
+          pattern='^[A-Za-z0-9, ]{0,50}$'
         />
 
-        <RowPercentage firstChildPercentage={30} gap="20px">
+        <RowPercentage firstChildPercentage={45} gap="20px">
           <div>
             <Dropdown
               etiqueta="Día"
@@ -225,7 +205,7 @@ const AdminHomeModule2 = () => {
                 { value: "60", label: "Sábado" },
                 { value: "70", label: "Domingo" },
               ]}
-              onChange={(event) => manejarCambioDia(event)}
+              onChange={cambiarDia}
               onBlur={validarSeleccionDia}
               esRequerido={true}
               mensajeValidacion={mensajeError.dia}

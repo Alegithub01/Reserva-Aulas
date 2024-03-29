@@ -53,7 +53,7 @@ const TextInput = ({
 
   useEffect(() => {
     cambio && cambio(value);
-  }, [value]);
+  }, [value, cambio]);
 
   const containerStyle = {
     width: fullWidth ? 'calc(100% - 0px)' : 'auto',

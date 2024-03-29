@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField';
 import { useTheme } from '../Contexts/ThemeContext';
 
 const SelectorHora = ({ etiqueta, esRequerido, ventanaCompleta, mensajeValidacion = "", enCambio, minimaHora, vacio=false, onBlur=null }) => {
+  const { theme } = useTheme();
   const [valorTipeado, ponerValorTipeado] = useState('');
   const [hayMensajeValidacion, ponerMensajeValidacion] = useState({
     noLlenado: false,
@@ -47,14 +48,14 @@ const SelectorHora = ({ etiqueta, esRequerido, ventanaCompleta, mensajeValidacio
 
   const entradaEstilo = {
     marginTop: 0,
-    heigh: 'auto',
-    border: 0,
+    height: 30,
+    border: `2px solid ? theme.highlight : theme.secondary}`, 
     marginLeft: 10,
-    display: 'flex',
+    // display: 'flex',
     padding: 0,
     width: '150px',
     flexDirection: 'column',
-    verticalAlign: 'top',
+    // verticalAlign: 'top',
   };
 
   const mensajeErrorEstilo = {
@@ -65,6 +66,17 @@ const SelectorHora = ({ etiqueta, esRequerido, ventanaCompleta, mensajeValidacio
     height: 'auto',
     overflow: 'hidden'
   }
+
+  const inputStyle = {
+    padding: '10px',
+    fontSize: '16px',
+    borderRadius: '15px',
+    transition: 'all 0.3s ease 0s',
+    width: '100%',
+    outline: 'none',
+    boxSizing: 'border-box',
+  };
+
   return (
     <div style={estiloContenedor}>
       <form noValidate sx={{ margin: 10 }}>
@@ -73,6 +85,7 @@ const SelectorHora = ({ etiqueta, esRequerido, ventanaCompleta, mensajeValidacio
           label={etiqueta}
           type="time"
           defaultValue="06:45"
+          style={inputStyle}
           InputLabelProps={{
             shrink: true,
             style: entradaEtiquetaEstilo,

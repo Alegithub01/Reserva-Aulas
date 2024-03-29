@@ -1,5 +1,6 @@
 import Card from "../Utils/Card";
 import Button from '../Utils/Button'
+import TableGrid from "../Components/TableGrid";
 
 const AdminHomeModule1 = () => {
   return (
@@ -12,8 +13,9 @@ const AdminHomeModule1 = () => {
           padding="10px"
           borderColor="blue"
           borderRadius="15px"
+          block
         >
-        <Button>contenido</Button>
+        <TableGrid/>
         </Card>
   );
 };
