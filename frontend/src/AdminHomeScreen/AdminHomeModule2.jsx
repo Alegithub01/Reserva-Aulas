@@ -61,10 +61,6 @@ const AdminHomeModule2 = () => {
     }
   };
 
-  const manejarCambioTipo = (event) => {
-    cambiarTipo(event.target.value);
-    cambiarMensajeError({ ...mensajeError, tipo: ""});
-  };
   const validarSeleccionTipo = () => {
     if(tipo.trim() === ''){
       cambiarMensajeError(previo => ({ ...previo, tipo: "Seleccione el tipo de ambiente"}));
@@ -140,7 +136,7 @@ const AdminHomeModule2 = () => {
               onBlur={validarVacioNombre}
               isRequired={true}
               validationMessage={mensajeError.nombre}
-              pattern="^[0-9(A-Z)+]*$"
+              pattern="^[0-9(A-Z)+]{0,8}$"
             />
           </div>
           <div>
@@ -188,10 +184,12 @@ const AdminHomeModule2 = () => {
           </div>
         </RowPercentage>
         <TextInput
-          label="Ubicacion"
+          label="Ubicación"
+          pattern='^[A-Za-z0-9, ]{0,50}$'
         />
         <TextInput
           label="Servicios"
+          pattern='^[A-Za-z0-9, ]{0,50}$'
         />
 
         <RowPercentage firstChildPercentage={45} gap="20px">

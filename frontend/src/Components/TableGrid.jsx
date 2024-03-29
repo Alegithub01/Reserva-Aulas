@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -13,26 +13,37 @@ import {
   GridActionsCellItem,
   GridRowEditStopReasons,
 } from '@mui/x-data-grid';
-import { randomId} from '@mui/x-data-grid-generator';
+import { randomId } from '@mui/x-data-grid-generator';
+import styled from 'styled-components';
 
 const informacion = [
-  {id:1, nombre: "691A", capacidad: 100, tipo: "Aula", planta: "1", dia: "Lunes", horaInicio: "08:00", horaFin: "10:00"},
-  {id:2, nombre: "691B", capacidad: 110, tipo: "Aula", planta: "1", dia: "Martes", horaInicio: "08:00", horaFin: "10:00"},
-  {id:3, nombre: "691C", capacidad: 90, tipo: "Aula", planta: "1", dia: "Miercoles", horaInicio: "08:00", horaFin: "10:00"},
-  {id:4, nombre: "692A", capacidad: 120, tipo: "Aula", planta: "2", dia: "Jueves", horaInicio: "08:00", horaFin: "18:45"},
-  {id:5, nombre: "692B", capacidad: 125, tipo: "Aula", planta: "2", dia: "Jueves", horaInicio: "18:00", horaFin: "20:00"},
+  { id: 1, nombre: "691A", capacidad: 100, tipo: "Aula", planta: "1", servicios: 'Data display', dia: "Lunes", horaInicio: "08:00", horaFin: "10:00" },
+  { id: 2, nombre: "691B", capacidad: 110, tipo: "Aula", planta: "1", servicios: 'Data display', dia: "Martes", horaInicio: "08:00", horaFin: "10:00" },
+  { id: 3, nombre: "691C", capacidad: 90, tipo: "Aula", planta: "1", servicios: 'Data display', dia: "Miercoles", horaInicio: "08:00", horaFin: "10:00" },
+  { id: 4, nombre: "692A", capacidad: 120, tipo: "Aula", planta: "2", servicios: 'Data display', dia: "Jueves", horaInicio: "08:00", horaFin: "18:45" },
+  { id: 5, nombre: "692B", capacidad: 125, tipo: "Aula", planta: "2", servicios: 'Data display', dia: "Jueves", horaInicio: "18:00", horaFin: "20:00" },
 ];
 
+const StyledDataGrid = styled(DataGrid)`
+  .MuiDataGrid-cell {
+    font-size: 0.93rem;
+    color: black;
+  }
+  .MuiDataGrid-root {
+    border-width: 3px;
+    border-color: pink;
+  }
+`;
 function EditarFilas(props) {
-  const {setFilas, setFilasModificadas} = props;
+  const { setFilas, setFilasModificadas } = props;
 
-  const manejoClick=()=>{
+  const manejoClick = () => {
     const id = randomId();
-    setFilas((filasAnteriores)=>[...filasAnteriores, {id, nombre: "", capacidad: 0, tipo: "", planta: "", dia: "", horaInicio: "", horaFin: "", esNuevo: true}]);
-    setFilasModificadas((filasModificadasAnteriores)=>({
+    setFilas((filasAnteriores) => [...filasAnteriores, { id, nombre: "", capacidad: 0, tipo: "", planta: "", dia: "", horaInicio: "", horaFin: "", esNuevo: true }]);
+    setFilasModificadas((filasModificadasAnteriores) => ({
       ...filasModificadasAnteriores,
-      [id]: {mode: GridRowModes.edit, fieldToFocus: "nombre"},
-  }));    
+      [id]: { mode: GridRowModes.edit, fieldToFocus: "nombre" },
+    }));
   };
 
   return (
@@ -50,7 +61,7 @@ function EditarFilas(props) {
 
 export default function GridTablaCrud() {
   const [filas, setFilas] = useState(informacion);
-  const [filasModificadas, setFilasModificadas] =useState({});
+  const [filasModificadas, setFilasModificadas] = useState({});
 
   const manejoEdicionParar = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -58,47 +69,60 @@ export default function GridTablaCrud() {
     }
   };
 
-  const manejoEditar =(id)=> () =>{
-    setFilasModificadas((filasModificadasAnteriores)=>({
+  const manejoEditar = (id) => () => {
+    setFilasModificadas((filasModificadasAnteriores) => ({
       ...filasModificadasAnteriores,
-      [id]: {mode: GridRowModes.Edit},
+      [id]: { mode: GridRowModes.Edit },
     }));
   };
 
-  const manejoGuardarClick =(id) => () =>{
-    setFilasModificadas((filasModificadasAnteriores)=>({
+  const manejoGuardarClick = (id) => () => {
+    setFilasModificadas((filasModificadasAnteriores) => ({
       ...filasModificadasAnteriores,
-      [id]: {mode: GridRowModes.View},
+      [id]: { mode: GridRowModes.View },
     }));
   };
 
-  const manejoEliminar=(id) => () =>{
-    setFilas((filasAnteriores)=>filasAnteriores.filter((fila)=>fila.id !== id));
+  const manejoEliminar = (id) => () => {
+    setFilas((filasAnteriores) => filasAnteriores.filter((fila) => fila.id !== id));
   };
 
-  const manejoCancelar=(id) => () =>{
+  const manejoCancelar = (id) => () => {
     setFilasModificadas({
       ...filasModificadas,
-      [id]: {mode: GridRowModes.View, ignoreModifications: true},
+      [id]: { mode: GridRowModes.View, ignoreModifications: true },
     });
-    const filaEditada = filas.find((fila)=>fila.id === id);
-    if(filaEditada.esNuevo){
-      setFilas(filas.filter((fila)=>fila.id !== id));
+    const filaEditada = filas.find((fila) => fila.id === id);
+    if (filaEditada.esNuevo) {
+      setFilas(filas.filter((fila) => fila.id !== id));
     }
   };
 
-  const procesarFilasModificadas =(nuevaFila) =>{
-    const filaModificada = {...nuevaFila, isNew: false};
-    setFilas(filas.map((fila)=>(fila.id === nuevaFila.id? filaModificada: fila)));
+  const procesarFilasModificadas = (nuevaFila) => {
+    const filaModificada = { ...nuevaFila, isNew: false };
+    setFilas(filas.map((fila) => (fila.id === nuevaFila.id ? filaModificada : fila)));
     return filaModificada;
   };
 
-  const manejoFilasEnCambio =(nuevasFilasModelo) =>{
+  const manejoFilasEnCambio = (nuevasFilasModelo) => {
     setFilasModificadas(nuevasFilasModelo);
   };
 
   const columnas = [
-    { field: 'nombre', headerName: 'Nombre', width: 80, editable: true },
+    {
+      field: 'nombre',
+      headerName: 'Nombre',
+      width: 80,
+      editable: true,
+      valueFormatter: (params) => {
+        const patronNombre = /^[0-9(A-Z)+]{0,8}$/;
+        if (patronNombre.test(params)) {
+          return params;
+        } else {
+          return '';
+        }
+      },
+    },
     {
       field: 'capacidad',
       headerName: 'Capacidad',
@@ -107,11 +131,18 @@ export default function GridTablaCrud() {
       align: 'left',
       headerAlign: 'left',
       editable: true,
+      valueFormatter: (params) => {
+        if(params < 10 || params > 300) {
+          return 'Error';
+        } else {
+          return params;
+        }
+      },
     },
     {
       field: 'tipo',
       headerName: 'Tipo Ambiente',
-      width: 60,
+      width: 90,
       editable: true,
       type: 'singleSelect',
       valueOptions: ['Aula', 'Laboratorio', 'Auditorio'],
@@ -129,7 +160,7 @@ export default function GridTablaCrud() {
     {
       field: 'dia',
       headerName: 'Día',
-      width: 70,
+      width: 80,
       editable: true,
       type: 'singleSelect',
       valueOptions: ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'],
@@ -140,6 +171,14 @@ export default function GridTablaCrud() {
       type: 'time',
       width: 80,
       editable: true,
+      valueFormatter: (params) => {
+        const patronTiempo = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+        if (patronTiempo.test(params)) {
+          return params;
+        } else {
+          return '--:--';
+        }
+      },
     },
     {
       field: 'horaFin',
@@ -147,6 +186,14 @@ export default function GridTablaCrud() {
       type: 'time',
       width: 80,
       editable: true,
+      valueFormatter: (params) => {
+        const patronTiempo = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+        if (patronTiempo.test(params)) {
+          return params;
+        } else {
+          return '--:--';
+        }
+      },
     },
     {
       field: 'acciones',
@@ -207,7 +254,7 @@ export default function GridTablaCrud() {
         },
       }}
     >
-      <DataGrid
+      <StyledDataGrid
         rows={filas}
         columns={columnas}
         editMode="row"
@@ -220,6 +267,11 @@ export default function GridTablaCrud() {
         }}
         slotProps={{
           toolbar: { setFilas, setFilasModificadas },
+        }}
+        sx={{
+          '& .MuiDataGrid-root, .MuiDataGrid-withBorderColor': {
+            bgcolor: '#f5f5f5',
+          },
         }}
       />
     </Box>
