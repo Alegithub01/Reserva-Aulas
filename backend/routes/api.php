@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
 Route::get('/ambientes', [AmbienteController::class, 'index']); 
 Route::get('/ambientes/{id}', [AmbienteController::class, 'show']); 
 Route::post('/ambientes', [AmbienteController::class, 'store']); 
