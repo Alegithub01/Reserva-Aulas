@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 
-use Iluminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 
 class AuthController extends Controller
@@ -18,7 +18,12 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'dummyGet']]);
+    }
+
+    public function dummyGet()
+    {
+        return response()->json(['message' => 'Dummy GET method']);
     }
 
     /**
@@ -26,12 +31,6 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-
-     public function dummyGet()
-     {
-        return response()->json(['message' => 'Dummy GET method']);
-     }
-
     public function login()
     {
         $credentials = request(['email', 'password']);
@@ -91,32 +90,31 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * Register a User.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string',
-            'email' => 'required|string|email|unique:users',
+            'name' => 'required',
+            'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|min:6',
         ]);
-
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+        if($validator->fails()){
+            return response()->json($validator->errors()->toJson(),400);
         }
 
         $user = User::create(array_merge(
-            $validator->validated(),
-            ['password' => bycrypt($request->password)]
+            $validator->validate(),
+            ['password' => bcrypt($request->password)]
         ));
 
-        return response() -> json([
-            'message' => 'User successfully registered',
+        return response()->json([
+            'message' => '¡Usuario registrado exitosamente!',
             'user' => $user
         ], 201);
     }
-
 }
+
+
+// public function dummyGet()
+// {
+// return response()->json(['message' => 'Dummy GET method']);
+// }
