@@ -13,10 +13,7 @@ const AdminHomeScreen = () => {
   }, [setTitulo]);
   return (
     <div>
-      <RowResponsive>
-        <div>
-          <AdminHomeModule1 />
-        </div>
+      <RowResponsive firstChildFlexPercentage="40%" lastChildFlexPercentage="60%">
         <div>
           <ColumnResponsive firstChildPercentage={70}>
             <div>
@@ -26,6 +23,9 @@ const AdminHomeScreen = () => {
               <AdminHomeModule3 />
             </div>
           </ColumnResponsive>
+        </div>
+        <div>
+          <AdminHomeModule1 />
         </div>
       </RowResponsive>
     </div>
