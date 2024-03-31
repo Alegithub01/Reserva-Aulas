@@ -6,6 +6,7 @@ import RowPercentage from "../Responsive/RowPercentage";
 import StyledText from "../StyledText";
 import Dropdown from "../Utils/Dropdown";
 import SelectorHora from "../Utils/SelectorHora";
+import SelectorMultiple from '../Utils/SelectorMultiple';
 
 const AdminHomeModule2 = () => {
   const [nombre, cambiarNombre] = useState("");
@@ -13,6 +14,7 @@ const AdminHomeModule2 = () => {
   const [tipo, cambiarTipo] = useState("");
   const [planta, cambiarPlanta] = useState("");
   const [dia, cambiarDia] = useState("");
+  const [horas, cambiarHoras] = useState([]);
   const [horaInicio, cambiarHoraInicio] = useState(false);
   const [horaFin, cambiarHoraFin] = useState(false);
   const [mensajeError, cambiarMensajeError] = useState({
@@ -67,6 +69,7 @@ const AdminHomeModule2 = () => {
     }
   };
 
+  const validarSeleccionHoras = () => {}
   const manejarCambioPlanta = (event) => {
     cambiarPlanta(event.target.value);
     cambiarMensajeError({ ...mensajeError, planta: ""});
@@ -212,7 +215,28 @@ const AdminHomeModule2 = () => {
             />
           </div>
           <RowPercentage firstChildPercentage={45} gap="20px">
-          <div>
+            <div>
+              <SelectorMultiple
+                etiqueta="Periodos de hora"
+                opciones={[
+                  { value: "10", label: "06:45-08:15" },
+                  { value: "20", label: "08:30-09:45" },
+                  { value: "30", label: "10:00-11:15" },
+                  { value: "40", label: "11:30-12:45" },
+                  { value: "50", label: "13:00-14:15" },
+                  { value: "60", label: "14:30-15:45" },
+                  { value: "70", label: "16:00-17:15" },
+                  { value: "80", label: "17:30-18:45" },
+                  { value: "90", label: "19:00-20:15" },
+                  { value: "100", label: "20:30-21:45" },
+                ]}
+                cambio={cambiarHoras}
+                llenado={validarSeleccionHoras}
+                esRequerido={true}
+                mensajeValidacion={mensajeError.horas}
+              />
+            </div> 
+          {/* <div>
             <SelectorHora
               etiqueta="Hora inicio:"
               esRequerido={true}
@@ -232,7 +256,7 @@ const AdminHomeModule2 = () => {
               onBlur={validarVacioHoraFin}
               mensajeValidacion={horaFin === ""? mensajeError.horaFin: ""}
             />
-          </div>
+          </div>  */}
           </RowPercentage>
         </RowPercentage>
         <Button fullWidth={true} onClick={validarInfoOblig}>Guardar Cambios</Button>
