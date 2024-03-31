@@ -111,10 +111,8 @@ class AuthController extends Controller
             'user' => $user
         ], 201);
     }
+
 }
 
 
-// public function dummyGet()
-// {
-// return response()->json(['message' => 'Dummy GET method']);
-// }
+
