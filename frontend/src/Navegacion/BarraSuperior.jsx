@@ -14,14 +14,13 @@ import {
 } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import MenuIcon from "@mui/icons-material/Menu";
 import UsuarioStore from '../Contexts/UsuarioStore';
 import { useTheme } from "../Contexts/ThemeContext";
 import PropTypes from 'prop-types';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 
-const BarraSuperior = ({ onToggleSidebar }) => {
+const BarraSuperior = () => {
   const { theme } = useTheme();
   const { nombre, correo } = UsuarioStore();
   const [anchorEl, setAnchorEl] = useState(null);
