@@ -33,8 +33,7 @@ const AdminHomeModule2 = () => {
     validarSeleccionTipo();
     validarSeleccionPlanta();
     validarSeleccionDia();
-    validarVacioHoraInicio();
-    validarVacioHoraFin();
+    validarSeleccionHoras();
   }
 
   const manejarCambioNombre = (event, pattern) => {
@@ -69,7 +68,6 @@ const AdminHomeModule2 = () => {
     }
   };
 
-  const validarSeleccionHoras = () => {}
   const manejarCambioPlanta = (event) => {
     cambiarPlanta(event.target.value);
     cambiarMensajeError({ ...mensajeError, planta: ""});
@@ -88,17 +86,14 @@ const AdminHomeModule2 = () => {
     }
   };
 
-  const validarVacioHoraInicio = () => {
-    if(horaInicio === ""){
-      cambiarMensajeError(previo => ({ ...previo, horaInicio: "Seleccione la hora de inicio"}));
+  const validarSeleccionHoras = () => {
+    if(horas.length === 0){
+      cambiarMensajeError(previo => ({ ...previo, horas: "Seleccione los periodos de hora"}));
+    }else{
+      cambiarMensajeError(previo => ({ ...previo, horas: ""}))    
     }
   };
 
-  const validarVacioHoraFin = () => {
-    if(horaFin === ""){
-      cambiarMensajeError(previo => ({ ...previo, horaFin: "Seleccione la hora de fin"}));
-    }
-  };
   return (
     <Card
       minWidth="300px"
@@ -195,7 +190,7 @@ const AdminHomeModule2 = () => {
           pattern='^[A-Za-z0-9, ]{0,50}$'
         />
 
-        <RowPercentage firstChildPercentage={70 } gap="20px">
+        <RowPercentage firstChildPercentage={60} gap="10px">
           <div>
             <Dropdown
               etiqueta="Día"
@@ -214,8 +209,7 @@ const AdminHomeModule2 = () => {
               mensajeValidacion={mensajeError.dia}
             />
           </div>
-          <RowPercentage firstChildPercentage={45} gap="20px">
-            <div>
+          <div>
               <SelectorMultiple
                 etiqueta="Periodos de hora"
                 opciones={[
@@ -235,29 +229,7 @@ const AdminHomeModule2 = () => {
                 esRequerido={true}
                 mensajeValidacion={mensajeError.horas}
               />
-            </div> 
-          {/* <div>
-            <SelectorHora
-              etiqueta="Hora inicio:"
-              esRequerido={true}
-              fullWidth={true}
-              enCambio={cambiarHoraInicio}
-              onBlur={validarVacioHoraInicio}
-              mensajeValidacion={horaInicio===""? mensajeError.horaInicio: ""}
-            />
-          </div>
-          <div>
-            <SelectorHora
-              etiqueta="Hora fin:"
-              esRequerido={true}
-              fullWidth={true}
-              minimaHora={horaInicio}
-              enCambio={cambiarHoraFin}
-              onBlur={validarVacioHoraFin}
-              mensajeValidacion={horaFin === ""? mensajeError.horaFin: ""}
-            />
-          </div>  */}
-          </RowPercentage>
+          </div> 
         </RowPercentage>
         <Button fullWidth={true} onClick={validarInfoOblig}>Guardar Cambios</Button>
       </div>
