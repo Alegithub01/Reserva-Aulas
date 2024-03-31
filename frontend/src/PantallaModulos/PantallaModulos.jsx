@@ -46,7 +46,7 @@ const PantallaModulos = () => {
             <Card 
                 text="Gestión de Usuarios" 
                 Icon={IconoPersonas}
-                onClick={() => navegar('/gestion-usuarios')}
+                onClick={() => navegar('/Gestion-Usuarios')}
             />
             <Card 
                 text="Gestión de Ambientes" 
