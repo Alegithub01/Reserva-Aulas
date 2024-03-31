@@ -18,6 +18,8 @@ import MenuIcon from "@mui/icons-material/Menu";
 import UsuarioStore from '../Contexts/UsuarioStore';
 import { useTheme } from "../Contexts/ThemeContext";
 import PropTypes from 'prop-types';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 
 const BarraSuperior = ({ onToggleSidebar }) => {
   const { theme } = useTheme();
@@ -39,8 +41,8 @@ const BarraSuperior = ({ onToggleSidebar }) => {
   return (
     <AppBar elevation={2} sx={{ bgcolor: theme.highlight }}>
       <Toolbar variant="dense">
-        <IconButton color="inherit" onClick={onToggleSidebar}>
-          <MenuIcon />
+        <IconButton color="inherit" onClick={() => navigate('/ModulosAdmin')}>
+          <ArrowBackIcon />
         </IconButton>
         <Box
           sx={{
