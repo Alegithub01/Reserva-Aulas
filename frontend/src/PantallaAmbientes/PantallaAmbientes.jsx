@@ -1,12 +1,16 @@
+import { useEffect } from 'react';
 import RowResponsive from "../Responsive/RowResponsive";
 import ColumnResponsive from "../Responsive/ColumnResponsive";
 import AdminHomeModule1 from "./AdminHomeModule1";
 import AdminHomeModule2 from "./AdminHomeModule2";
 import AdminHomeModule3 from "./AdminHomeModule3";
-// import { useTheme } from "../Contexts/ThemeContext";
+import useTituloStore from "../Contexts/TituloStore";
 
 const AdminHomeScreen = () => {
-  // const { theme } = useTheme();
+  const { setTitulo } = useTituloStore(); 
+  useEffect(() => {
+    setTitulo('Gestion de Ambientes');
+  }, [setTitulo]);
   return (
     <div>
       <RowResponsive>

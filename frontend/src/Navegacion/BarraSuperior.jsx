@@ -16,6 +16,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import UsuarioStore from '../Contexts/UsuarioStore';
 import { useTheme } from "../Contexts/ThemeContext";
+import TituloStore from '../Contexts/TituloStore';
 import PropTypes from 'prop-types';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
@@ -23,6 +24,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 const BarraSuperior = () => {
   const { theme } = useTheme();
   const { nombre, correo } = UsuarioStore();
+  const { titulo } = TituloStore();
   const [anchorEl, setAnchorEl] = useState(null);
   const abierto = Boolean(anchorEl);
   const navigate = useNavigate();
@@ -53,7 +55,7 @@ const BarraSuperior = () => {
           }}
         >
           <Typography variant="h6" noWrap>
-            GESTIÓN DE AMBIENTES
+            { titulo }
           </Typography>
         </Box>
         <Box sx={{ display: "flex" }}>
