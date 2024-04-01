@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import Button from '../Utils/Button';
+import { useTheme } from '../Contexts/ThemeContext';
 
 const RegistroMasivoBoton = () => {
     const [documento, setDocumento] = useState(null);
+    const { theme } = useTheme();
 
     const manejoDocumentoCambio = (e) => {
         setDocumento(e.target.files[0]);
@@ -23,12 +25,21 @@ const RegistroMasivoBoton = () => {
         .catch(error => {
             console.log(error);
         });
+        if(documento){
+            const leerArchivo = new FileReader();
+            leerArchivo.onload = (e) => {
+                const texto = e.target.result;
+                console.log(texto);
+                localStorage.setItem('texto', texto);
+            };
+            leerArchivo.readAsText(documento);
+        }
     }
     return (
         <div style={{display: 'flex', flexDirection:'column', justifyContent: 'center', alignItems: 'center'}}>
             <input 
             accept=".csv"
-            style={{padding: '20px', margin: '10px'}}
+            style={{padding: '10px', margin: '20px', border: `1px solid ${theme.secondary}`, backgroundColor: theme.secondary, borderRadius: '15px', fontSize: '0.98rem'}}
             type="file" 
             onChange={manejoDocumentoCambio} 
             />
