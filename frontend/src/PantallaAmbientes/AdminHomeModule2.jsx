@@ -5,7 +5,8 @@ import TextInput from "../Utils/TextInput";
 import RowPercentage from "../Responsive/RowPercentage";
 import StyledText from "../StyledText";
 import Dropdown from "../Utils/Dropdown";
-import SelectorHora from "../Utils/SelectorHora";
+import SelectorMultiple from '../Utils/SelectorMultiple';
+import MensajeExito from '../Utils/MensajeExito';
 
 const AdminHomeModule2 = () => {
   const [nombre, cambiarNombre] = useState("");
@@ -13,16 +14,15 @@ const AdminHomeModule2 = () => {
   const [tipo, cambiarTipo] = useState("");
   const [planta, cambiarPlanta] = useState("");
   const [dia, cambiarDia] = useState("");
-  const [horaInicio, cambiarHoraInicio] = useState(false);
-  const [horaFin, cambiarHoraFin] = useState(false);
+  const [horas, cambiarHoras] = useState([]);
+  const [abrirDialogo, cambiarAbrirDialogo] = useState(false);
   const [mensajeError, cambiarMensajeError] = useState({
     nombre: "",
     capacidad: "",
     tipo: "",
     planta: "",
     dia: "",
-    horaInicio: "",
-    horaFin: "",
+    horas: "",
   });
 
   const validarInfoOblig = () => {
@@ -31,8 +31,14 @@ const AdminHomeModule2 = () => {
     validarSeleccionTipo();
     validarSeleccionPlanta();
     validarSeleccionDia();
-    validarVacioHoraInicio();
-    validarVacioHoraFin();
+    validarSeleccionHoras();
+    
+    console.log("nom", nombre, "cap", capacidad, "tipo", tipo, "planta",planta, "dia", dia,"horas", horas);
+    if(nombre.trim() !== "" && capacidad.trim() !== "" && tipo.trim() !== "" && planta.trim() !== "" && dia.trim() !== "" && horas.length !== 0){
+      cambiarAbrirDialogo(true);
+    }else{
+      cambiarAbrirDialogo(false);
+    }
   }
 
   const manejarCambioNombre = (event, pattern) => {
@@ -85,17 +91,14 @@ const AdminHomeModule2 = () => {
     }
   };
 
-  const validarVacioHoraInicio = () => {
-    if(horaInicio === ""){
-      cambiarMensajeError(previo => ({ ...previo, horaInicio: "Seleccione la hora de inicio"}));
+  const validarSeleccionHoras = () => {
+    if(horas.length === 0){
+      cambiarMensajeError(previo => ({ ...previo, horas: "Seleccione los periodos de hora"}));
+    }else{
+      cambiarMensajeError(previo => ({ ...previo, horas: ""}))    
     }
   };
 
-  const validarVacioHoraFin = () => {
-    if(horaFin === ""){
-      cambiarMensajeError(previo => ({ ...previo, horaFin: "Seleccione la hora de fin"}));
-    }
-  };
   return (
     <Card
       minWidth="300px"
@@ -161,7 +164,7 @@ const AdminHomeModule2 = () => {
                 { value: "20", label: "Auditorio" },
                 { value: "30", label: "Laboratorio" },
               ]}
-              onChange={cambiarTipo}
+              cambio={cambiarTipo}
               onBlur={validarSeleccionTipo}
               esRequerido={true}
               mensajeValidacion={mensajeError.tipo}
@@ -176,7 +179,7 @@ const AdminHomeModule2 = () => {
                 { value: "30", label: "Planta 2" },
                 { value: "40", label: "Planta 3" },
               ]}
-              onChange={(event) => manejarCambioPlanta(event.target.value)}
+              cambio={cambiarPlanta}
               onBlur={validarSeleccionPlanta}
               esRequerido={true}
               mensajeValidacion={mensajeError.planta}
@@ -192,7 +195,7 @@ const AdminHomeModule2 = () => {
           pattern='^[A-Za-z0-9, ]{0,50}$'
         />
 
-        <RowPercentage firstChildPercentage={70 } gap="20px">
+        <RowPercentage firstChildPercentage={60} gap="10px">
           <div>
             <Dropdown
               etiqueta="Día"
@@ -205,36 +208,39 @@ const AdminHomeModule2 = () => {
                 { value: "60", label: "Sábado" },
                 { value: "70", label: "Domingo" },
               ]}
-              onChange={cambiarDia}
+              cambio={cambiarDia}
               onBlur={validarSeleccionDia}
               esRequerido={true}
               mensajeValidacion={mensajeError.dia}
             />
           </div>
-          <RowPercentage firstChildPercentage={45} gap="20px">
           <div>
-            <SelectorHora
-              etiqueta="Hora inicio:"
-              esRequerido={true}
-              fullWidth={true}
-              enCambio={cambiarHoraInicio}
-              onBlur={validarVacioHoraInicio}
-              mensajeValidacion={horaInicio===""? mensajeError.horaInicio: ""}
-            />
-          </div>
-          <div>
-            <SelectorHora
-              etiqueta="Hora fin:"
-              esRequerido={true}
-              fullWidth={true}
-              minimaHora={horaInicio}
-              enCambio={cambiarHoraFin}
-              onBlur={validarVacioHoraFin}
-              mensajeValidacion={horaFin === ""? mensajeError.horaFin: ""}
-            />
-          </div>
-          </RowPercentage>
+              <SelectorMultiple
+                etiqueta="Periodos de hora"
+                opciones={[
+                  { value: "10", label: "06:45-08:15" },
+                  { value: "20", label: "08:30-09:45" },
+                  { value: "30", label: "10:00-11:15" },
+                  { value: "40", label: "11:30-12:45" },
+                  { value: "50", label: "13:00-14:15" },
+                  { value: "60", label: "14:30-15:45" },
+                  { value: "70", label: "16:00-17:15" },
+                  { value: "80", label: "17:30-18:45" },
+                  { value: "90", label: "19:00-20:15" },
+                  { value: "100", label: "20:30-21:45" },
+                ]}
+                cambio={cambiarHoras}
+                llenado={validarSeleccionHoras}
+                esRequerido={true}
+                mensajeValidacion={mensajeError.horas}
+              />
+          </div> 
         </RowPercentage>
+        <MensajeExito
+          abrirDialogo={abrirDialogo}
+          cerrarDialogo={() => cambiarAbrirDialogo(false)}
+          mensaje="Ambiente registrado con éxito"
+        />
         <Button fullWidth={true} onClick={validarInfoOblig}>Guardar Cambios</Button>
       </div>
     </Card>
