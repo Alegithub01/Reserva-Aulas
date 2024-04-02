@@ -6,7 +6,9 @@ import PantallaAmbientes from "./PantallaAmbientes/PantallaAmbientes";
 import PantallaInicioSesion from "./PantallaInicioSesion/PantallaInicioSesion";
 import PantallaRegistro from "./PantallaRegistro/PantallaRegistro";
 import PantallaModulos from "./PantallaModulos/PantallaModulos";
+import PantallaPrincipal from "./PantallaPrincipal/PantallaPrincipal";
 import PantallaUsuarios from "./PantallaUsuarios/PantallaUsuarios";
+
 
 function App() {
   return (
@@ -35,7 +37,7 @@ function App() {
                   height: "100vh",
                 }}
               >
-                <PantallaRegistro/>
+                <PantallaRegistro />
               </div>
             }
           />
@@ -48,7 +50,7 @@ function App() {
                   height: "100vh",
                 }}
               >
-                <PantallaModulos/>
+                <PantallaModulos />
               </div>
             }
           />
@@ -67,6 +69,21 @@ function App() {
                 </div>
               </Layout>
             }
+          />
+          <Route
+
+            path="/PantallaPrincipal"
+            element={
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100vh",
+                    overflow: "auto",
+                  }}
+                >
+                  <PantallaPrincipal />
+                </div>
+              }
           />
           <Route
             path="/Gestion-Usuarios"
