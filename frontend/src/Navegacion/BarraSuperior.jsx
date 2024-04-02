@@ -14,14 +14,17 @@ import {
 } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import MenuIcon from "@mui/icons-material/Menu";
 import UsuarioStore from '../Contexts/UsuarioStore';
 import { useTheme } from "../Contexts/ThemeContext";
+import TituloStore from '../Contexts/TituloStore';
 import PropTypes from 'prop-types';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-const BarraSuperior = ({ onToggleSidebar }) => {
+
+const BarraSuperior = () => {
   const { theme } = useTheme();
   const { nombre, correo } = UsuarioStore();
+  const { titulo } = TituloStore();
   const [anchorEl, setAnchorEl] = useState(null);
   const abierto = Boolean(anchorEl);
   const navigate = useNavigate();
@@ -39,8 +42,8 @@ const BarraSuperior = ({ onToggleSidebar }) => {
   return (
     <AppBar elevation={2} sx={{ bgcolor: theme.highlight }}>
       <Toolbar variant="dense">
-        <IconButton color="inherit" onClick={onToggleSidebar}>
-          <MenuIcon />
+        <IconButton color="inherit" onClick={() => navigate('/ModulosAdmin')}>
+          <ArrowBackIcon />
         </IconButton>
         <Box
           sx={{
@@ -52,7 +55,7 @@ const BarraSuperior = ({ onToggleSidebar }) => {
           }}
         >
           <Typography variant="h6" noWrap>
-            GESTIÓN DE AMBIENTES
+            { titulo }
           </Typography>
         </Box>
         <Box sx={{ display: "flex" }}>

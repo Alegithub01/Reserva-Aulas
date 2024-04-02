@@ -1,35 +1,36 @@
 import { useEffect } from 'react';
 import RowResponsive from "../Responsive/RowResponsive";
 import ColumnResponsive from "../Responsive/ColumnResponsive";
-import AdminHomeModule1 from "./AdminHomeModule1";
-import AdminHomeModule2 from "./AdminHomeModule2";
-import AdminHomeModule3 from "./AdminHomeModule3";
+import UsuarioModule1 from "./UsuarioModule1";
+import UsuarioModule2 from "./UsuarioModule2";
+import UsuarioModule3 from "./UsuarioModule3";
 import useTituloStore from "../Contexts/TituloStore";
 
-const AdminHomeScreen = () => {
+const PantallaUsuarios = () => {
   const { setTitulo } = useTituloStore(); 
   useEffect(() => {
-    setTitulo('Gestion de Ambientes');
+    setTitulo('Gestion de Usuarios');
   }, [setTitulo]);
+
   return (
     <div>
       <RowResponsive firstChildFlexPercentage="40%" lastChildFlexPercentage="60%">
         <div>
-          <ColumnResponsive firstChildPercentage={70}>
+          <ColumnResponsive firstChildPercentage={60}>
             <div>
-              <AdminHomeModule2 />
+              <UsuarioModule2 />
             </div>
             <div>
-              <AdminHomeModule3 />
+              <UsuarioModule3 />
             </div>
           </ColumnResponsive>
         </div>
         <div>
-          <AdminHomeModule1 />
+          <UsuarioModule1 />
         </div>
       </RowResponsive>
     </div>
   );
 };
 
-export default AdminHomeScreen;
+export default PantallaUsuarios;
