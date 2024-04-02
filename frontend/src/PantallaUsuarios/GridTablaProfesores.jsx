@@ -13,9 +13,9 @@ import IconoGuardar from '@mui/icons-material/Save';
 import IconoCancelar from '@mui/icons-material/Close';
 
 const profesores = [
-  { id: 1, nombre1: "Juan", apellidoP: "Pérez", apellidoM: "Peredo", rol: "Docente", correo: "juan.perez@gmail.com" },
-  { id: 2, nombre1: "Ana", apellidoP: "Gómez", apellidoM: "Gonzales", rol: "Administrativo", correo: "ana.gomez@gmail.com" },
-  { id: 3, nombre1: "Luis", apellidoP: "Martínez", apellidoM: "Mercedez", rol: "Docente", correo: "luis.martinez@gmail.com" },
+  { id: 1, nombres: "Juan Carlos", apellidos: "Pérez Peredo", rol: "Docente", correo: "juan.perez@gmail.com" },
+  { id: 2, nombres: "Ana Luisa", apellidos: "Gómez Gonzales", rol: "Administrativo", correo: "ana.gomez@gmail.com" },
+  { id: 3, nombres: "Luis Alfredo", apellidos: "Martínez Mercedez", rol: "Docente", correo: "luis.martinez@gmail.com" },
 ];
 
 const DataGridEstilizado = styled(DataGrid)({
@@ -60,9 +60,8 @@ function TablaProfesores() {
   };
 
   const columnas = [
-    { field: 'apellidoP', headerName: 'Apellido P', flex: 1, minWidth: 100, editable: true },
-    { field: 'apellidoM', headerName: 'Apellido M', flex: 1, minWidth: 100, editable: true },
-    { field: 'nombre1', headerName: 'Nombre', flex: 1, minWidth: 100, editable: true },
+    { field: 'nombres', headerName: 'Nombres', flex: 1, minWidth: 100, editable: true },
+    { field: 'apellidos', headerName: 'Apellidos', flex: 1, minWidth: 100, editable: true },
     {
       field: 'rol',
       headerName: 'Rol',
