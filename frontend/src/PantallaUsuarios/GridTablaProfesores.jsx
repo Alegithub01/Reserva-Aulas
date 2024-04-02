@@ -11,11 +11,22 @@ import IconoEditar from '@mui/icons-material/Edit';
 import IconoEliminar from '@mui/icons-material/DeleteOutlined';
 import IconoGuardar from '@mui/icons-material/Save';
 import IconoCancelar from '@mui/icons-material/Close';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import Button from '@mui/material/Button';
 
 const profesores = [
   { id: 1, nombres: "Juan Carlos", apellidos: "Pérez Peredo", rol: "Docente", correo: "juan.perez@gmail.com" },
   { id: 2, nombres: "Ana Luisa", apellidos: "Gómez Gonzales", rol: "Administrativo", correo: "ana.gomez@gmail.com" },
   { id: 3, nombres: "Luis Alfredo", apellidos: "Martínez Mercedez", rol: "Docente", correo: "luis.martinez@gmail.com" },
+];
+
+const roles = [
+  { nombre: 'Docente', descripcion: 'Persona que enseña xD' },
+  { nombre: 'Administrativo', descripcion: '...' },
+  { nombre: 'Administrativo2', descripcion: '...' },
 ];
 
 const DataGridEstilizado = styled(DataGrid)({
@@ -33,6 +44,8 @@ const DataGridEstilizado = styled(DataGrid)({
 function TablaProfesores() {
   const [filas, setFilas] = useState(profesores);
   const [modeloModoFila, setModeloModoFila] = useState({});
+  const [dialogoAbierto, setDialogoAbierto] = useState(false);
+  const [idAEliminar, setIdAEliminar] = useState(null);
 
   const manejarClickEditar = (id) => () => {
     setModeloModoFila({ ...modeloModoFila, [id]: { mode: GridRowModes.Edit } });
@@ -59,6 +72,17 @@ function TablaProfesores() {
     return nuevaFila;
   };
 
+  const abrirDialogoEliminar = (id) => () => {
+    setIdAEliminar(id);
+    setDialogoAbierto(true);
+  };
+
+  const manejarConfirmarEliminar = () => {
+    setFilas(filas.filter((fila) => fila.id !== idAEliminar));
+    setDialogoAbierto(false);
+    setIdAEliminar(null);
+  };
+
   const columnas = [
     { field: 'nombres', headerName: 'Nombres', flex: 1, minWidth: 100, editable: true },
     { field: 'apellidos', headerName: 'Apellidos', flex: 1, minWidth: 100, editable: true },
@@ -69,7 +93,7 @@ function TablaProfesores() {
       minWidth: 130,
       editable: true,
       type: 'singleSelect',
-      valueOptions: ['Docente', 'Administrativo'],
+      valueOptions: roles.map(rol => rol.nombre),
     },
     { field: 'correo', headerName: 'Correo', flex: 1, minWidth: 150, editable: true },
     {
@@ -106,7 +130,7 @@ function TablaProfesores() {
             key={`${id}-eliminar`}
             icon={<IconoEliminar />}
             label="Eliminar"
-            onClick={manejarClickEliminar(id)}
+            onClick={abrirDialogoEliminar(id)}
           />,
         ];
       },
@@ -114,6 +138,7 @@ function TablaProfesores() {
   ];
 
   return (
+    <>
     <Caja sx={{ height: '100%', width: '100%' }}>
       <DataGridEstilizado
         rows={filas}
@@ -137,6 +162,24 @@ function TablaProfesores() {
         }}
       />
     </Caja>
+    <Dialog
+        open={dialogoAbierto}
+        onClose={() => setDialogoAbierto(false)}
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            ¿Estás seguro de que quieres eliminar este registro?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDialogoAbierto(false)}>Cancelar</Button>
+          <Button onClick={manejarConfirmarEliminar} autoFocus>
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
+      </>
   );
 }
 
