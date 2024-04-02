@@ -4,9 +4,10 @@ import StyledText from "../StyledText";
 import { css, keyframes } from "@emotion/react";
 import Zoom from '@mui/material/Zoom';
 import Button from '../Utils/Button';
+import { useNavigate } from 'react-router-dom';
 
 const PantallaEfecto = () => {
-
+  const navegacion = useNavigate();
   const deslizamiento = keyframes`
     from {
       transform: translateY(-100px);
@@ -71,8 +72,8 @@ const PantallaEfecto = () => {
         <div style={style.card}>
           <StyledText boldWhiteText style={style.titulo}>Reservación de Ambientes FCYT</StyledText>
           <div style={style.contenedorBotones}>
-            <Button fullWidth={false} onClick={() => { }}>Registrarse</Button>
-            <Button fullWidth={false} onClick={() => { }}>Iniciar sesión</Button>
+            <Button fullWidth={false} onClick={() => { navegacion("/registro")}}>Registrarse</Button>
+            <Button fullWidth={false} onClick={() => { navegacion("/") }}>Iniciar sesión</Button>
           </div>
         </div>
       </Zoom>
