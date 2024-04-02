@@ -35,7 +35,7 @@ function App() {
                   height: "100vh",
                 }}
               >
-                <PantallaRegistro/>
+                <PantallaRegistro />
               </div>
             }
           />
@@ -48,7 +48,7 @@ function App() {
                   height: "100vh",
                 }}
               >
-                <PantallaModulos/>
+                <PantallaModulos />
               </div>
             }
           />
@@ -71,17 +71,17 @@ function App() {
           <Route
             path="/PantallaPrincipal"
             element={
-              <Layout>
+              
                 <div
                   style={{
                     width: "100vw",
-                    height: "calc(100vh - 50px)",
+                    height: "100vh",
                     overflow: "auto",
                   }}
                 >
                   <PantallaPrincipal />
                 </div>
-              </Layout>
+              
             }
           />
         </Routes>
