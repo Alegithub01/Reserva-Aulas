@@ -55,10 +55,6 @@ function TablaProfesores() {
     setModeloModoFila({ ...modeloModoFila, [id]: { mode: GridRowModes.View } });
   };
 
-  const manejarClickEliminar = (id) => () => {
-    setFilas(filas.filter((fila) => fila.id !== id));
-  };
-
   const manejarClickCancelar = (id) => () => {
     setModeloModoFila({
       ...modeloModoFila,

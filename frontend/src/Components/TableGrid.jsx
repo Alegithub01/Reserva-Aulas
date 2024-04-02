@@ -1,6 +1,10 @@
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
@@ -65,6 +69,8 @@ function EditarFilas(props) {
 export default function GridTablaCrud() {
   const [filas, setFilas] = useState(informacion);
   const [filasModificadas, setFilasModificadas] = useState({});
+  const [dialogoAbierto, setDialogoAbierto] = useState(false);
+  const [idAEliminar, setIdAEliminar] = useState(null);
 
   const manejoEdicionParar = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -86,10 +92,6 @@ export default function GridTablaCrud() {
     }));
   };
 
-  const manejoEliminar = (id) => () => {
-    setFilas((filasAnteriores) => filasAnteriores.filter((fila) => fila.id !== id));
-  };
-
   const manejoCancelar = (id) => () => {
     setFilasModificadas({
       ...filasModificadas,
@@ -109,6 +111,22 @@ export default function GridTablaCrud() {
 
   const manejoFilasEnCambio = (nuevasFilasModelo) => {
     setFilasModificadas(nuevasFilasModelo);
+  };
+
+  const abrirDialogoEliminar = (id) => () => {
+    setIdAEliminar(id);
+    setDialogoAbierto(true);
+  };
+
+  const manejoConfirmarEliminar = () => {
+    setFilas(filas.filter((fila) => fila.id !== idAEliminar));
+    setDialogoAbierto(false);
+    setIdAEliminar(null);
+  };
+
+  const manejoCancelarEliminacion = () => {
+    setDialogoAbierto(false);
+    setIdAEliminar(null);
   };
 
   const columnas = [
@@ -238,7 +256,7 @@ export default function GridTablaCrud() {
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={manejoEliminar(id)}
+            onClick={abrirDialogoEliminar(id)}
             color="inherit"
           />,
         ];
@@ -281,6 +299,24 @@ export default function GridTablaCrud() {
           },
         }}
       />
+      <Dialog
+        open={dialogoAbierto}
+        onClose={manejoCancelarEliminacion}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            ¿Estás seguro de que deseas eliminar este registro?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={manejoCancelarEliminacion}>Cancelar</Button>
+          <Button onClick={manejoConfirmarEliminar} autoFocus>
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
