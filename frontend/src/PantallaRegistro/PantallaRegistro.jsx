@@ -217,6 +217,7 @@ const RegistroDocente = () => {
       />
       <TextInput
         label="Contraseña"
+        type="password"
         isRequired={true}
         validationMessage={
           camposVacios.contrasena
@@ -229,6 +230,7 @@ const RegistroDocente = () => {
       />
       <TextInput
         label="Confirmar Contraseña"
+        type="password"
         isRequired={true}
         validationMessage={errores.confirmarContrasena}
         value={confirmarContrasena}

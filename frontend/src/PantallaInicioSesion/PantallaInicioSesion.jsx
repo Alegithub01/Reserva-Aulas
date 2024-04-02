@@ -113,6 +113,7 @@ const PantallaInicioSesionProfesor = () => {
       />
       <TextInput
         label="Contraseña"
+        type="password"
         isRequired={true}
         validationMessage={errores.contrasena}
         value={contrasena}

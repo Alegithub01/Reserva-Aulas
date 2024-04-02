@@ -9,6 +9,7 @@ const ValidationTextInput = ({
   fullWidth = false,
   isRequired = false,
   validationMessage = '',
+  type = 'text',
   ...otherProps
 }) => {
   const { theme } = useTheme();
@@ -23,6 +24,7 @@ const ValidationTextInput = ({
     }
   };
   const handleChange = (event) => {
+    console.log(event.target.value);
     if (onChange) {
       onChange(event);
     }
@@ -64,7 +66,7 @@ const ValidationTextInput = ({
     <div style={{ width: fullWidth ? '100%' : 'auto', boxSizing: 'border-box' }}>
       <div style={{ position: 'relative', width: '100%' }}>
         <input
-          type="text"
+          type={type}
           required={isRequired}
           autoComplete="off"
           onFocus={handleFocus}
@@ -90,6 +92,7 @@ ValidationTextInput.propTypes = {
   fullWidth: PropTypes.bool,
   isRequired: PropTypes.bool,
   validationMessage: PropTypes.string,
+  type: PropTypes.string,
 };
 
 export default ValidationTextInput;
