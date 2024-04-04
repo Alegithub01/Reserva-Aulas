@@ -4,7 +4,9 @@
 # descargar composer:
 # WINDOWS:
 https://getcomposer.org/download/
-
+composer install
+conf/jwt.php "modificar el algo si estas en php menor a 8"
+    'algorithm' => env('JWT_ALGORITHM', 'HS256'),
 # LINUX:
 cd ~
 
@@ -17,7 +19,7 @@ sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 composer --version
 
 ## DEPENDECNIAS PARA EL FRONTEND
-
+instalar axios es el controlador para la comunicacion
 # en terminal poner estos comandos:
 # Linux
 sudo apt update

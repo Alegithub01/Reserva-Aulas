@@ -4,6 +4,8 @@ import SplitScreenLayout from "../Components/SplitScreenLayout";
 import TextInput from "../Utils/CampoValidado";
 import StyledText from "../StyledText";
 import Button from "../Utils/Button";
+import axios from 'axios';
+
 
 const PantallaInicioSesionProfesor = () => {
   const navegar = useNavigate();
@@ -11,20 +13,20 @@ const PantallaInicioSesionProfesor = () => {
   const [contrasena, setContrasena] = useState('');
   const [errores, setErrores] = useState({ correoElectronico: '', contrasena: '' });
 
-  const usuariosValidos = [
+  /*const usuariosValidos = [
     { email: 'JhonDoe@gmail.com', password: '12345678' },
     { email: 'eurekasolutionsrl@gmail.com', password: 'TIS12024' }
   ];
-
+  */
   const validarCorreoElectronico = () => {
     let mensajeError = '';
     if (!correoElectronico) {
       mensajeError = 'Ingrese su correo electrónico.';
     } else if (!/\S+@\S+\.\S+/.test(correoElectronico)) {
       mensajeError = 'Ingrese un correo electrónico válido.';
-    } else if (!usuariosValidos.some(usuario => usuario.email === correoElectronico)) {
+    } /*else if (!usuariosValidos.some(usuario => usuario.email === correoElectronico)) {
       mensajeError = 'Correo electrónico no registrado.';
-    }
+    }*/
     setErrores((erroresActuales) => ({
       ...erroresActuales,
       correoElectronico: mensajeError,
@@ -41,29 +43,40 @@ const PantallaInicioSesionProfesor = () => {
     } else if (!/\S+@\S+\.\S+/.test(correoElectronico)) {
         mensajesError.correoElectronico = 'Ingrese un correo electrónico válido.';
         formularioEsValido = false;
-    } else if (!usuariosValidos.some(usuario => usuario.email === correoElectronico)) {
+    } /*else if (!usuariosValidos.some(usuario => usuario.email === correoElectronico)) {
         mensajesError.correoElectronico = 'Correo electrónico no registrado.';
         formularioEsValido = false;
-    }
+    }*/
 
     if (!contrasena) {
         mensajesError.contrasena = 'Ingrese su contraseña.';
         formularioEsValido = false;
-    } else {
+    } /*else {
         const usuario = usuariosValidos.find(usuario => usuario.email === correoElectronico);
         if (usuario && usuario.password !== contrasena) {
             mensajesError.contrasena = 'Contraseña incorrecta.';
             formularioEsValido = false;
         }
-    }
+    }*/
 
     setErrores(mensajesError);
     return formularioEsValido;
   };
 
+  //const para mandar la solicitud al backend
   const iniciarSesion = () => {
-    if (validarFormulario()) {  // Desactivado para no afectar el flujo de la aplicacion en desarrollo
-      navegar('/ModulosAdmin');
+    if (validarFormulario()) {
+      axios.post('http://localhost:8000/api/auth/login', {
+        email: correoElectronico,
+        password: contrasena
+      })
+      .then(response => {
+        console.log(response.data); 
+        navegar('/ModulosAdmin');
+      })
+      .catch(error => {
+        console.error('Error al iniciar sesión:', error);
+      });
     }
   };
 
