@@ -9,6 +9,8 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import RowPercentage from "../Responsive/RowPercentage";
+import axios from 'axios';
+
 
 const RegistroDocente = () => {
   const navegar = useNavigate();
@@ -144,10 +146,32 @@ const RegistroDocente = () => {
     if (formularioEsValido) {
       // Proceso de registro
       setDialogoAbierto(true);
+      enviarDatosAlBackend(); 
     } else {
       // Manejar errores
     }
   };
+
+  const enviarDatosAlBackend = () => {
+    // Crear un objeto con los datos a enviar
+    const datos = {
+      nombres: nombres,
+      apellidos: apellido,
+      email: correo,
+      password: contrasena
+    };
+  
+    // Realizar la solicitud HTTP POST al backend
+    axios.post('http://localhost:8000/api/auth/register', datos)
+      .then(response => {
+        console.log('Datos registrados exitosamente', response.data);
+        navegar('/');
+      })
+      .catch(error => {
+        console.error('Error al enviar datos al api:', error);
+      });
+  };
+  
 
   const contenidoIzquierdo = (
     <div
