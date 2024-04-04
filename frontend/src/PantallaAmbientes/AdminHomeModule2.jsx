@@ -233,7 +233,8 @@ const AdminHomeModule2 = () => {
         </RowPercentage>
         <MensajeExito
           abrirDialogo={abrirDialogo}
-          cerrarDialogo={() => cambiarAbrirDialogo(false)}
+          cerrarDialogo={() => {cambiarAbrirDialogo(false); window.location.reload();
+          }}
           mensaje="Ambiente registrado con éxito"
         />
         <Button fullWidth={true} onClick={validarInfoOblig}>Guardar Cambios</Button>
