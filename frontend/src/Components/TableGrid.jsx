@@ -22,11 +22,11 @@ import styled from 'styled-components';
 import { useTheme } from '../Contexts/ThemeContext';
 
 const informacion = [
-  { id: 1, nombre: "691A", capacidad: 100, tipo: "Aula", planta: "1", servicios: 'Data display', dia: "Lunes", horaInicio: "08:00", horaFin: "10:00" },
-  { id: 2, nombre: "691B", capacidad: 110, tipo: "Aula", planta: "1", servicios: 'Data display', dia: "Martes", horaInicio: "08:00", horaFin: "10:00" },
-  { id: 3, nombre: "691C", capacidad: 90, tipo: "Aula", planta: "1", servicios: 'Data display', dia: "Miercoles", horaInicio: "08:00", horaFin: "10:00" },
-  { id: 4, nombre: "692A", capacidad: 120, tipo: "Aula", planta: "2", servicios: 'Data display', dia: "Jueves", horaInicio: "08:00", horaFin: "18:45" },
-  { id: 5, nombre: "692B", capacidad: 125, tipo: "Aula", planta: "2", servicios: 'Data display', dia: "Jueves", horaInicio: "18:00", horaFin: "20:00" },
+  { id: 1, nombre: "691A", capacidad: 100, tipo: "Aula", planta: "1", servicios: 'Data display', dia: "Lunes", periodos: "08:00-10:00, 15:45-17:15" },
+  { id: 2, nombre: "691B", capacidad: 110, tipo: "Aula", planta: "1", servicios: 'Data display', dia: "Martes", periodos: "08:00-10:00" },
+  { id: 3, nombre: "691C", capacidad: 90, tipo: "Aula", planta: "1", servicios: 'Data display', dia: "Miercoles", periodos: "08:00-10:00" },
+  { id: 4, nombre: "692A", capacidad: 120, tipo: "Aula", planta: "2", servicios: 'Data display', dia: "Jueves", periodos: "08:00-18:45" },
+  { id: 5, nombre: "692B", capacidad: 125, tipo: "Aula", planta: "2", servicios: 'Data display', dia: "Jueves", periodos: "18:00-20:00" },
 ];
 
 const StyledDataGrid = styled(DataGrid)`
@@ -44,26 +44,6 @@ const StyledDataGrid = styled(DataGrid)`
 function EditarFilas(props) {
   const { setFilas, setFilasModificadas } = props;
 
-  const manejoClick = () => {
-    const id = randomId();
-    setFilas((filasAnteriores) => [...filasAnteriores, { id, nombre: "", capacidad: 0, tipo: "", planta: "", dia: "", horaInicio: "", horaFin: "", esNuevo: true }]);
-    setFilasModificadas((filasModificadasAnteriores) => ({
-      ...filasModificadasAnteriores,
-      [id]: { mode: GridRowModes.edit, fieldToFocus: "nombre" },
-    }));
-  };
-
-  return (
-    <GridToolbarContainer>
-      <Button
-        color="primary"
-        startIcon={<AddIcon />}
-        onClick={manejoClick}
-      >
-        Agregar
-      </Button>
-    </GridToolbarContainer>
-  );
 }
 
 export default function GridTablaCrud() {
@@ -187,34 +167,19 @@ export default function GridTablaCrud() {
       valueOptions: ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'],
     },
     {
-      field: 'horaInicio',
-      headerName: 'Hora Inicio',
-      type: 'time',
-      width: 80,
+      field: 'periodos',
+      headerName: 'Periodos',
+      width: 180,
       editable: true,
-      valueFormatter: (params) => {
-        const patronTiempo = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
-        if (patronTiempo.test(params)) {
-          return params;
-        } else {
-          return '--:--';
-        }
-      },
+      valueOptions: ["06:45-08:15", "08:30-09:45", "10:00-11:15", "11:30-12:45", "13:00-14:15", "14:30-15:45", "16:00-17:15", "17:30-18:45", "19:00-20:15", "20:30-21:45"],
     },
     {
-      field: 'horaFin',
-      headerName: 'Hora Fin',
-      type: 'time',
-      width:  80,
+      field: 'estado',
+      headerName: 'Estado',
+      width: 90,
       editable: true,
-      valueFormatter: (params) => {
-        const patronTiempo = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
-        if (patronTiempo.test(params)) {
-          return params;
-        } else {
-          return '--:--';
-        }
-      },
+      type: 'singleSelect',
+      valueOptions: ['Disponible', 'Ocupado', 'Mantenimiento'],
     },
     {
       field: 'acciones',
@@ -268,7 +233,6 @@ export default function GridTablaCrud() {
     <Box
       sx={{
         height: '100%',
-        
         '& .actions': {
           color: 'text.secondary',
         },
