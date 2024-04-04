@@ -5,28 +5,24 @@ import TextInput from "../Utils/CampoValidado";
 import StyledText from "../StyledText";
 import Button from "../Utils/Button";
 import axios from 'axios';
-
+import { Snackbar, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 const PantallaInicioSesionProfesor = () => {
   const navegar = useNavigate();
   const [correoElectronico, setCorreoElectronico] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [errores, setErrores] = useState({ correoElectronico: '', contrasena: '' });
+  const [snackbarAbierto, setSnackbarAbierto] = useState(false);
+  const [mensajeSnackbar, setMensajeSnackbar] = useState('');
 
-  /*const usuariosValidos = [
-    { email: 'JhonDoe@gmail.com', password: '12345678' },
-    { email: 'eurekasolutionsrl@gmail.com', password: 'TIS12024' }
-  ];
-  */
   const validarCorreoElectronico = () => {
     let mensajeError = '';
     if (!correoElectronico) {
       mensajeError = 'Ingrese su correo electrónico.';
     } else if (!/\S+@\S+\.\S+/.test(correoElectronico)) {
       mensajeError = 'Ingrese un correo electrónico válido.';
-    } /*else if (!usuariosValidos.some(usuario => usuario.email === correoElectronico)) {
-      mensajeError = 'Correo electrónico no registrado.';
-    }*/
+    }
     setErrores((erroresActuales) => ({
       ...erroresActuales,
       correoElectronico: mensajeError,
@@ -43,29 +39,20 @@ const PantallaInicioSesionProfesor = () => {
     } else if (!/\S+@\S+\.\S+/.test(correoElectronico)) {
         mensajesError.correoElectronico = 'Ingrese un correo electrónico válido.';
         formularioEsValido = false;
-    } /*else if (!usuariosValidos.some(usuario => usuario.email === correoElectronico)) {
-        mensajesError.correoElectronico = 'Correo electrónico no registrado.';
-        formularioEsValido = false;
-    }*/
+    }
 
     if (!contrasena) {
         mensajesError.contrasena = 'Ingrese su contraseña.';
         formularioEsValido = false;
-    } /*else {
-        const usuario = usuariosValidos.find(usuario => usuario.email === correoElectronico);
-        if (usuario && usuario.password !== contrasena) {
-            mensajesError.contrasena = 'Contraseña incorrecta.';
-            formularioEsValido = false;
-        }
-    }*/
+    }
 
     setErrores(mensajesError);
     return formularioEsValido;
   };
 
-  //const para mandar la solicitud al backend
   const iniciarSesion = () => {
     if (validarFormulario()) {
+      console.error('Estas aqui');
       axios.post('http://localhost:8000/api/auth/login', {
         email: correoElectronico,
         password: contrasena
@@ -76,8 +63,21 @@ const PantallaInicioSesionProfesor = () => {
       })
       .catch(error => {
         console.error('Error al iniciar sesión:', error);
+        manejarAbrirSnackbar('Las credenciales ingresadas no son válidas.');
       });
     }
+  };
+
+  const manejarAbrirSnackbar = (mensaje) => {
+    setMensajeSnackbar(mensaje);
+    setSnackbarAbierto(true);
+  };
+  
+  const manejarCerrarSnackbar = (evento, razon) => {
+    if (razon === 'clickaway') {
+      return;
+    }
+    setSnackbarAbierto(false);
   };
 
   const contenidoIzquierdo = (
@@ -159,6 +159,21 @@ const PantallaInicioSesionProfesor = () => {
           <StyledText enlaceText> Registrarse como docente </StyledText>
         </div>
       </div>
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        open={snackbarAbierto}
+        autoHideDuration={6000}
+        onClose={manejarCerrarSnackbar}
+        message={mensajeSnackbar}
+        action={
+          <IconButton size="small" aria-label="cerrar" color="inherit" onClick={manejarCerrarSnackbar}>
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        }
+      />
     </div>
   );
 
