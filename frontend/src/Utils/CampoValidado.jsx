@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '../Contexts/ThemeContext';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const ValidationTextInput = ({
   label,
@@ -15,6 +17,11 @@ const ValidationTextInput = ({
   const { theme } = useTheme();
   const [isFocused, setIsFocused] = useState(false);
   const [value, setValue] = useState('');
+  const [inputType, setInputType] = useState(type);
+
+  const togglePasswordVisibility = () => {
+    setInputType(inputType === 'password' ? 'text' : 'password');
+  };
 
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => {
@@ -31,8 +38,16 @@ const ValidationTextInput = ({
     setValue(event.target.value);
   };
 
+  const toggleStyle = {
+    position: 'absolute',
+    top: '10px',
+    right: '10px',
+    cursor: 'pointer',
+    fontSize: '16px',
+  };
+
   const inputStyle = {
-    padding: '10px',
+    padding: '10px 40px 10px 10px',
     fontSize: '16px',
     border: `2px solid ${isFocused ? theme.highlight : theme.secondary}`,
     borderRadius: '15px',
@@ -66,7 +81,7 @@ const ValidationTextInput = ({
     <div style={{ width: fullWidth ? '100%' : 'auto', boxSizing: 'border-box' }}>
       <div style={{ position: 'relative', width: '100%' }}>
         <input
-          type={type}
+          type={inputType}
           required={isRequired}
           autoComplete="off"
           onFocus={handleFocus}
@@ -76,6 +91,15 @@ const ValidationTextInput = ({
           style={inputStyle}
           {...otherProps}
         />
+        {type === 'password' && (
+          <span style={toggleStyle} onClick={togglePasswordVisibility}>
+            {inputType === 'password' ? (
+              <Visibility style={{ color: theme.secondary }} />
+            ) : (
+              <VisibilityOff style={{ color: theme.secondary }} />
+            )}
+          </span>
+        )}
         <label style={labelStyle}>{label}</label>
       </div>
       <div style={validationMessageStyle}>
