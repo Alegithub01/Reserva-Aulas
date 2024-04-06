@@ -16,7 +16,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route
-            path="/"
+            path="/inicioSesion"
             element={
               <div
                 style={{
@@ -71,8 +71,7 @@ function App() {
             }
           />
           <Route
-
-            path="/PantallaPrincipal"
+            path="/"
             element={
                 <div
                   style={{
