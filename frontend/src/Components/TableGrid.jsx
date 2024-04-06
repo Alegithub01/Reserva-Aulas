@@ -1,11 +1,10 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
@@ -13,11 +12,9 @@ import CancelIcon from '@mui/icons-material/Close';
 import {
   GridRowModes,
   DataGrid,
-  GridToolbarContainer,
   GridActionsCellItem,
   GridRowEditStopReasons,
 } from '@mui/x-data-grid';
-import { randomId } from '@mui/x-data-grid-generator';
 import styled from 'styled-components';
 import { useTheme } from '../Contexts/ThemeContext';
 
@@ -51,6 +48,8 @@ export default function GridTablaCrud() {
   const [filasModificadas, setFilasModificadas] = useState({});
   const [dialogoAbierto, setDialogoAbierto] = useState(false);
   const [idAEliminar, setIdAEliminar] = useState(null);
+  const [nombreAntiguo, setNombreAntiguo] = useState('');
+  const [periodosAntiguos, setPeriodosAntiguos] = useState('');
 
   const manejoEdicionParar = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {

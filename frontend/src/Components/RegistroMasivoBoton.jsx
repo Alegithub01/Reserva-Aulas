@@ -16,8 +16,9 @@ const RegistroMasivoBoton = () => {
     overflow: 'hidden',
   };
 
-  const manejoDocumentoCambio = (e) => {
-    setDocumento(e.target.files[0]);
+  const manejoDocumentoCambio = (e, valor) => {
+    setDocumento(valor? e.target.files[0]: null);
+
   }
 
   const manejoDocumentoSubido = () => {
@@ -25,7 +26,6 @@ const RegistroMasivoBoton = () => {
       const leerArchivo = new FileReader();
       leerArchivo.onload = (e) => {
         const texto = e.target.result;
-        console.log(texto);
 
         if (texto.includes('Nombre') && texto.includes('Capacidad') && texto.includes('Tipo') && texto.includes('Planta')
           && texto.includes('Ubicacion') && texto.includes('Servicios') && texto.includes('Dia') && texto.includes('Periodos')) {
@@ -62,7 +62,7 @@ return (
       accept=".csv"
       style={{ padding: '10px', margin: '20px', border: `1px solid ${theme.secondary}`, backgroundColor: theme.secondary, borderRadius: '15px', fontSize: '0.98rem' }}
       type="file"
-      onChange={manejoDocumentoCambio}
+      onChange={(e)=>{manejoDocumentoCambio(e, true)}}
     />
     <MensajeExito
       abrirDialogo={abrirDialogo}
@@ -71,6 +71,8 @@ return (
     />
     <Button onClick={manejoDocumentoSubido}>Procesar CSV</Button>
     {mostrarMensaje && <div style={mensajeValidacionEstilo}>Seleccione un archivo con el formato correcto para registrar</div>}
+    <div style={{margin: 5}}></div>
+    <Button onClick={(e)=>{manejoDocumentoCambio(e, false); cambiarMostrarMensaje(false)}}>Cancelar</Button>
   </div>
 );
 };

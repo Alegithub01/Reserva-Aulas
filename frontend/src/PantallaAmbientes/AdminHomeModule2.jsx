@@ -186,7 +186,7 @@ const AdminHomeModule2 = () => {
             alignItems: "center",
           }}
         >
-          <StyledText boldText>Ambiente</StyledText>
+          <StyledText boldText>Registro de Ambiente</StyledText>
 
         </div>
         <RowPercentage firstChildPercentage={60} gap="10px">
@@ -275,7 +275,7 @@ const AdminHomeModule2 = () => {
           }}
           mensaje="Ambiente registrado con éxito"
         />
-        <Button fullWidth={true} onClick={validarInfoOblig}>Guardar Cambios</Button>
+        <Button fullWidth={true} onClick={validarInfoOblig}>Guardar</Button>
       </div>
     </Card>
   );
