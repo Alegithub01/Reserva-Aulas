@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Card from "../Utils/Card";
 import Button from "../Utils/Button";
 import TextInput from "../Utils/TextInput";
@@ -7,12 +7,15 @@ import StyledText from "../StyledText";
 import Dropdown from "../Utils/Dropdown";
 import SelectorMultiple from '../Utils/SelectorMultiple';
 import MensajeExito from '../Utils/MensajeExito';
+import axios from 'axios';
 
 const AdminHomeModule2 = () => {
   const [nombre, cambiarNombre] = useState("");
   const [capacidad, cambiarCapacidad] = useState("");
   const [tipo, cambiarTipo] = useState("");
   const [planta, cambiarPlanta] = useState("");
+  const [servicios, cambiarServicios] = useState("");
+  const [ubicacion, cambiarUbicacion] = useState("");
   const [dia, cambiarDia] = useState("");
   const [horas, cambiarHoras] = useState([]);
   const [abrirDialogo, cambiarAbrirDialogo] = useState(false);
@@ -25,7 +28,44 @@ const AdminHomeModule2 = () => {
     horas: "",
   });
 
+  const ambientes = [
+    { value: "10", label: "Aula" },
+    { value: "20", label: "Auditorio" },
+    { value: "30", label: "Laboratorio" },
+  ];
+
+  const horarios = [
+    { value: "10", label: "06:45-08:15" },
+    { value: "20", label: "08:30-09:45" },
+    { value: "30", label: "10:00-11:15" },
+    { value: "40", label: "11:30-12:45" },
+    { value: "50", label: "13:00-14:15" },
+    { value: "60", label: "14:30-15:45" },
+    { value: "70", label: "16:00-17:15" },
+    { value: "80", label: "17:30-18:45" },
+    { value: "90", label: "19:00-20:15" },
+    { value: "100", label: "20:30-21:45" },
+  ];
+
+  const dias = [
+    { value: "10", label: "Lunes" },
+    { value: "20", label: "Martes" },
+    { value: "30", label: "Miércoles" },
+    { value: "40", label: "Jueves" },
+    { value: "50", label: "Viernes" },
+    { value: "60", label: "Sábado" },
+    { value: "70", label: "Domingo" },
+  ];
+
+  const plantas = [
+    { value: "10", label: "Planta 0" },
+    { value: "20", label: "Planta 1" },
+    { value: "30", label: "Planta 2" },
+    { value: "40", label: "Planta 3" },
+  ];
+  
   const validarInfoOblig = () => {
+    console.log(nombre, capacidad, tipo, planta, ubicacion, servicios, dia, horas);
     validarVacioNombre();
     validarVacioCapacidad();
     validarSeleccionTipo();
@@ -38,6 +78,29 @@ const AdminHomeModule2 = () => {
     }else{
       cambiarAbrirDialogo(false);
     }
+    
+    const valorTipo= ambientes.find(opcion => opcion.value === tipo).label;
+    const valorPlanta = plantas.find(opcion => opcion.value === planta).label;
+    const valorDia = dias.find(opcion => opcion.value === dia).label;
+    const valorHoras = horas.map(hora => horarios.find(opcion => opcion.value === hora).label);
+    // if(abrirDialogo){
+    //   axios.post('http://localhost:5000/ambientes', {
+    //     nombre: nombre,
+    //     capacidad: capacidad,
+    //     tipo: valorTipo,
+    //     planta: valorPlanta,
+    //     ubicacion: ubicacion,
+    //     servicios: servicios,
+    //     dia: valorDia,
+    //     horas: valorHoras
+    //   })
+    //   .then((response) => {
+    //     console.log(response);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+    // }
   }
 
   const manejarCambioNombre = (event, pattern) => {
@@ -154,11 +217,7 @@ const AdminHomeModule2 = () => {
           <div>
             <Dropdown
               etiqueta="Tipo de Ambiente"
-              opciones={[
-                { value: "10", label: "Aula" },
-                { value: "20", label: "Auditorio" },
-                { value: "30", label: "Laboratorio" },
-              ]}
+              opciones={ambientes}
               cambio={cambiarTipo}
               onBlur={validarSeleccionTipo}
               esRequerido={true}
@@ -168,12 +227,7 @@ const AdminHomeModule2 = () => {
           <div>
             <Dropdown
               etiqueta="Planta"
-              opciones={[
-                { value: "10", label: "Planta 0" },
-                { value: "20", label: "Planta 1" },
-                { value: "30", label: "Planta 2" },
-                { value: "40", label: "Planta 3" },
-              ]}
+              opciones={plantas}
               cambio={cambiarPlanta}
               onBlur={validarSeleccionPlanta}
               esRequerido={true}
@@ -184,25 +238,19 @@ const AdminHomeModule2 = () => {
         <TextInput
           label="Ubicación"
           pattern='^[A-Za-z0-9, ]{0,50}$'
+          onChange={(event)=> cambiarUbicacion(event.target.value)}
         />
         <TextInput
           label="Servicios"
           pattern='^[A-Za-z0-9, ]{0,50}$'
+          onChange={(event)=> cambiarServicios(event.target.value)}
         />
 
         <RowPercentage firstChildPercentage={60} gap="10px">
           <div>
             <Dropdown
               etiqueta="Día"
-              opciones={[
-                { value: "10", label: "Lunes" },
-                { value: "20", label: "Martes" },
-                { value: "30", label: "Miércoles" },
-                { value: "40", label: "Jueves" },
-                { value: "50", label: "Viernes" },
-                { value: "60", label: "Sábado" },
-                { value: "70", label: "Domingo" },
-              ]}
+              opciones={dias}
               cambio={cambiarDia}
               onBlur={validarSeleccionDia}
               esRequerido={true}
@@ -212,18 +260,7 @@ const AdminHomeModule2 = () => {
           <div>
               <SelectorMultiple
                 etiqueta="Periodos de hora"
-                opciones={[
-                  { value: "10", label: "06:45-08:15" },
-                  { value: "20", label: "08:30-09:45" },
-                  { value: "30", label: "10:00-11:15" },
-                  { value: "40", label: "11:30-12:45" },
-                  { value: "50", label: "13:00-14:15" },
-                  { value: "60", label: "14:30-15:45" },
-                  { value: "70", label: "16:00-17:15" },
-                  { value: "80", label: "17:30-18:45" },
-                  { value: "90", label: "19:00-20:15" },
-                  { value: "100", label: "20:30-21:45" },
-                ]}
+                opciones={horarios}
                 cambio={cambiarHoras}
                 llenado={validarSeleccionHoras}
                 esRequerido={true}
