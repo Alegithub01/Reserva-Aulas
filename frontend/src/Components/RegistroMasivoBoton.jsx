@@ -6,6 +6,7 @@ import { useTheme } from '../Contexts/ThemeContext';
 const RegistroMasivoBoton = () => {
   const [documento, setDocumento] = useState(null);
   const [abrirDialogo, cambiarAbrirDialogo] = useState(false);
+  const [mostrarMensaje, cambiarMostrarMensaje] = useState(false);
   const { theme } = useTheme();
 
   const mensajeValidacionEstilo = {
@@ -20,48 +21,58 @@ const RegistroMasivoBoton = () => {
   }
 
   const manejoDocumentoSubido = () => {
-    const documentos = new FormData();
-    documentos.append('file', documento);
-
-    fetch('http://localhost:5173/api/usuarios/masivo', {  //cambiar a la ruta de la API laravel
-      method: 'POST',
-      body: documentos
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
     if (documento) {
       const leerArchivo = new FileReader();
       leerArchivo.onload = (e) => {
         const texto = e.target.result;
         console.log(texto);
-        localStorage.setItem('texto', texto);
+
+        if (texto.includes('Nombre') && texto.includes('Capacidad') && texto.includes('Tipo') && texto.includes('Planta')
+          && texto.includes('Ubicacion') && texto.includes('Servicios') && texto.includes('Dia') && texto.includes('Periodos')) {
+          console.log('Archivo válido');
+            localStorage.setItem('texto', texto);
+          fetch('http://localhost:5173/api/usuarios/masivo', {  //cambiar a la ruta de la API laravel
+            method: 'POST',
+            body: documento
+          })
+            .then(response => response.json())
+            .then(data => {
+              console.log(data);
+            })
+            .catch(error => {
+              console.log(error);
+            });
+          cambiarAbrirDialogo(true);
+          cambiarMostrarMensaje(false);
+        } else {
+          cambiarMostrarMensaje(true);
+        }
       };
       leerArchivo.readAsText(documento);
-      cambiarAbrirDialogo(true);
+    } else {
+      cambiarMostrarMensaje(true);
     }
   }
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-      <input
-        accept=".csv"
-        style={{ padding: '10px', margin: '20px', border: `1px solid ${theme.secondary}`, backgroundColor: theme.secondary, borderRadius: '15px', fontSize: '0.98rem' }}
-        type="file"
-        onChange={manejoDocumentoCambio}
-      />
-      <MensajeExito
-        abrirDialogo={abrirDialogo}
-        cerrarDialogo={() => cambiarAbrirDialogo(false)}
-        mensaje="Registros subidos con éxito"
-      />
-      <Button onClick={manejoDocumentoSubido}>Procesar CSV</Button>
-      {!documento && <div style={mensajeValidacionEstilo}>Seleccione un archivo correcto para registrar</div>}
-    </div>
-  );
+
+
+
+return (
+  <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+    <input
+      accept=".csv"
+      style={{ padding: '10px', margin: '20px', border: `1px solid ${theme.secondary}`, backgroundColor: theme.secondary, borderRadius: '15px', fontSize: '0.98rem' }}
+      type="file"
+      onChange={manejoDocumentoCambio}
+    />
+    <MensajeExito
+      abrirDialogo={abrirDialogo}
+      cerrarDialogo={() => cambiarAbrirDialogo(false)}
+      mensaje="Registros subidos con éxito"
+    />
+    <Button onClick={manejoDocumentoSubido}>Procesar CSV</Button>
+    {mostrarMensaje && <div style={mensajeValidacionEstilo}>Seleccione un archivo con el formato correcto para registrar</div>}
+  </div>
+);
 };
 
 export default RegistroMasivoBoton;

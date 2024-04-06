@@ -83,6 +83,7 @@ const AdminHomeModule2 = () => {
     const valorPlanta = plantas.find(opcion => opcion.value === planta).label;
     const valorDia = dias.find(opcion => opcion.value === dia).label;
     const valorHoras = horas.map(hora => horarios.find(opcion => opcion.value === hora).label);
+    console.log(valorTipo, valorPlanta, valorDia, valorHoras);
     // if(abrirDialogo){
     //   axios.post('http://localhost:5000/ambientes', {
     //     nombre: nombre,

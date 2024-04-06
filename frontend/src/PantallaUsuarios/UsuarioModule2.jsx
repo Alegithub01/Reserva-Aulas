@@ -28,45 +28,11 @@ const AdminHomeModule2 = () => {
     marginTop: "5px",
   };
   
-  const [errores, setErrores] = useState({
-    nombreDelRol: "",
-    casillas: "",
-  });
-
-  const mensajeErrorEstilo = {
-    color: "red",
-    fontSize: "12px",
-    marginTop: "5px",
-  };
-  
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
     setCasillas((prevState) => ({ ...prevState, [name]: checked }));
   };
 
-  const validarNombreRol = () => {
-    if (nombreDelRol === "") {
-      setErrores((prevState) => ({ ...prevState, nombreDelRol: "Por favor, ingrese el nombre del rol." }));
-    }else{
-      setErrores((prevState) => ({ ...prevState, nombreDelRol: "" }));
-    }
-  }
-
-  const manejarCambioNombreRol = (event, patron) => {
-    const valor = event.target.value;
-    if(patron && RegExp(patron).test(valor)){
-      setNombreDelRol(valor);
-      setErrores((prevState) => ({ ...prevState, nombreDelRol: "" }));
-    }
-  }
-
-  const validarCasillas = () => {
-    if (!Object.values(casillas).some((value) => value === true)) {
-      setErrores((prevState) => ({ ...prevState, casillas: "Seleccione al menos un módulo de acceso para el rol." }));
-    }else{
-      setErrores((prevState) => ({ ...prevState, casillas: "" }));
-    }
-  }
   const validarNombreRol = () => {
     if (nombreDelRol === "") {
       setErrores((prevState) => ({ ...prevState, nombreDelRol: "Por favor, ingrese el nombre del rol." }));
@@ -97,7 +63,7 @@ const AdminHomeModule2 = () => {
     if(nombreDelRol !== "" && Object.values(casillas).some((value) => value === true)){
       setSnackbarOpen(true);
     }else{
-
+      setSnackbarOpen(false);
     }
     console.log("Nombre del rol:", nombreDelRol);
     console.log("Casillas seleccionadas:");
@@ -152,9 +118,6 @@ const AdminHomeModule2 = () => {
             validationMessage={errores.nombreDelRol}
             onChange={(event)=>manejarCambioNombreRol(event, "^[0-9(a-zA-Z)+]*$")}
             onBlur={validarNombreRol}
-            validationMessage={errores.nombreDelRol}
-            onChange={(event)=>manejarCambioNombreRol(event, "^[0-9(a-zA-Z)+]*$")}
-            onBlur={validarNombreRol}
           />
         </div>
         <div style={{ marginBottom: "10px" }}>
@@ -196,7 +159,6 @@ const AdminHomeModule2 = () => {
               />
             </div>
           </RowPercentage>
-          {errores.casillas && <div style={mensajeErrorEstilo}>{errores.casillas}</div>}
           {errores.casillas && <div style={mensajeErrorEstilo}>{errores.casillas}</div>}
         </div>
         <Button fullWidth={true} onClick={handleSave}>
