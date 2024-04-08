@@ -13,6 +13,7 @@ const AdminHomeModule3 = () => {
     tamano: "",
     registros: 0,
   });
+  const [datosJson, setDatosJson] = useState([]);
   const [abrirDialogo, cambiarAbrirDialogo] = useState(false);
   const [mensajeError, setMensajeError] = useState("");
 
@@ -32,10 +33,11 @@ const AdminHomeModule3 = () => {
       const leerArchivo = new FileReader();
       leerArchivo.onload = (e) => {
         const contenido = e.target.result;
-        const registros = contenido.split("\n").length;
+        const json = csvAJson(contenido);
+        setDatosJson(json);
         setDetallesArchivo((detalles) => ({
           ...detalles,
-          registros: registros - 1,
+          registros: json.length,
         }));
       };
       leerArchivo.readAsText(archivo);
@@ -47,7 +49,8 @@ const AdminHomeModule3 = () => {
       setMensajeError("Seleccione un archivo para procesar.");
       return;
     }
-    
+    console.log("Datos para el backend:", datosJson);
+
     const formData = new FormData();
     formData.append("file", documento);
 
@@ -65,6 +68,19 @@ const AdminHomeModule3 = () => {
         console.error(error);
         setMensajeError("Error al subir el archivo. Intente nuevamente.");
       });
+  };
+
+  const csvAJson = (csv) => {
+    const lineas = csv.split("\n");
+    const encabezados = lineas[0].split(",");
+    const json = lineas.slice(1).map((linea) => {
+      const datos = linea.split(",");
+      return encabezados.reduce((objeto, claveActual, indice) => {
+        objeto[claveActual] = datos[indice];
+        return objeto;
+      }, {});
+    });
+    return json;
   };
 
   return (
