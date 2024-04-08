@@ -168,23 +168,15 @@ export default function GridTablaCrud() {
     {
       field: 'periodos',
       headerName: 'Periodos',
-      width: 180,
+      width: 280,
       editable: true,
       valueOptions: ["06:45-08:15", "08:30-09:45", "10:00-11:15", "11:30-12:45", "13:00-14:15", "14:30-15:45", "16:00-17:15", "17:30-18:45", "19:00-20:15", "20:30-21:45"],
-    },
-    {
-      field: 'estado',
-      headerName: 'Estado',
-      width: 90,
-      editable: true,
-      type: 'singleSelect',
-      valueOptions: ['Disponible', 'Ocupado', 'Mantenimiento'],
     },
     {
       field: 'acciones',
       type: 'actions',
       headerName: 'Acciones',
-      width: 100,
+      width: 110,
       cellClassName: 'actions',
       getActions: ({ id }) => {
         const estaModoEdicion = filasModificadas[id]?.mode === GridRowModes.Edit;
