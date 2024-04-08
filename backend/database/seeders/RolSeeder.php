@@ -14,19 +14,22 @@ class RolSeeder extends Seeder
      */
     public function run()
     {
-        // Crea algunos roles
+        // Crea roles con IDs específicos
         Rol::create([
+            'id' => 1,
             'nombre' => 'Administrador',
             'descripcion' => 'Rol de administrador con todos los permisos.',
         ]);
 
         Rol::create([
+            'id' => 2,
             'nombre' => 'Docente',
             'descripcion' => 'Rol de Docente con permisos limitados.',
         ]);
 
-        // Puedes crear más roles según sea necesario
+        // Puedes crear más roles con IDs específicos según sea necesario
 
-        $this->command->info('Roles creados exitosamente.');
+        $this->command->info('Roles creados exitosamente con IDs específicos.');
     }
 }
+
