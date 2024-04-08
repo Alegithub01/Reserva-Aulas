@@ -24,13 +24,14 @@ Route::group ([
     'prefix' => 'auth'
 ], function ($router) {
     Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/registerMany', [AuthController::class, 'registerMany']);
 
     Route::post('login', [AuthController::class, 'login']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'me']);
 
-    Route::get('dummy', [AuthController::class, 'dummyGet']);
+    Route::get('dummyy', [AuthController::class, 'dummyGet']);
 });
 
 
