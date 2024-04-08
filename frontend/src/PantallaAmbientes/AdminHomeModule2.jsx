@@ -33,7 +33,6 @@ const AdminHomeModule2 = () => {
     validarSeleccionDia();
     validarSeleccionHoras();
     
-    console.log("nom", nombre, "cap", capacidad, "tipo", tipo, "planta",planta, "dia", dia,"horas", horas);
     if(nombre.trim() !== "" && capacidad.trim() !== "" && tipo.trim() !== "" && planta.trim() !== "" && dia.trim() !== "" && horas.length !== 0){
       cambiarAbrirDialogo(true);
     }else{
@@ -73,10 +72,6 @@ const AdminHomeModule2 = () => {
     }
   };
 
-  const manejarCambioPlanta = (event) => {
-    cambiarPlanta(event.target.value);
-    cambiarMensajeError({ ...mensajeError, planta: ""});
-  };
   const validarSeleccionPlanta = () => {
     if(planta.trim() === ''){
       cambiarMensajeError(previo => ({ ...previo, planta: "Seleccione la planta"}));
@@ -238,7 +233,8 @@ const AdminHomeModule2 = () => {
         </RowPercentage>
         <MensajeExito
           abrirDialogo={abrirDialogo}
-          cerrarDialogo={() => cambiarAbrirDialogo(false)}
+          cerrarDialogo={() => {cambiarAbrirDialogo(false); window.location.reload();
+          }}
           mensaje="Ambiente registrado con éxito"
         />
         <Button fullWidth={true} onClick={validarInfoOblig}>Guardar Cambios</Button>

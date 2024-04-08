@@ -22,7 +22,7 @@ function Dropdown({ etiqueta, opciones, mensajeValidacion = '', esRequerido, cam
 
   useEffect(() => {
     cambio && cambio(valorSeleccionado);
-  }, [valorSeleccionado]);
+  }, [cambio, valorSeleccionado]);
 
   const mensajeValidacionEstilo = {
     color: 'red',
