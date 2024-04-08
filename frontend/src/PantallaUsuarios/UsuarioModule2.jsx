@@ -62,15 +62,16 @@ const AdminHomeModule2 = () => {
 
     if(nombreDelRol !== "" && Object.values(casillas).some((value) => value === true)){
       setSnackbarOpen(true);
+      setNombreDelRol("");
+      setCasillas({
+        gestionDeUsuario: false,
+        gestionDeAmbientes: false,
+        gestionDeReservas: false,
+        solicitudDeReservas: false,
+      });
     }else{
       setSnackbarOpen(false);
     }
-    console.log("Nombre del rol:", nombreDelRol);
-    console.log("Casillas seleccionadas:");
-    Object.entries(casillas).forEach(([key, value]) => {
-      if (value) console.log(key.replace(/([A-Z])/g, " $1").trim());
-    });
-    // guaradr rol
     
   };
   const handleCloseSnackbar = (event, reason) => {
