@@ -69,6 +69,8 @@ const AdminHomeModule2 = () => {
         gestionDeReservas: false,
         solicitudDeReservas: false,
       });
+    }else{
+      setSnackbarOpen(false);
     }
     
   };
