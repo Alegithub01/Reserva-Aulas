@@ -6,6 +6,7 @@ import StyledText from "../StyledText";
 import EntradaArchivo from "../Utils/EntradaArchivo";
 import RowPercentage from '../Responsive/RowPercentage';
 import { Cancel } from '@mui/icons-material';
+import axios from 'axios';
 
 const AdminHomeModule3 = () => {
   const [documento, setDocumento] = useState(null);
@@ -60,21 +61,33 @@ const AdminHomeModule3 = () => {
 
     const formData = new FormData();
     formData.append("file", documento);
+    console.log(formData);
 
-    fetch("http://localhost:5173/api/usuarios/masivo", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
+    axios.post("http://localhost:8000/api/auth/registerMany", datosJson)
+      .then(response => {
+        console.log(response.data);
         cambiarAbrirDialogo(true);
         setMensajeError("");
       })
-      .catch((error) => {
+      .catch(error => {
         console.error(error);
         setMensajeError("Error al subir el archivo. Intente nuevamente.");
       });
+
+    // fetch("http://127.0.0.1:8000/api/auth/registerMany", {
+    //   method: "POST",
+    //   body: formData,
+    // })
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     console.log(data);
+    //     cambiarAbrirDialogo(true);
+    //     setMensajeError("");
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //     setMensajeError("Error al subir el archivo. Intente nuevamente.");
+    //   });
   };
 
   const manejoCancelacion = () => {
