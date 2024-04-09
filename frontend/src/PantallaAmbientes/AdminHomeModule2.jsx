@@ -28,6 +28,28 @@ const AdminHomeModule2 = () => {
     horas: "",
   });
 
+const registrarAmbiente = async () => {
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/ambientes', {
+        nombre: nombre,
+        capacidad: capacidad,
+        tipo: tipo,
+        planta: planta,
+        ubicacion: ubicacion,
+        servicios: servicios,
+        dia: dia,
+        horas: horas
+      });
+      console.log(response.data);
+      cambiarAbrirDialogo(true);
+    } catch (error) {
+      console.error('Error al registrar ambiente:', error);
+    
+    }
+  };
+ 
+ 
+
   const ambientes = [
     { value: "10", label: "Aula" },
     { value: "20", label: "Auditorio" },
@@ -36,14 +58,14 @@ const AdminHomeModule2 = () => {
 
   const horarios = [
     { value: "10", label: "06:45-08:15" },
-    { value: "20", label: "08:30-09:45" },
-    { value: "30", label: "10:00-11:15" },
-    { value: "40", label: "11:30-12:45" },
-    { value: "50", label: "13:00-14:15" },
-    { value: "60", label: "14:30-15:45" },
-    { value: "70", label: "16:00-17:15" },
-    { value: "80", label: "17:30-18:45" },
-    { value: "90", label: "19:00-20:15" },
+    { value: "20", label: "08:15-09:45" },
+    { value: "30", label: "09:45-11:15" },
+    { value: "40", label: "11:15-12:45" },
+    { value: "50", label: "12:45-14:15" },
+    { value: "60", label: "14:15-15:45" },
+    { value: "70", label: "15:45-17:15" },
+    { value: "80", label: "17:15-18:45" },
+    { value: "90", label: "18:45-20:15" },
     { value: "100", label: "20:30-21:45" },
   ];
 
@@ -74,6 +96,7 @@ const AdminHomeModule2 = () => {
     validarSeleccionHoras();
     
     if(nombre.trim() !== "" && capacidad.trim() !== "" && tipo.trim() !== "" && planta.trim() !== "" && dia.trim() !== "" && horas.length !== 0){
+      registrarAmbiente();
       cambiarAbrirDialogo(true);
     }else{
       cambiarAbrirDialogo(false);
