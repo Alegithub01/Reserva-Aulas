@@ -2,7 +2,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '../Contexts/ThemeContext';
 
-const EntradaArchivo = ({ onChange, disabled, ...rest }) => {
+const EntradaArchivo = ({ onChange, disabled, accept, ...rest }) => {
   const { theme } = useTheme();
 
   const styles = {
@@ -33,6 +33,7 @@ const EntradaArchivo = ({ onChange, disabled, ...rest }) => {
       <input
         type="file"
         onChange={onChange}
+        accept={accept}
         disabled={disabled}
         style={styles.input}
         onMouseOver={(e) => e.currentTarget.nextSibling.style.boxShadow = '0px 5px 20px rgba(54, 97, 235, 0.4)'} 

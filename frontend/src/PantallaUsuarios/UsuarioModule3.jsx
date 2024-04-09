@@ -5,6 +5,7 @@ import Button from "../Utils/Button";
 import StyledText from "../StyledText";
 import EntradaArchivo from "../Utils/EntradaArchivo";
 import RowPercentage from '../Responsive/RowPercentage';
+import { Cancel } from '@mui/icons-material';
 
 const AdminHomeModule3 = () => {
   const [documento, setDocumento] = useState(null);
@@ -23,13 +24,19 @@ const AdminHomeModule3 = () => {
     setMensajeError("");
     const archivo = e.target.files[0];
     if (archivo) {
+      const extensionArchivo = archivo.name.split('.').pop().toLowerCase();
+      if(extensionArchivo !== 'csv') {
+        setMensajeError("Por favor, seleccione un archivo CSV.");
+        return;
+      }
+  
       setDocumento(archivo);
       setDetallesArchivo({
         nombre: archivo.name,
         tamano: (archivo.size / 1024).toFixed(2) + " KB",
         registros: 0,
       });
-
+  
       const leerArchivo = new FileReader();
       leerArchivo.onload = (e) => {
         const contenido = e.target.result;
@@ -68,6 +75,16 @@ const AdminHomeModule3 = () => {
         console.error(error);
         setMensajeError("Error al subir el archivo. Intente nuevamente.");
       });
+  };
+
+  const manejoCancelacion = () => {
+    setDocumento(null);
+    setDetallesArchivo({
+      nombre: "",
+      tamano: "",
+      registros: 0,
+    });
+    setDatosJson([]);
   };
 
   const csvAJson = (csv) => {
@@ -113,20 +130,32 @@ const AdminHomeModule3 = () => {
         >
           <StyledText boldText>Registro masivo</StyledText>
         </div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        <div style={{ display: "flex", flexDirection: "column", position: 'relative'}}>
           <div>
             <span style={{ color: documento ? 'black' : '#888' }}>Nombre del archivo: {documento ? detallesArchivo.nombre : 'No disponible'}</span>
           </div>
           <div>
             <span style={{ color: documento ? 'black' : '#888' }}>Cantidad de registros: {documento ? detallesArchivo.registros : 'No disponible'}</span>
           </div>
+          {documento && (
+              <Cancel 
+                onClick={manejoCancelacion} 
+                style={{ 
+                  cursor: 'pointer',
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  color: 'black',
+                }} 
+              />
+            )}
         </div>
-        <RowPercentage firstChildPercentage={50} gap="20px">
-          <div>
-            <EntradaArchivo onChange={manejoDocumentoCambio} />
+        <RowPercentage firstChildPercentage={40} gap="20px">
+          <div >
+            <EntradaArchivo onChange={manejoDocumentoCambio} accept=".csv" />
           </div>
-          <div>
-            <Button onClick={manejoDocumentoSubido}>
+          <div >
+            <Button onClick={manejoDocumentoSubido} fullWidth>
               Procesar
             </Button>            
           </div>
