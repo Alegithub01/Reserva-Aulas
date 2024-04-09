@@ -6,9 +6,14 @@ import StyledText from "../StyledText";
 import EntradaArchivo from "../Utils/EntradaArchivo";
 import RowPercentage from '../Responsive/RowPercentage';
 import { Cancel } from '@mui/icons-material';
+import axios from 'axios';
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 const AdminHomeModule3 = () => {
   const [documento, setDocumento] = useState(null);
+  const [snackbarOpenSuccess, setSnackbarOpenSuccess] = useState(false);
+  const [snackbarOpenError, setSnackbarOpenError] = useState(false);
   const [detallesArchivo, setDetallesArchivo] = useState({
     nombre: "",
     tamano: "",
@@ -17,8 +22,23 @@ const AdminHomeModule3 = () => {
   const [datosJson, setDatosJson] = useState([]);
   const [abrirDialogo, cambiarAbrirDialogo] = useState(false);
   const [mensajeError, setMensajeError] = useState("");
+  const [mensajeExito, setMensajeExito] = useState("");
 
   const { theme } = useTheme();
+
+  const handleCloseSnackbarSuccess = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpenSuccess(false);
+  };
+
+  const handleCloseSnackbarError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpenError(false);
+  };
 
   const manejoDocumentoCambio = (e) => {
     setMensajeError("");
@@ -60,20 +80,21 @@ const AdminHomeModule3 = () => {
 
     const formData = new FormData();
     formData.append("file", documento);
+    console.log(formData);
 
-    fetch("http://localhost:5173/api/usuarios/masivo", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
+    axios.post("http://localhost:8000/api/auth/registerMany", datosJson)
+      .then(response => {
+        console.log(response.data);
         cambiarAbrirDialogo(true);
+        setSnackbarOpenSuccess(true);
+        setMensajeExito("Usuarios registrados exitosamente.");
         setMensajeError("");
       })
-      .catch((error) => {
+      .catch(error => {
         console.error(error);
-        setMensajeError("Error al subir el archivo. Intente nuevamente.");
+        setSnackbarOpenError(true);
+        setMensajeError("Error al procesar el archivo. Intente nuevamente.");
+        setMensajeExito("");
       });
   };
 
@@ -161,6 +182,32 @@ const AdminHomeModule3 = () => {
           </div>
         </RowPercentage>
       </div>
+      <Snackbar
+        open={snackbarOpenSuccess}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbarSuccess}
+      >
+        <Alert
+          onClose={handleCloseSnackbarSuccess}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          {mensajeExito}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={snackbarOpenError}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbarError}
+      >
+        <Alert
+          onClose={handleCloseSnackbarError}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          {mensajeError}
+        </Alert>
+      </Snackbar>
     </Card>
   );
 };
