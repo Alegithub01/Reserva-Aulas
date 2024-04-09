@@ -17,14 +17,16 @@ import {
 } from '@mui/x-data-grid';
 import styled from 'styled-components';
 import { useTheme } from '../Contexts/ThemeContext';
+import { useEffect } from 'react';
+import axios from 'axios';
 
-const informacion = [
-  { id: 1, nombre: "691A", capacidad: 100, tipo: "Aula", planta: "1", servicios: 'Data display', dia: "Lunes", periodos: "08:00-10:00, 15:45-17:15" },
-  { id: 2, nombre: "691B", capacidad: 110, tipo: "Aula", planta: "1", servicios: 'Data display', dia: "Martes", periodos: "08:00-10:00" },
-  { id: 3, nombre: "691C", capacidad: 90, tipo: "Aula", planta: "1", servicios: 'Data display', dia: "Miercoles", periodos: "08:00-10:00" },
-  { id: 4, nombre: "692A", capacidad: 120, tipo: "Aula", planta: "2", servicios: 'Data display', dia: "Jueves", periodos: "08:00-18:45" },
-  { id: 5, nombre: "692B", capacidad: 125, tipo: "Aula", planta: "2", servicios: 'Data display', dia: "Jueves", periodos: "18:00-20:00" },
-];
+//const informacion = [
+//  { id: 1, nombre: "691A", capacidad: 100, tipo: "Aula", planta: "1", servicios: 'Data display', dia: "Lunes", periodos: "08:00-10:00, 15:45-17:15" },
+//  { id: 2, nombre: "691B", capacidad: 110, tipo: "Aula", planta: "1", servicios: 'Data display', dia: "Martes", periodos: "08:00-10:00" },
+//  { id: 3, nombre: "691C", capacidad: 90, tipo: "Aula", planta: "1", servicios: 'Data display', dia: "Miercoles", periodos: "08:00-10:00" },
+//  { id: 4, nombre: "692A", capacidad: 120, tipo: "Aula", planta: "2", servicios: 'Data display', dia: "Jueves", periodos: "08:00-18:45" },
+//  { id: 5, nombre: "692B", capacidad: 125, tipo: "Aula", planta: "2", servicios: 'Data display', dia: "Jueves", periodos: "18:00-20:00" },
+//];
 
 const StyledDataGrid = styled(DataGrid)`
   .MuiDataGrid-cell {
@@ -44,12 +46,30 @@ function EditarFilas(props) {
 }
 
 export default function GridTablaCrud() {
-  const [filas, setFilas] = useState(informacion);
+  //const [filas, setFilas] = useState(informacion);
   const [filasModificadas, setFilasModificadas] = useState({});
   const [dialogoAbierto, setDialogoAbierto] = useState(false);
   const [idAEliminar, setIdAEliminar] = useState(null);
   const [nombreAntiguo, setNombreAntiguo] = useState('');
   const [periodosAntiguos, setPeriodosAntiguos] = useState('');
+
+  const [filas, setFilas] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const obtenerAmbientes = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/ambientes');
+        setFilas(response.data); 
+      } catch (error) {
+        setError('Error al obtener los ambientes.'); 
+      }
+    };
+
+    obtenerAmbientes();
+  }, []);
+
+
 
   const manejoEdicionParar = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
