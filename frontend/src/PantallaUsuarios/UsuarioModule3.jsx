@@ -7,9 +7,12 @@ import EntradaArchivo from "../Utils/EntradaArchivo";
 import RowPercentage from '../Responsive/RowPercentage';
 import { Cancel } from '@mui/icons-material';
 import axios from 'axios';
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 const AdminHomeModule3 = () => {
   const [documento, setDocumento] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [detallesArchivo, setDetallesArchivo] = useState({
     nombre: "",
     tamano: "",
@@ -20,6 +23,13 @@ const AdminHomeModule3 = () => {
   const [mensajeError, setMensajeError] = useState("");
 
   const { theme } = useTheme();
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpen(false);
+  };
 
   const manejoDocumentoCambio = (e) => {
     setMensajeError("");
@@ -67,6 +77,7 @@ const AdminHomeModule3 = () => {
       .then(response => {
         console.log(response.data);
         cambiarAbrirDialogo(true);
+        setSnackbarOpen(true);
         setMensajeError("");
       })
       .catch(error => {
@@ -174,6 +185,19 @@ const AdminHomeModule3 = () => {
           </div>
         </RowPercentage>
       </div>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Usuarios registrados exitosamente.
+        </Alert>
+      </Snackbar>
     </Card>
   );
 };
