@@ -12,7 +12,8 @@ import Alert from "@mui/material/Alert";
 
 const AdminHomeModule3 = () => {
   const [documento, setDocumento] = useState(null);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarOpenSuccess, setSnackbarOpenSuccess] = useState(false);
+  const [snackbarOpenError, setSnackbarOpenError] = useState(false);
   const [detallesArchivo, setDetallesArchivo] = useState({
     nombre: "",
     tamano: "",
@@ -21,14 +22,22 @@ const AdminHomeModule3 = () => {
   const [datosJson, setDatosJson] = useState([]);
   const [abrirDialogo, cambiarAbrirDialogo] = useState(false);
   const [mensajeError, setMensajeError] = useState("");
+  const [mensajeExito, setMensajeExito] = useState("");
 
   const { theme } = useTheme();
 
-  const handleCloseSnackbar = (event, reason) => {
+  const handleCloseSnackbarSuccess = (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-    setSnackbarOpen(false);
+    setSnackbarOpenSuccess(false);
+  };
+
+  const handleCloseSnackbarError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpenError(false);
   };
 
   const manejoDocumentoCambio = (e) => {
@@ -77,28 +86,16 @@ const AdminHomeModule3 = () => {
       .then(response => {
         console.log(response.data);
         cambiarAbrirDialogo(true);
-        setSnackbarOpen(true);
+        setSnackbarOpenSuccess(true);
+        setMensajeExito("Usuarios registrados exitosamente.");
         setMensajeError("");
       })
       .catch(error => {
         console.error(error);
-        setMensajeError("Error al subir el archivo. Intente nuevamente.");
+        setSnackbarOpenError(true);
+        setMensajeError("Error al procesar el archivo. Intente nuevamente.");
+        setMensajeExito("");
       });
-
-    // fetch("http://127.0.0.1:8000/api/auth/registerMany", {
-    //   method: "POST",
-    //   body: formData,
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     console.log(data);
-    //     cambiarAbrirDialogo(true);
-    //     setMensajeError("");
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //     setMensajeError("Error al subir el archivo. Intente nuevamente.");
-    //   });
   };
 
   const manejoCancelacion = () => {
@@ -186,16 +183,29 @@ const AdminHomeModule3 = () => {
         </RowPercentage>
       </div>
       <Snackbar
-        open={snackbarOpen}
+        open={snackbarOpenSuccess}
         autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
+        onClose={handleCloseSnackbarSuccess}
       >
         <Alert
-          onClose={handleCloseSnackbar}
+          onClose={handleCloseSnackbarSuccess}
           severity="success"
           sx={{ width: "100%" }}
         >
-          Usuarios registrados exitosamente.
+          {mensajeExito}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={snackbarOpenError}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbarError}
+      >
+        <Alert
+          onClose={handleCloseSnackbarError}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          {mensajeError}
         </Alert>
       </Snackbar>
     </Card>
