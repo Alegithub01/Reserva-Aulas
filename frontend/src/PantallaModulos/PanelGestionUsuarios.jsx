@@ -46,7 +46,7 @@ const PanelGestionUsuarios = () => {
             <Card 
                 text="Registro Masivo de Usuarios" 
                 Icon={IconoRegistroMasivo}
-                onClick={() => navegar('/Gestion-Usuarios')}
+                onClick={() => navegar('/Registro-Masivo-Usuarios')}
             />
             <Card 
                 text="Lista de Usuarios Registrados" 
@@ -56,7 +56,7 @@ const PanelGestionUsuarios = () => {
             <Card 
                 text="Crear Nuevo Rol" 
                 Icon={IconoCrearRol}
-                onClick={() => navegar('/gestion-reservas')}
+                onClick={() => navegar('/Crear-Rol-Nuevo')}
             />
             <div
                 style={{

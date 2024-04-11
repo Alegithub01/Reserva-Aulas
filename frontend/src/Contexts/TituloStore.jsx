@@ -1,7 +1,7 @@
 import create from 'zustand';
 
 const useTituloStore = create(set => ({
-  titulo: 'Lorem Ipsum',
+  titulo: ' ',
   setTitulo: titulo => set(() => ({ titulo })),
 }));
 

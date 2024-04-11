@@ -20,7 +20,6 @@ import TituloStore from '../Contexts/TituloStore';
 import PropTypes from 'prop-types';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-
 const BarraSuperior = () => {
   const { theme } = useTheme();
   const { nombre, correo } = UsuarioStore();
@@ -28,9 +27,11 @@ const BarraSuperior = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const abierto = Boolean(anchorEl);
   const navigate = useNavigate();
+
   const manejarCierreSesion = () => {
     navigate('/');
   };
+
   const manejarAperturaMenuPerfil = (evento) => {
     setAnchorEl(evento.currentTarget);
   };
@@ -40,9 +41,9 @@ const BarraSuperior = () => {
   };
 
   return (
-    <AppBar elevation={2} sx={{ bgcolor: theme.highlight }}>
+    <AppBar elevation={0} sx={{ bgcolor: 'transparent', position: 'absolute', zIndex: 1400 }}>
       <Toolbar variant="dense">
-        <IconButton color="inherit" onClick={() => navigate('/ModulosAdmin')}>
+        <IconButton style={{ color: '#333' }} onClick={() => navigate(-1)}>
           <ArrowBackIcon />
         </IconButton>
         <Box
@@ -60,14 +61,14 @@ const BarraSuperior = () => {
         </Box>
         <Box sx={{ display: "flex" }}>
           <Tooltip title="Notificaciones">
-            <IconButton color="inherit" size="large">
+            <IconButton style={{ color: '#333' }} size="large">
               <NotificationsIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Perfil">
             <IconButton
               edge="end"
-              color="inherit"
+              style={{ color: '#333' }}
               size="large"
               onClick={manejarAperturaMenuPerfil}
             >

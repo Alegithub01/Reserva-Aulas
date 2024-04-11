@@ -9,6 +9,8 @@ import PantallaModulos from "./PantallaModulos/PantallaModulos";
 import PantallaPrincipal from "./PantallaPrincipal/PantallaPrincipal";
 import PantallaUsuarios from "./PantallaUsuarios/PantallaUsuarios";
 import PanelGestionUsuarios from "./PantallaModulos/PanelGestionUsuarios";
+import CrearRol from "../src/PantallaUsuarios/UsuarioModule2"
+import RegistroMasivoUsuarios from "../src/PantallaUsuarios/UsuarioModule1"
 
 function App() {
   return (
@@ -112,6 +114,38 @@ function App() {
                 >
                   <PanelGestionUsuarios />
                 </div>
+            }
+          />
+          <Route
+            path="/Crear-Rol-Nuevo"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100vh",
+                    overflow: "auto",
+                  }}
+                >
+                  <CrearRol />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/Registro-Masivo-Usuarios"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "calc(100vh - 48px)",
+                    overflow: "auto",
+                  }}
+                >
+                  <RegistroMasivoUsuarios />
+                </div>
+              </Layout>
             }
           />
         </Routes>
