@@ -10,14 +10,15 @@ const AdminHomeModule1 = () => {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      with:'100%',
       height: '100%',
+      with:'100%',
       backgroundColor: theme.secondary,
     },
     container: {
       display: 'flex',
-      minWidth: '900px',
-      minHeight: '500px',
+      width: '70%',
+      minWidth: '600px',
+      minHeight: '600px',
     },
   };
   return (
@@ -50,7 +51,7 @@ const AdminHomeModule1 = () => {
                 alignItems: "center",
               }}
             >
-              <StyledText boldText>Lista de Usuarios</StyledText>
+              <StyledText boldText>Lista de Usuarios Registrados</StyledText>
             </div>
             <div
               style={{

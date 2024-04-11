@@ -10,7 +10,8 @@ import PantallaPrincipal from "./PantallaPrincipal/PantallaPrincipal";
 import PantallaUsuarios from "./PantallaUsuarios/PantallaUsuarios";
 import PanelGestionUsuarios from "./PantallaModulos/PanelGestionUsuarios";
 import CrearRol from "../src/PantallaUsuarios/UsuarioModule2"
-import RegistroMasivoUsuarios from "../src/PantallaUsuarios/UsuarioModule1"
+import RegistroMasivoUsuarios from "../src/PantallaUsuarios/UsuarioModule3"
+import ListaUsuarios from "../src/PantallaUsuarios/UsuarioModule1"
 
 function App() {
   return (
@@ -46,14 +47,16 @@ function App() {
           <Route
             path="/ModulosAdmin"
             element={
-              <div
-                style={{
-                  width: "100vw",
-                  height: "100vh",
-                }}
-              >
-                <PantallaModulos />
-              </div>
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100vh",
+                  }}
+                >
+                  <PantallaModulos />
+                </div>
+              </Layout>
             }
           />
           <Route
@@ -105,6 +108,7 @@ function App() {
           <Route
             path="/Panel-Gestion-Usuarios"
             element={
+              <Layout>
                 <div
                   style={{
                     width: "100vw",
@@ -114,6 +118,7 @@ function App() {
                 >
                   <PanelGestionUsuarios />
                 </div>
+              </Layout>
             }
           />
           <Route
@@ -139,11 +144,27 @@ function App() {
                 <div
                   style={{
                     width: "100vw",
-                    height: "calc(100vh - 48px)",
+                    height: "100vh",
                     overflow: "auto",
                   }}
                 >
                   <RegistroMasivoUsuarios />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/Lista-Usuarios"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100vh",
+                    overflow: "auto",
+                  }}
+                >
+                  <ListaUsuarios />
                 </div>
               </Layout>
             }

@@ -4,7 +4,6 @@ import { useTheme } from "../Contexts/ThemeContext";
 import Button from "../Utils/Button";
 import StyledText from "../StyledText";
 import EntradaArchivo from "../Utils/EntradaArchivo";
-import RowPercentage from '../Responsive/RowPercentage';
 import { Cancel } from '@mui/icons-material';
 import axios from 'axios';
 import Snackbar from "@mui/material/Snackbar";
@@ -120,95 +119,120 @@ const AdminHomeModule3 = () => {
     });
     return json;
   };
-
+  const defaultStyle = {
+    outerContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100%',
+      with:'100%',
+      backgroundColor: theme.secondary,
+    },
+    container: {
+      display: 'flex',
+      width: '50%',
+      minWidth: '600px',
+      minHeight: '450px',
+    },
+  };
   return (
-    <Card
-      minWidth="300px"
-      minHeight="100px"
-      fullWidth
-      fullHeight
-      alignCenter
-      padding="30px 60px"
-      borderColor="blue"
-      borderRadius="15px"
-    >
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          height: "100%",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "30%",
-          }}
+    <div style={defaultStyle.outerContainer}>
+      <div style={defaultStyle.container}>
+        <Card
+          minWidth="300px"
+          minHeight="100px"
+          fullWidth
+          alignCenter
+          padding="30px 60px"
+          borderColor="blue"
+          borderRadius="15px"
         >
-          <StyledText boldText>Registro masivo</StyledText>
-        </div>
-        <div style={{ display: "flex", flexDirection: "column", position: 'relative'}}>
-          <div>
-            <span style={{ color: documento ? 'black' : '#888' }}>Nombre del archivo: {documento ? detallesArchivo.nombre : 'No disponible'}</span>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              height: "100%",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "30%",
+              }}
+            >
+              <StyledText boldText>Registro masivo de usuarios</StyledText>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", position: 'relative', gap:20}}>
+              <div>
+                <span style={{ color: documento ? 'black' : '#888' }}>Nombre del archivo: {documento ? detallesArchivo.nombre : 'No disponible'}</span>
+              </div>
+              <div>
+                <span style={{ color: documento ? 'black' : '#888' }}>Cantidad de registros: {documento ? detallesArchivo.registros : 'No disponible'}</span>
+              </div>
+              {documento && (
+                  <Cancel 
+                    onClick={manejoCancelacion} 
+                    style={{ 
+                      cursor: 'pointer',
+                      position: 'absolute',
+                      top: 0,
+                      right: 0,
+                      color: 'black',
+                    }} 
+                  />
+                )}
+            </div>  
+              <div >
+                <EntradaArchivo onChange={manejoDocumentoCambio} accept=".csv" />
+              </div>
+              <div >
+                <Button onClick={manejoDocumentoSubido} fullWidth>
+                  Procesar
+                </Button>            
+              </div>
+            <div
+              style={{
+                height: "0%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            ></div>
           </div>
-          <div>
-            <span style={{ color: documento ? 'black' : '#888' }}>Cantidad de registros: {documento ? detallesArchivo.registros : 'No disponible'}</span>
-          </div>
-          {documento && (
-              <Cancel 
-                onClick={manejoCancelacion} 
-                style={{ 
-                  cursor: 'pointer',
-                  position: 'absolute',
-                  top: 0,
-                  right: 0,
-                  color: 'black',
-                }} 
-              />
-            )}
-        </div>
-        <RowPercentage firstChildPercentage={40} gap="20px">
-          <div >
-            <EntradaArchivo onChange={manejoDocumentoCambio} accept=".csv" />
-          </div>
-          <div >
-            <Button onClick={manejoDocumentoSubido} fullWidth>
-              Procesar
-            </Button>            
-          </div>
-        </RowPercentage>
+          
+          <Snackbar
+            open={snackbarOpenSuccess}
+            autoHideDuration={6000}
+            onClose={handleCloseSnackbarSuccess}
+          >
+            <Alert
+              onClose={handleCloseSnackbarSuccess}
+              severity="success"
+              sx={{ width: "100%" }}
+            >
+              {mensajeExito}
+            </Alert>
+          </Snackbar>
+          <Snackbar
+            open={snackbarOpenError}
+            autoHideDuration={6000}
+            onClose={handleCloseSnackbarError}
+          >
+            <Alert
+              onClose={handleCloseSnackbarError}
+              severity="error"
+              sx={{ width: "100%" }}
+            >
+              {mensajeError}
+            </Alert>
+          </Snackbar>
+        </Card>
       </div>
-      <Snackbar
-        open={snackbarOpenSuccess}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbarSuccess}
-      >
-        <Alert
-          onClose={handleCloseSnackbarSuccess}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          {mensajeExito}
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        open={snackbarOpenError}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbarError}
-      >
-        <Alert
-          onClose={handleCloseSnackbarError}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          {mensajeError}
-        </Alert>
-      </Snackbar>
-    </Card>
+  </div>
   );
 };
 

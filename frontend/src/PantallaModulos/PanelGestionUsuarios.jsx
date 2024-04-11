@@ -4,7 +4,6 @@ import Card from "./Modulo";
 import IconoRegistroMasivo from '@mui/icons-material/GroupAdd';
 import IconoListaUsuarios from '@mui/icons-material/ListAlt';
 import IconoCrearRol from '@mui/icons-material/AdminPanelSettings';
-
 import { useNavigate } from 'react-router-dom';
 
 const PanelGestionUsuarios = () => {
@@ -51,7 +50,7 @@ const PanelGestionUsuarios = () => {
             <Card 
                 text="Lista de Usuarios Registrados" 
                 Icon={IconoListaUsuarios}
-                onClick={() => navegar('/GestionAmbientes')}
+                onClick={() => navegar('/Lista-Usuarios')}
             />
             <Card 
                 text="Crear Nuevo Rol" 
@@ -71,7 +70,7 @@ const PanelGestionUsuarios = () => {
                 onMouseOver={(e) => (e.target.style.color = "#3661EB")}
                 onMouseOut={(e) => (e.target.style.color = "black")}
             >
-                <StyledText enlaceText> Cerrar sesión </StyledText>
+                {/* <StyledText enlaceText> regresar </StyledText> */}
             </div>
         </div>
     );

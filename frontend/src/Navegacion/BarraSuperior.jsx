@@ -55,9 +55,9 @@ const BarraSuperior = () => {
             marginRight: 2,
           }}
         >
-          <Typography variant="h6" noWrap>
+          {/* <Typography variant="h6" noWrap>
             { titulo }
-          </Typography>
+          </Typography> */}
         </Box>
         <Box sx={{ display: "flex" }}>
           <Tooltip title="Notificaciones">
