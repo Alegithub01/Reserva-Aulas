@@ -1,12 +1,13 @@
 import SplitScreenLayout from "../Components/SplitScreenLayout";
 import StyledText from "../StyledText";
 import Card from "./Modulo";
-import IconoPersonas from '@mui/icons-material/PeopleAlt';
-import IconoAmbientes from '@mui/icons-material/RoomPreferences';
-import IconoReservas from '@mui/icons-material/EventNote';
+import IconoRegistroMasivo from '@mui/icons-material/GroupAdd';
+import IconoListaUsuarios from '@mui/icons-material/ListAlt';
+import IconoCrearRol from '@mui/icons-material/AdminPanelSettings';
+
 import { useNavigate } from 'react-router-dom';
 
-const PantallaModulos = () => {
+const PanelGestionUsuarios = () => {
     const navegar = useNavigate();
     const contenidoIzq = (
         <div
@@ -40,21 +41,21 @@ const PantallaModulos = () => {
                     margin: "15px 0",
                 }}
             >
-                <StyledText boldText>Módulos</StyledText>
+                <StyledText boldText>Gestion de Usuarios</StyledText>
             </div>
             <Card 
-                text="Gestión de Usuarios" 
-                Icon={IconoPersonas}
-                onClick={() => navegar('/Panel-Gestion-Usuarios')}
+                text="Registro Masivo de Usuarios" 
+                Icon={IconoRegistroMasivo}
+                onClick={() => navegar('/Gestion-Usuarios')}
             />
             <Card 
-                text="Gestión de Ambientes" 
-                Icon={IconoAmbientes}
+                text="Lista de Usuarios Registrados" 
+                Icon={IconoListaUsuarios}
                 onClick={() => navegar('/GestionAmbientes')}
             />
             <Card 
-                text="Gestión de Reservas" 
-                Icon={IconoReservas}
+                text="Crear Nuevo Rol" 
+                Icon={IconoCrearRol}
                 onClick={() => navegar('/gestion-reservas')}
             />
             <div
@@ -82,4 +83,4 @@ const PantallaModulos = () => {
     );
 };
 
-export default PantallaModulos;
+export default PanelGestionUsuarios;

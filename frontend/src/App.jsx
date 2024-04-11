@@ -8,7 +8,7 @@ import PantallaRegistro from "./PantallaRegistro/PantallaRegistro";
 import PantallaModulos from "./PantallaModulos/PantallaModulos";
 import PantallaPrincipal from "./PantallaPrincipal/PantallaPrincipal";
 import PantallaUsuarios from "./PantallaUsuarios/PantallaUsuarios";
-
+import PanelGestionUsuarios from "./PantallaModulos/PanelGestionUsuarios";
 
 function App() {
   return (
@@ -98,6 +98,20 @@ function App() {
                   <PantallaUsuarios />
                 </div>
               </Layout>
+            }
+          />
+          <Route
+            path="/Panel-Gestion-Usuarios"
+            element={
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100vh",
+                    overflow: "auto",
+                  }}
+                >
+                  <PanelGestionUsuarios />
+                </div>
             }
           />
         </Routes>
