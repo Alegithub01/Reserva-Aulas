@@ -28,7 +28,6 @@ const AdminHomeModule1 = () => {
           minWidth="100px"
           minHeight="100px"
           fullWidth
-          // fullHeight
           alignCenter
           padding="30px 10px"
           borderColor="blue"

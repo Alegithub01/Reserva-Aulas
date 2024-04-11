@@ -94,7 +94,7 @@ const AdminHomeModule2 = () => {
     },
     container: {
       display: 'flex',
-      width: '55%', // controlar ancho
+      width: '55%', //ancho
       minWidth: '600px', // min
       minHeight: '450px',
     },
@@ -106,7 +106,6 @@ const AdminHomeModule2 = () => {
           minWidth="200px"
           minHeight="200px"
           fullWidth
-          // fullHeight
           alignCenter
           padding="30px 60px"
           borderColor="blue"

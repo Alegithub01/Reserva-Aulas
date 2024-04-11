@@ -70,7 +70,6 @@ const PanelGestionUsuarios = () => {
                 onMouseOver={(e) => (e.target.style.color = "#3661EB")}
                 onMouseOut={(e) => (e.target.style.color = "black")}
             >
-                {/* <StyledText enlaceText> regresar </StyledText> */}
             </div>
         </div>
     );
