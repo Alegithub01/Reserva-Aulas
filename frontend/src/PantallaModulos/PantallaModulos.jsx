@@ -18,6 +18,7 @@ const PantallaModulos = () => {
                 height: "20%",
             }}
         >
+            <StyledText boldWhiteText>Sistema</StyledText>
             <StyledText boldWhiteText>Reserva de Ambientes</StyledText>
         </div>
     );
@@ -50,7 +51,7 @@ const PantallaModulos = () => {
             <Card 
                 text="Gestión de Ambientes" 
                 Icon={IconoAmbientes}
-                onClick={() => navegar('/GestionAmbientes')}
+                onClick={() => navegar('/Panel-Gestion-Ambientes')}
             />
             <Card 
                 text="Gestión de Reservas" 

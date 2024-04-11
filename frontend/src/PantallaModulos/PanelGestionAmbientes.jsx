@@ -1,12 +1,12 @@
 import SplitScreenLayout from "../Components/SplitScreenLayout";
 import StyledText from "../StyledText";
 import Card from "./Modulo";
-import IconoRegistroMasivo from '@mui/icons-material/GroupAdd';
-import IconoListaUsuarios from '@mui/icons-material/ListAlt';
-import IconoCrearRol from '@mui/icons-material/AdminPanelSettings';
+import IconoRegistroAmbiente from '@mui/icons-material/AddLocation';
+import IconoRegistroMasivoAmbiente from '@mui/icons-material/GroupAdd';
+import IconoListaAmbientes from '@mui/icons-material/List';
 import { useNavigate } from 'react-router-dom';
 
-const PanelGestionUsuarios = () => {
+const PanelGestionAmbientes = () => {
     const navegar = useNavigate();
     const contenidoIzq = (
         <div
@@ -41,22 +41,22 @@ const PanelGestionUsuarios = () => {
                     margin: "15px 0",
                 }}
             >
-                <StyledText boldText>Gestion de Usuarios</StyledText>
+                <StyledText boldText>Gestión de Ambientes</StyledText>
             </div>
             <Card 
-                text="Registro Masivo de Usuarios" 
-                Icon={IconoRegistroMasivo}
-                onClick={() => navegar('/Registro-Masivo-Usuarios')}
+                text="Registro de Ambiente" 
+                Icon={IconoRegistroAmbiente}
+                onClick={() => navegar('/Registro-Ambiente')}
             />
             <Card 
-                text="Lista de Usuarios Registrados" 
-                Icon={IconoListaUsuarios}
-                onClick={() => navegar('/Lista-Usuarios')}
+                text="Registro Masivo de Ambientes" 
+                Icon={IconoRegistroMasivoAmbiente}
+                onClick={() => navegar('/Registro-Masivo-Ambientes')}
             />
             <Card 
-                text="Crear Nuevo Rol" 
-                Icon={IconoCrearRol}
-                onClick={() => navegar('/Crear-Rol-Nuevo')}
+                text="Lista de Ambientes Registrados" 
+                Icon={IconoListaAmbientes}
+                onClick={() => navegar('/Lista-Ambientes')}
             />
             <div
                 style={{
@@ -82,4 +82,4 @@ const PanelGestionUsuarios = () => {
     );
 };
 
-export default PanelGestionUsuarios;
+export default PanelGestionAmbientes;

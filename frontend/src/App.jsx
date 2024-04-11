@@ -12,6 +12,10 @@ import PanelGestionUsuarios from "./PantallaModulos/PanelGestionUsuarios";
 import CrearRol from "../src/PantallaUsuarios/UsuarioModule2"
 import RegistroMasivoUsuarios from "../src/PantallaUsuarios/UsuarioModule3"
 import ListaUsuarios from "../src/PantallaUsuarios/UsuarioModule1"
+import PanelGestionAmbientes from "./PantallaModulos/PanelGestionAmbientes";
+import ListaAmbientes from "../src/PantallaAmbientes/AdminHomeModule1"
+import RegistroAmbiente from "../src/PantallaAmbientes/AdminHomeModule2"
+import RegistroMasivoAmbientes from "../src/PantallaAmbientes/AdminHomeModule3"
 
 function App() {
   return (
@@ -122,6 +126,22 @@ function App() {
             }
           />
           <Route
+            path="/Panel-Gestion-Ambientes"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100vh",
+                    overflow: "auto",
+                  }}
+                >
+                  <PanelGestionAmbientes />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
             path="/Crear-Rol-Nuevo"
             element={
               <Layout>
@@ -165,6 +185,54 @@ function App() {
                   }}
                 >
                   <ListaUsuarios />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/Lista-Ambientes"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100vh",
+                    overflow: "auto",
+                  }}
+                >
+                  <ListaAmbientes />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/Registro-Ambiente"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100vh",
+                    overflow: "auto",
+                  }}
+                >
+                  <RegistroAmbiente />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/Registro-Masivo-Ambientes"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100vh",
+                    overflow: "auto",
+                  }}
+                >
+                  <RegistroMasivoAmbientes />
                 </div>
               </Layout>
             }

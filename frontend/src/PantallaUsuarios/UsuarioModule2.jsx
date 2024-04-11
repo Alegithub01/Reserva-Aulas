@@ -94,8 +94,8 @@ const AdminHomeModule2 = () => {
     },
     container: {
       display: 'flex',
-      width: '55%', //ancho
-      minWidth: '600px', // min
+      width: '50%',
+      minWidth: '600px',
       minHeight: '450px',
     },
   };
