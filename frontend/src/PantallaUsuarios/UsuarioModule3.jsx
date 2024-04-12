@@ -8,7 +8,7 @@ import { Cancel } from '@mui/icons-material';
 import axios from 'axios';
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-
+import CircularProgress from '@mui/material/CircularProgress';
 const AdminHomeModule3 = () => {
   const [documento, setDocumento] = useState(null);
   const [snackbarOpenSuccess, setSnackbarOpenSuccess] = useState(false);
@@ -21,6 +21,7 @@ const AdminHomeModule3 = () => {
   const [datosJson, setDatosJson] = useState([]);
   const [mensajeError, setMensajeError] = useState("");
   const [mensajeExito, setMensajeExito] = useState("");
+  const [cargando, setCargando] = useState(false);
 
   const { theme } = useTheme();
 
@@ -74,6 +75,7 @@ const AdminHomeModule3 = () => {
       setMensajeError("Seleccione un archivo para procesar.");
       return;
     }
+    setCargando(true);
     console.log("Datos para el backend:", datosJson);
 
     const formData = new FormData();
@@ -92,7 +94,8 @@ const AdminHomeModule3 = () => {
         setSnackbarOpenError(true);
         setMensajeError("Error al procesar el archivo. Intente nuevamente.");
         setMensajeExito("");
-      });
+      })
+      .finally(() => setCargando(false));
   };
 
   const manejoCancelacion = () => {
@@ -132,6 +135,18 @@ const AdminHomeModule3 = () => {
       minWidth: '600px',
       minHeight: '450px',
     },
+    loadingOverlay: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'rgba(255, 255, 255, 0.5)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 1000,
+    }
   };
   return (
     <div style={defaultStyle.outerContainer}>
@@ -154,6 +169,11 @@ const AdminHomeModule3 = () => {
               height: "100%",
             }}
           >
+            {cargando && (
+              <div style={defaultStyle.loadingOverlay}>
+                <CircularProgress />
+              </div>
+            )}
             <div
               style={{
                 display: "flex",
