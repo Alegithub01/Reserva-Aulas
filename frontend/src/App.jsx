@@ -21,6 +21,7 @@ import PanelSolicitudReservas from "./PantallaModulos/PanelSolicitudReservas";
 import Solicitud from "./PantallaSolicitudReserva/Solicitud";
 import Calendario from "./PantallaSolicitudReserva/Calendario";
 import Reservas from "./PantallaSolicitudReserva/Reservas";
+import BuscarAmbiente from "./PantallaSolicitudReserva/BuscarAmbiente"
 
 function App() {
   return (
@@ -318,6 +319,22 @@ function App() {
                   }}
                 >
                   <Reservas />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/Buscar-Ambiente"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100vh",
+                    overflow: "auto",
+                  }}
+                >
+                  <BuscarAmbiente />
                 </div>
               </Layout>
             }

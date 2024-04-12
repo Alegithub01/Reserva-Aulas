@@ -54,11 +54,11 @@ const PantallaModulos = () => {
                 Icon={IconoAmbientes}
                 onClick={() => navegar('/Panel-Gestion-Ambientes')}
             />
-            <Card 
+            {/* <Card 
                 text="Gestión de Reservas" 
                 Icon={IconoReservas}
                 onClick={() => navegar('/Gestion-Reserva')}
-            />
+            /> */}
             <Card 
                 text="Solicitud de Reservas" 
                 Icon={BookOnlineIcon}

@@ -5,6 +5,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import HistoryIcon from '@mui/icons-material/History';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import { useNavigate } from 'react-router-dom';
+import SearchIcon from '@mui/icons-material/Search';    
 
 const PanelSolicitudReservas = () => {
     const navegar = useNavigate();
@@ -39,7 +40,7 @@ const PanelSolicitudReservas = () => {
                     justifyContent: "center",
                     alignItems: "center",
                     margin: "15px 0",
-                    height: "15%",
+                    height: "10%",
                 }}
             >
                 <StyledText boldText>Reservas</StyledText>
@@ -53,6 +54,11 @@ const PanelSolicitudReservas = () => {
                 text="Ver Disponibilidad" 
                 Icon={EventAvailableIcon}
                 onClick={() => navegar('/Calendario')}
+            />
+            <Card 
+                text="Buscar Ambientes" 
+                Icon={SearchIcon}
+                onClick={() => navegar('/Buscar-Ambiente')}
             />
             <Card 
                 text="Mis Reservas" 
