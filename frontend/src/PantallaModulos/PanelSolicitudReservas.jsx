@@ -47,17 +47,17 @@ const PanelSolicitudReservas = () => {
             <Card 
                 text="Solicitar Reserva" 
                 Icon={AddCircleOutlineIcon}
-                onClick={() => navegar('/mav')}
+                onClick={() => navegar('/Solicitud')}
             />
             <Card 
                 text="Ver Disponibilidad" 
                 Icon={EventAvailableIcon}
-                onClick={() => navegar('/mav')}
+                onClick={() => navegar('/Calendario')}
             />
             <Card 
                 text="Mis Reservas" 
                 Icon={HistoryIcon}
-                onClick={() => navegar('/mav')}
+                onClick={() => navegar('/Reservas')}
             />
             <div
                 style={{

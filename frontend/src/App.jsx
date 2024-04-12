@@ -18,6 +18,9 @@ import RegistroAmbiente from "../src/PantallaAmbientes/AdminHomeModule2"
 import RegistroMasivoAmbientes from "../src/PantallaAmbientes/AdminHomeModule3"
 import GestionReservas from "./PantallaGestionReserva/GestionReservas";
 import PanelSolicitudReservas from "./PantallaModulos/PanelSolicitudReservas";
+import Solicitud from "./PantallaSolicitudReserva/Solicitud";
+import Calendario from "./PantallaSolicitudReserva/Calendario";
+import Reservas from "./PantallaSolicitudReserva/Reservas";
 
 function App() {
   return (
@@ -267,6 +270,54 @@ function App() {
                   }}
                 >
                   <GestionReservas />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/Solicitud"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100vh",
+                    overflow: "auto",
+                  }}
+                >
+                  <Solicitud />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/Calendario"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100vh",
+                    overflow: "auto",
+                  }}
+                >
+                  <Calendario />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/Reservas"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100vh",
+                    overflow: "auto",
+                  }}
+                >
+                  <Reservas />
                 </div>
               </Layout>
             }

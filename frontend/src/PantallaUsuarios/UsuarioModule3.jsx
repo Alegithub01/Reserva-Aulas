@@ -19,7 +19,6 @@ const AdminHomeModule3 = () => {
     registros: 0,
   });
   const [datosJson, setDatosJson] = useState([]);
-  // const [abrirDialogo, cambiarAbrirDialogo] = useState(false);
   const [mensajeError, setMensajeError] = useState("");
   const [mensajeExito, setMensajeExito] = useState("");
 
@@ -84,7 +83,6 @@ const AdminHomeModule3 = () => {
     axios.post("http://localhost:8000/api/auth/registerMany", datosJson)
       .then(response => {
         console.log(response.data);
-        // cambiarAbrirDialogo(true);
         setSnackbarOpenSuccess(true);
         setMensajeExito("Usuarios registrados exitosamente.");
         setMensajeError("");
