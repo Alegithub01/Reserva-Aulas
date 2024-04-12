@@ -47,6 +47,27 @@ function useAmbientes() {
           periodos: ["12:45-14:15"]
         },
         {
+          nombre: "692A",
+          capacidad: 100,
+          tipo: "Aula",
+          planta: 2,
+          ubicacion: "Edif. Nuevo",
+          servicios: ["Data display"],
+          dia: "Jueves",
+          periodos: ["11:15-12:45", "17:15-18:45"]
+        },
+        
+        {
+          nombre: "692A",
+          capacidad: 100,
+          tipo: "Aula",
+          planta: 2,
+          ubicacion: "Edif. Nuevo",
+          servicios: ["Data display"],
+          dia: "Viernes",
+          periodos: ["12:45-14-15", "17:15-18:45"]
+        },
+        {
           nombre: "693D",
           capacidad: 300,
           tipo: "Auditorio",
