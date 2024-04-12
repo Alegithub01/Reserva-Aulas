@@ -1,9 +1,8 @@
 import Card from "../Utils/Card";
-import GridTablaProfesores from "./GridTablaProfesores";
 import StyledText from "../StyledText";
 import { useTheme } from '../Contexts/ThemeContext';
 
-const AdminHomeModule1 = () => {
+const GestionReservas = () => {
   const { theme } = useTheme();
   const defaultStyle = {
     outerContainer: {
@@ -29,7 +28,7 @@ const AdminHomeModule1 = () => {
           minHeight="100px"
           fullWidth
           alignCenter
-          padding="30px 10px"
+          padding="30px 50px"
           borderColor="blue"
           borderRadius="15px"
         >
@@ -44,23 +43,17 @@ const AdminHomeModule1 = () => {
           >
             <div
               style={{
-                height: "6%",
+                height: "10%",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
               }}
             >
-              <StyledText boldText>Lista de Usuarios Registrados</StyledText>
+              <StyledText boldText>Gestion de Reserva</StyledText>
             </div>
-            <div
-              style={{
-                height: "6%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            ></div>
-            <GridTablaProfesores />
+
+            <StyledText boldText>...</StyledText>
+
             <div
               style={{
                 height: "0%",
@@ -76,4 +69,4 @@ const AdminHomeModule1 = () => {
   );
 };
 
-export default AdminHomeModule1;
+export default GestionReservas;

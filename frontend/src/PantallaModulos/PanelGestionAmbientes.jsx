@@ -1,13 +1,12 @@
 import SplitScreenLayout from "../Components/SplitScreenLayout";
 import StyledText from "../StyledText";
 import Card from "./Modulo";
-import IconoPersonas from '@mui/icons-material/PeopleAlt';
-import IconoAmbientes from '@mui/icons-material/RoomPreferences';
-import IconoReservas from '@mui/icons-material/EventNote';
-import BookOnlineIcon from '@mui/icons-material/BookOnline';
+import IconoRegistroAmbiente from '@mui/icons-material/AddLocation';
+import IconoRegistroMasivoAmbiente from '@mui/icons-material/GroupAdd';
+import IconoListaAmbientes from '@mui/icons-material/List';
 import { useNavigate } from 'react-router-dom';
 
-const PantallaModulos = () => {
+const PanelGestionAmbientes = () => {
     const navegar = useNavigate();
     const contenidoIzq = (
         <div
@@ -40,31 +39,26 @@ const PantallaModulos = () => {
                     justifyContent: "center",
                     alignItems: "center",
                     margin: "15px 0",
+                    height: "15%",
                 }}
             >
-                <StyledText boldText>Módulos</StyledText>
+                <StyledText boldText>Gestión de Ambientes</StyledText>
             </div>
             <Card 
-                text="Gestión de Usuarios" 
-                Icon={IconoPersonas}
-                onClick={() => navegar('/Panel-Gestion-Usuarios')}
+                text="Registro de Ambiente" 
+                Icon={IconoRegistroAmbiente}
+                onClick={() => navegar('/Registro-Ambiente')}
             />
             <Card 
-                text="Gestión de Ambientes" 
-                Icon={IconoAmbientes}
-                onClick={() => navegar('/Panel-Gestion-Ambientes')}
+                text="Registro Masivo de Ambientes" 
+                Icon={IconoRegistroMasivoAmbiente}
+                onClick={() => navegar('/Registro-Masivo-Ambientes')}
             />
             <Card 
-                text="Gestión de Reservas" 
-                Icon={IconoReservas}
-                onClick={() => navegar('/Gestion-Reserva')}
+                text="Lista de Ambientes Registrados" 
+                Icon={IconoListaAmbientes}
+                onClick={() => navegar('/Lista-Ambientes')}
             />
-            <Card 
-                text="Solicitud de Reservas" 
-                Icon={BookOnlineIcon}
-                onClick={() => navegar('/Panel-Solicitud-Reservas')}
-            />
-            
             <div
                 style={{
                     display: "flex",
@@ -78,7 +72,6 @@ const PantallaModulos = () => {
                 onMouseOver={(e) => (e.target.style.color = "#3661EB")}
                 onMouseOut={(e) => (e.target.style.color = "black")}
             >
-                <StyledText enlaceText> Cerrar sesión </StyledText>
             </div>
         </div>
     );
@@ -90,4 +83,4 @@ const PantallaModulos = () => {
     );
 };
 
-export default PantallaModulos;
+export default PanelGestionAmbientes;

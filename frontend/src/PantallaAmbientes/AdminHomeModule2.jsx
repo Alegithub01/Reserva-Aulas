@@ -8,8 +8,10 @@ import Dropdown from "../Utils/Dropdown";
 import SelectorMultiple from '../Utils/SelectorMultiple';
 import MensajeExito from '../Utils/MensajeExito';
 import axios from 'axios';
+import { useTheme } from '../Contexts/ThemeContext';
 
 const AdminHomeModule2 = () => {
+  const { theme } = useTheme();
   const [nombre, cambiarNombre] = useState("");
   const [capacidad, cambiarCapacidad] = useState("");
   const [tipo, cambiarTipo] = useState("");
@@ -180,127 +182,145 @@ const registrarAmbiente = async () => {
       cambiarMensajeError(previo => ({ ...previo, horas: ""}))    
     }
   };
-
+  const defaultStyle = {
+    outerContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100%',
+      with:'100%',
+      backgroundColor: theme.secondary,
+    },
+    container: {
+      display: 'flex',
+      width: '50%',
+      minWidth: '600px',
+      minHeight: '450px',
+    },
+  };
   return (
-    <Card
-      minWidth="300px"
-      minHeight="100px"
-      fullWidth
-      fullHeight
-      alignCenter
-      padding="30px 60px"
-      borderColor="blue"
-      borderRadius="15px"
-    >
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          gap: '10px'
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+    <div style={defaultStyle.outerContainer}>
+      <div style={defaultStyle.container}>
+        <Card
+          minWidth="300px"
+          minHeight="100px"
+          fullWidth
+          alignCenter
+          padding="30px 60px"
+          borderColor="blue"
+          borderRadius="15px"
         >
-          <StyledText boldText>Registro de Ambiente</StyledText>
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              gap: '10px'
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <StyledText boldText>Registro de Ambiente</StyledText>
 
-        </div>
-        <RowPercentage firstChildPercentage={60} gap="10px">
-          <div>
+            </div>
+            <RowPercentage firstChildPercentage={60} gap="10px">
+              <div>
+                <TextInput
+                  label="Nombre"
+                  fullWidth={true}
+                  onChange={(event) => manejarCambioNombre(event, "^[0-9(A-Z)+]*$")}
+                  onBlur={validarVacioNombre}
+                  isRequired={true}
+                  validationMessage={mensajeError.nombre}
+                  pattern="^[0-9(A-Z)+]{0,8}$"
+                />
+              </div>
+              <div>
+                <TextInput
+                  label="Capacidad"
+                  fullWidth={true}
+                  onChange={(event) => manejarCambioCapacidad(event, "^[0-9]*$", {min: 10, max: 300})}
+                  onBlur={validarVacioCapacidad}
+                  isRequired={true}
+                  validationMessage={mensajeError.capacidad}
+                  pattern="^[0-9]*$"
+                  rango={{ min: 10, max: 300 }}
+                />
+              </div>
+            </RowPercentage>
+            <RowPercentage firstChildPercentage={40} gap="10px">
+              <div>
+                <Dropdown
+                  etiqueta="Tipo de Ambiente"
+                  opciones={ambientes}
+                  cambio={cambiarTipo}
+                  onBlur={validarSeleccionTipo}
+                  esRequerido={true}
+                  mensajeValidacion={mensajeError.tipo}
+                />
+              </div>
+              <div>
+                <Dropdown
+                  etiqueta="Planta"
+                  opciones={plantas}
+                  cambio={cambiarPlanta}
+                  onBlur={validarSeleccionPlanta}
+                  esRequerido={true}
+                  mensajeValidacion={mensajeError.planta}
+                />
+              </div>
+            </RowPercentage>
             <TextInput
-              label="Nombre"
-              fullWidth={true}
-              onChange={(event) => manejarCambioNombre(event, "^[0-9(A-Z)+]*$")}
-              onBlur={validarVacioNombre}
-              isRequired={true}
-              validationMessage={mensajeError.nombre}
-              pattern="^[0-9(A-Z)+]{0,8}$"
+              label="Ubicación"
+              pattern='^[A-Za-z0-9, ]{0,50}$'
+              onChange={(event)=> cambiarUbicacion(event.target.value)}
             />
-          </div>
-          <div>
             <TextInput
-              label="Capacidad"
-              fullWidth={true}
-              onChange={(event) => manejarCambioCapacidad(event, "^[0-9]*$", {min: 10, max: 300})}
-              onBlur={validarVacioCapacidad}
-              isRequired={true}
-              validationMessage={mensajeError.capacidad}
-              pattern="^[0-9]*$"
-              rango={{ min: 10, max: 300 }}
+              label="Servicios"
+              pattern='^[A-Za-z0-9, ]{0,50}$'
+              onChange={(event)=> cambiarServicios(event.target.value)}
             />
-          </div>
-        </RowPercentage>
-        <RowPercentage firstChildPercentage={40} gap="10px">
-          <div>
-            <Dropdown
-              etiqueta="Tipo de Ambiente"
-              opciones={ambientes}
-              cambio={cambiarTipo}
-              onBlur={validarSeleccionTipo}
-              esRequerido={true}
-              mensajeValidacion={mensajeError.tipo}
-            />
-          </div>
-          <div>
-            <Dropdown
-              etiqueta="Planta"
-              opciones={plantas}
-              cambio={cambiarPlanta}
-              onBlur={validarSeleccionPlanta}
-              esRequerido={true}
-              mensajeValidacion={mensajeError.planta}
-            />
-          </div>
-        </RowPercentage>
-        <TextInput
-          label="Ubicación"
-          pattern='^[A-Za-z0-9, ]{0,50}$'
-          onChange={(event)=> cambiarUbicacion(event.target.value)}
-        />
-        <TextInput
-          label="Servicios"
-          pattern='^[A-Za-z0-9, ]{0,50}$'
-          onChange={(event)=> cambiarServicios(event.target.value)}
-        />
 
-        <RowPercentage firstChildPercentage={60} gap="10px">
-          <div>
-            <Dropdown
-              etiqueta="Día"
-              opciones={dias}
-              cambio={cambiarDia}
-              onBlur={validarSeleccionDia}
-              esRequerido={true}
-              mensajeValidacion={mensajeError.dia}
+            <RowPercentage firstChildPercentage={60} gap="10px">
+              <div>
+                <Dropdown
+                  etiqueta="Día"
+                  opciones={dias}
+                  cambio={cambiarDia}
+                  onBlur={validarSeleccionDia}
+                  esRequerido={true}
+                  mensajeValidacion={mensajeError.dia}
+                />
+              </div>
+              <div>
+                  <SelectorMultiple
+                    etiqueta="Periodos de hora"
+                    opciones={horarios}
+                    cambio={cambiarHoras}
+                    llenado={validarSeleccionHoras}
+                    esRequerido={true}
+                    mensajeValidacion={mensajeError.horas}
+                  />
+              </div> 
+            </RowPercentage>
+            <MensajeExito
+              abrirDialogo={abrirDialogo}
+              cerrarDialogo={() => {cambiarAbrirDialogo(false); window.location.reload();
+              }}
+              mensaje="Ambiente registrado con éxito"
             />
+            <Button fullWidth={true} onClick={validarInfoOblig}>Guardar</Button>
           </div>
-          <div>
-              <SelectorMultiple
-                etiqueta="Periodos de hora"
-                opciones={horarios}
-                cambio={cambiarHoras}
-                llenado={validarSeleccionHoras}
-                esRequerido={true}
-                mensajeValidacion={mensajeError.horas}
-              />
-          </div> 
-        </RowPercentage>
-        <MensajeExito
-          abrirDialogo={abrirDialogo}
-          cerrarDialogo={() => {cambiarAbrirDialogo(false); window.location.reload();
-          }}
-          mensaje="Ambiente registrado con éxito"
-        />
-        <Button fullWidth={true} onClick={validarInfoOblig}>Guardar</Button>
+        </Card>
       </div>
-    </Card>
+    </div>
   );
 };
 
