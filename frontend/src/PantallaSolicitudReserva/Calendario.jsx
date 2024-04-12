@@ -176,7 +176,17 @@ const Calendario = () => {
       'auditorios': auditorios,
       'laboratorios': laboratorios
     };
-    return mapTipoToState[tipo]?.map(item => ({ value: item.nombre, label: item.nombre })) || [];
+    const items = mapTipoToState[tipo];
+    if (!items) {
+      return [];
+    }
+    const uniqueNames = new Set(items.map(item => item.nombre));
+    const options = Array.from(uniqueNames).map(nombre => ({
+      value: nombre,
+      label: nombre
+    }));
+  
+    return options;
   };
 
   const crearScheduleParaAula = (nombreAula) => {
@@ -208,7 +218,7 @@ const Calendario = () => {
       display: 'flex',
       width: '70%',
       minWidth: '700px',
-      minHeight: '600px',
+      minHeight: '650px',
     },
   };
 
@@ -217,7 +227,7 @@ const Calendario = () => {
       <div style={defaultStyle.container}>
         <Card minWidth="100px" minHeight="100px" fullWidth alignCenter padding="30px 50px" borderColor="blue" borderRadius="15px">
           <div style={{ width: "100%", flexDirection: "column", height: "100%", display: "flex", justifyContent: "space-between" }}>
-            <div style={{ height: "10%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <div style={{ height: "20%", display: "flex", justifyContent: "center", alignItems: "center"}}>
               <StyledText boldText>Disponibilidad de ambientes</StyledText>
             </div>
             <RowPercentage firstChildPercentage={40} gap="10px">
@@ -236,8 +246,8 @@ const Calendario = () => {
                 cambio={handleAulaEspecificaChange}
               />
             </RowPercentage>
-            <div>
-              {aulaEspecifica && <StyledText> Aula Seleccionada: {aulaEspecifica} </StyledText>}
+            <div style={{ height: "10%", display: "flex", justifyContent: "center", alignItems: "center"}}>
+              {aulaEspecifica && <StyledText> Aula: {aulaEspecifica} </StyledText>}
             </div>
             <CalendarioComp schedule={schedule} />
           </div>
