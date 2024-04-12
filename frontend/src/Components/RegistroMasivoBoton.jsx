@@ -60,7 +60,12 @@ const RegistroMasivoBoton = () => {
         if (texto.includes('Periodos', 'Dia', 'Servicios', 'Ubicacion', 'Planta', 'Tipo', 'Capacidad', 'Nombre')) {
           const lineas = texto.split('\n').slice(1);
           const registros = lineas.map((linea) => {
-            const campos = linea.split(',').map(campo => campo.trim());
+            let campos = linea.split(',');
+            if(campos.length > 8) {
+              campos[7] = campos.slice(7).join(',');
+              campos = campos.slice(0,8);
+            }
+            campos[7] = campos[7]?campos[7].replace(/^\"|\"\r$/g, ''):campos[7];
             return {
               nombre: campos[0],
               capacidad: parseInt(campos[1]),
@@ -69,10 +74,11 @@ const RegistroMasivoBoton = () => {
               ubicacion: campos[4],
               servicios: campos[5],
               dia: campos[6],
-              horas: JSON.stringify(campos[7]),
+              horas: campos[7],
             };
           });
-
+        
+          console.log(registros);
           localStorage.setItem('registros', JSON.stringify(registros));
 
           //acá se debería hacer la petición POST
