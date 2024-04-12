@@ -39,6 +39,7 @@ const PanelGestionAmbientes = () => {
                     justifyContent: "center",
                     alignItems: "center",
                     margin: "15px 0",
+                    height: "15%",
                 }}
             >
                 <StyledText boldText>Gestión de Ambientes</StyledText>

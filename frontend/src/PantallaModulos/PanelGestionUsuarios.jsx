@@ -38,7 +38,8 @@ const PanelGestionUsuarios = () => {
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    margin: "15px 0",
+                    margin: "15px 0px",
+                    height: "15%",
                 }}
             >
                 <StyledText boldText>Gestion de Usuarios</StyledText>

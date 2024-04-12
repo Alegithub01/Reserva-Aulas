@@ -13,7 +13,7 @@ const Modulo = ({ text = 'Texto Predeterminado', Icon = StarBorder, onClick }) =
       alignItems: 'center',
       justifyContent: 'space-between',
       position: 'relative',
-      width: 'calc(100% - 40px)',
+      // width: 'calc(100% - 40px)',
       padding: '5px 20px',
       backgroundColor: '#fff',
       borderRadius: '15px',
@@ -21,6 +21,7 @@ const Modulo = ({ text = 'Texto Predeterminado', Icon = StarBorder, onClick }) =
       textDecoration: 'none',
       zIndex: 0,
       overflow: 'hidden',
+      width: '100%',
     },
     text: {
       fontSize: '17px',
