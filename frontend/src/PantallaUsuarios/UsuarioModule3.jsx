@@ -67,6 +67,7 @@ const AdminHomeModule3 = () => {
         }));
       };
       leerArchivo.readAsText(archivo);
+      console.log("Archivo cargado:", archivo);
     }
   };
 

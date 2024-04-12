@@ -11,7 +11,7 @@ const AdminHomeModule3 = () => {
       justifyContent: 'center',
       alignItems: 'center',
       height: '100%',
-      with:'100%',
+      with: '100%',
       backgroundColor: theme.secondary,
     },
     container: {
@@ -22,42 +22,43 @@ const AdminHomeModule3 = () => {
     },
   };
   return (
-  <div style={defaultStyle.outerContainer}>
-    <div style={defaultStyle.container}>
-      <Card
-        minWidth="300px"
-        minHeight="100px"
-        fullWidth
-        alignCenter
-        padding="10px"
-        borderColor="blue"
-        borderRadius="15px"
-      >
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            gap: '10px'
-          }}
+    <div style={defaultStyle.outerContainer}>
+      <div style={defaultStyle.container}>
+        <Card
+          minWidth="300px"
+          minHeight="100px"
+          fullWidth
+          alignCenter
+          padding="30px 60px"
+          borderColor="blue"
+          borderRadius="15px"
         >
           <div
             style={{
+              width: "100%",
+              height: "100%",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
+              
+            
             }}
           >
-            <StyledText boldText>Registrar varios</StyledText>
-            <RegistroMasivoBoton />
-          </div>
-        </div>
-      </Card>
-    </div>
-  </div>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '30%',
+                }}
+              >
+                <StyledText boldText >Registrar varios</StyledText>
+              </div>
+              <RegistroMasivoBoton />
+            </div>
+       
+        </Card>
+      </div >
+    </div >
   );
 };
 
