@@ -1,4 +1,3 @@
-// esp
 import { useNavigate } from 'react-router-dom';
 import { useState } from "react";
 import {
@@ -19,8 +18,10 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const BarraSuperior = () => {
   const { nombre, correo } = UsuarioStore();
-  const [anchorEl, setAnchorEl] = useState(null);
-  const abierto = Boolean(anchorEl);
+  const [anchorElPerfil, setAnchorElPerfil] = useState(null);
+  const abiertoPerfil = Boolean(anchorElPerfil);
+  const [anchorElNotificaciones, setAnchorElNotificaciones] = useState(null);
+  const abiertoNotificaciones = Boolean(anchorElNotificaciones);
   const navigate = useNavigate();
 
   const manejarCierreSesion = () => {
@@ -28,11 +29,27 @@ const BarraSuperior = () => {
   };
 
   const manejarAperturaMenuPerfil = (evento) => {
-    setAnchorEl(evento.currentTarget);
+    if (anchorElPerfil) {
+      setAnchorElPerfil(null);
+    } else {
+      setAnchorElPerfil(evento.currentTarget);
+    }
   };
 
   const manejarCierreMenu = () => {
-    setAnchorEl(null);
+    setAnchorElPerfil(null);
+  };
+
+  const manejarAperturaNotificaciones = (evento) => {
+    if (anchorElNotificaciones) {
+      setAnchorElNotificaciones(null);
+    } else {
+      setAnchorElNotificaciones(evento.currentTarget);
+    }
+  };
+
+  const manejarCierreNotificaciones = () => {
+    setAnchorElNotificaciones(null);
   };
 
   return (
@@ -53,10 +70,30 @@ const BarraSuperior = () => {
         </Box>
         <Box sx={{ display: "flex" }}>
           <Tooltip title="Notificaciones">
-            <IconButton style={{ color: 'white' }} size="large">
+            <IconButton style={{ color: 'white' }} size="large" onClick={manejarAperturaNotificaciones}>
               <NotificationsIcon />
             </IconButton>
           </Tooltip>
+          <Menu
+            id="menu-notificaciones"
+            anchorEl={anchorElNotificaciones}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={abiertoNotificaciones}
+            onClose={manejarCierreNotificaciones}
+          >
+            <MenuItem onClick={manejarCierreNotificaciones}>Notificación 1</MenuItem>
+            <MenuItem onClick={manejarCierreNotificaciones}>Notificación 2</MenuItem>
+            <Divider />
+            <MenuItem onClick={manejarCierreNotificaciones}>Ver todas</MenuItem>
+          </Menu>
           <Tooltip title="Perfil">
             <IconButton
               edge="end"
@@ -69,7 +106,7 @@ const BarraSuperior = () => {
           </Tooltip>
           <Menu
             id="menu-appbar"
-            anchorEl={anchorEl}
+            anchorEl={anchorElPerfil}
             anchorOrigin={{
               vertical: "bottom",
               horizontal: "right",
@@ -79,7 +116,7 @@ const BarraSuperior = () => {
               vertical: "top",
               horizontal: "right",
             }}
-            open={abierto}
+            open={abiertoPerfil}
             onClose={manejarCierreMenu}
           >
             <Typography
@@ -102,9 +139,6 @@ const BarraSuperior = () => {
       </Toolbar>
     </AppBar>
   );
-};
-
-BarraSuperior.propTypes = {
 };
 
 export default BarraSuperior;

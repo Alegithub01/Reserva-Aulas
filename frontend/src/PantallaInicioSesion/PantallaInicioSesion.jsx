@@ -13,20 +13,13 @@ const PantallaInicioSesionProfesor = () => {
   const [contrasena, setContrasena] = useState('');
   const [errores, setErrores] = useState({ correoElectronico: '', contrasena: '' });
 
-  /*const usuariosValidos = [
-    { email: 'JhonDoe@gmail.com', password: '12345678' },
-    { email: 'eurekasolutionsrl@gmail.com', password: 'TIS12024' }
-  ];
-  */
   const validarCorreoElectronico = () => {
     let mensajeError = '';
     if (!correoElectronico) {
       mensajeError = 'Ingrese su correo electrónico.';
     } else if (!/\S+@\S+\.\S+/.test(correoElectronico)) {
       mensajeError = 'Ingrese un correo electrónico válido.';
-    } /*else if (!usuariosValidos.some(usuario => usuario.email === correoElectronico)) {
-      mensajeError = 'Correo electrónico no registrado.';
-    }*/
+    } 
     setErrores((erroresActuales) => ({
       ...erroresActuales,
       correoElectronico: mensajeError,
@@ -36,34 +29,21 @@ const PantallaInicioSesionProfesor = () => {
   const validarFormulario = () => {
     let mensajesError = { correoElectronico: '', contrasena: '' };
     let formularioEsValido = true;
-
     if (!correoElectronico) {
         mensajesError.correoElectronico = 'Ingrese su correo electrónico.';
         formularioEsValido = false;
     } else if (!/\S+@\S+\.\S+/.test(correoElectronico)) {
         mensajesError.correoElectronico = 'Ingrese un correo electrónico válido.';
         formularioEsValido = false;
-    } /*else if (!usuariosValidos.some(usuario => usuario.email === correoElectronico)) {
-        mensajesError.correoElectronico = 'Correo electrónico no registrado.';
-        formularioEsValido = false;
-    }*/
-
+    } 
     if (!contrasena) {
         mensajesError.contrasena = 'Ingrese su contraseña.';
         formularioEsValido = false;
-    } /*else {
-        const usuario = usuariosValidos.find(usuario => usuario.email === correoElectronico);
-        if (usuario && usuario.password !== contrasena) {
-            mensajesError.contrasena = 'Contraseña incorrecta.';
-            formularioEsValido = false;
-        }
-    }*/
-
+    } 
     setErrores(mensajesError);
     return formularioEsValido;
   };
 
-  //const para mandar la solicitud al backend
   const iniciarSesion = () => {
     if (validarFormulario()) {
       axios.post('http://localhost:8000/api/auth/login', {
@@ -71,8 +51,13 @@ const PantallaInicioSesionProfesor = () => {
         password: contrasena
       })
       .then(response => {
-        console.log(response.data); 
-        navegar('/ModulosAdmin');
+        if (response.data.access_token) {
+          console.log('Token recibido:', response.data.access_token);
+          localStorage.setItem('access_token', response.data.access_token);
+          navegar('/ModulosAdmin');
+        } else {
+          console.error('No se recibió token');
+        }
       })
       .catch(error => {
         console.error('Error al iniciar sesión:', error);
