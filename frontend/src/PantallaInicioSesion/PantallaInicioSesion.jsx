@@ -65,17 +65,22 @@ const PantallaInicioSesionProfesor = () => {
           if (response.data.access_token) {
             console.log("Token recibido:", response.data.access_token);
             localStorage.setItem("access_token", response.data.access_token);
-            navegar("/ModulosAdmin");
-            setSnackbarMessage("Inicio de sesión exitoso");
-            setSnackbarSeverity("success");
+            return obtenerDatosUsuario();
           } else {
             console.error("No se recibió token");
             setSnackbarMessage("Inicio de sesión fallido");
             setSnackbarSeverity("error");
+            return Promise.reject(new Error("No se recibió token"));
           }
         })
+        .then((userData) => {
+          console.log("Datos del usuario obtenidos:", userData);
+          navegar("/ModulosAdmin");
+          setSnackbarMessage("Inicio de sesión exitoso");
+          setSnackbarSeverity("success");
+        })
         .catch((error) => {
-          console.error("Error al iniciar sesión:", error);
+          console.error("Error al iniciar sesión o al obtener los datos del usuario:", error);
           setSnackbarMessage("Inicio de sesión fallido");
           setSnackbarSeverity("error");
         })
@@ -84,6 +89,27 @@ const PantallaInicioSesionProfesor = () => {
           setSnackbarOpen(true);
         });
     }
+  };
+  
+  const obtenerDatosUsuario = () => {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      console.error("No se enconto el token");
+      return Promise.reject(new Error("No se enconto el token"));
+    }
+    // return axios.get('http://localhost:8000/api/user/profile', {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`
+    //   }
+    // })
+    // .then(response => {
+    //   console.log('Datos del usuario:', response.data);
+    //   return response.data;
+    // })
+    // .catch(error => {
+    //   console.error('Error al obtener los datos del usuario:', error);
+    //   return Promise.reject(error);
+    // });
   };
 
   const contenidoIzquierdo = (
