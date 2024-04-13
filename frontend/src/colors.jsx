@@ -8,6 +8,7 @@ export const userColors = {
   boxShadowPressed: 'rgba(54, 97, 235, 0.4)',
   primaryText: "#0B0B0B",
   secondaryText: "#A7A7A7",
+  bgmain : "linear-gradient(90deg, rgb(146, 41, 49) 0%, rgb(50, 59, 115) 100%)", 
   };
   
   export const adminColors = {
