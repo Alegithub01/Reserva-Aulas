@@ -39,7 +39,7 @@ const BarraSuperior = () => {
   return (
     <AppBar elevation={0} sx={{ bgcolor: 'transparent', position: 'absolute', zIndex: 1400 }}>
       <Toolbar variant="dense">
-        <IconButton style={{ color: '#333' }} onClick={() => navigate(-1)}>
+        <IconButton style={{ color: 'white' }} onClick={() => navigate(-1)}>
           <ArrowBackIcon />
         </IconButton>
         <Box
@@ -54,14 +54,14 @@ const BarraSuperior = () => {
         </Box>
         <Box sx={{ display: "flex" }}>
           <Tooltip title="Notificaciones">
-            <IconButton style={{ color: '#333' }} size="large">
+            <IconButton style={{ color: 'white' }} size="large">
               <NotificationsIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Perfil">
             <IconButton
               edge="end"
-              style={{ color: '#333' }}
+              style={{ color: 'white' }}
               size="large"
               onClick={manejarAperturaMenuPerfil}
             >

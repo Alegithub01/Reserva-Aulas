@@ -4,6 +4,7 @@ import Card from "./Modulo";
 import IconoRegistroAmbiente from '@mui/icons-material/AddLocation';
 import IconoRegistroMasivoAmbiente from '@mui/icons-material/GroupAdd';
 import IconoListaAmbientes from '@mui/icons-material/List';
+import IconoReglasAmbiente from '@mui/icons-material/Rule';
 import { useNavigate } from 'react-router-dom';
 
 const PanelGestionAmbientes = () => {
@@ -58,6 +59,11 @@ const PanelGestionAmbientes = () => {
                 text="Lista de Ambientes Registrados" 
                 Icon={IconoListaAmbientes}
                 onClick={() => navegar('/Lista-Ambientes')}
+            />
+            <Card 
+                text="Publicar Reglas" 
+                Icon={IconoReglasAmbiente}
+                onClick={() => navegar('/Publicacion-Reglas')}
             />
             <div
                 style={{

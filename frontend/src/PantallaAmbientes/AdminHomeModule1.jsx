@@ -12,7 +12,7 @@ const AdminHomeModule1 = () => {
       alignItems: 'center',
       height: '100%',
       with:'100%',
-      backgroundColor: theme.secondary,
+      background: theme.bgmain,
     },
     container: {
       display: 'flex',

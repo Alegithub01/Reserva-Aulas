@@ -37,7 +37,7 @@ const SplitScreenLayout = ({ left, right, style }) => {
       justifyContent: 'center',
       alignItems: 'center',
       height: '100vh',
-      backgroundColor: theme.secondary,
+      background: theme.bgmain,
     },
     container: {
       display: 'flex',
