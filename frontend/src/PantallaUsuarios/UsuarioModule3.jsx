@@ -67,6 +67,7 @@ const AdminHomeModule3 = () => {
         }));
       };
       leerArchivo.readAsText(archivo);
+      console.log("Archivo cargado:", archivo);
     }
   };
 
@@ -127,7 +128,7 @@ const AdminHomeModule3 = () => {
       alignItems: 'center',
       height: '100%',
       with:'100%',
-      backgroundColor: theme.secondary,
+      background: theme.bgmain,
     },
     container: {
       display: 'flex',

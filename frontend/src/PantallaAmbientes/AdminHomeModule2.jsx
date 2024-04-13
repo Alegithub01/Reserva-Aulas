@@ -189,7 +189,7 @@ const registrarAmbiente = async () => {
       alignItems: 'center',
       height: '100%',
       with:'100%',
-      backgroundColor: theme.secondary,
+      background: theme.bgmain,
     },
     container: {
       display: 'flex',

@@ -196,8 +196,8 @@ const Calendario = () => {
       justifyContent: 'center',
       alignItems: 'center',
       height: '100%',
-      width: '100%',
-      backgroundColor: theme.secondary,
+      with:'100%',
+      background: theme.bgmain,
     },
     container: {
       display: 'flex',
