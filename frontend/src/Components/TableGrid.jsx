@@ -132,7 +132,7 @@ export default function GridTablaCrud() {
     {
       field: 'nombre',
       headerName: 'Nombre',
-      width: 80,
+      width: 100,
       editable: true,
       valueFormatter: (params) => {
         const patronNombre = /^[0-9(A-Z)+]{0,8}$/;
@@ -147,7 +147,7 @@ export default function GridTablaCrud() {
       field: 'capacidad',
       headerName: 'Capacidad',
       type: 'number',
-      width: 80,
+      width: 100,
       align: 'left',
       headerAlign: 'left',
       editable: true,
@@ -162,7 +162,7 @@ export default function GridTablaCrud() {
     {
       field: 'tipo',
       headerName: 'Tipo Ambiente',
-      width: 90,
+      width: 140,
       editable: true,
       type: 'singleSelect',
       valueOptions: ['Aula', 'Laboratorio', 'Auditorio'],
@@ -170,7 +170,7 @@ export default function GridTablaCrud() {
     {
       field: 'planta',
       headerName: 'Planta',
-      width: 60,
+      width: 90,
       editable: true,
       type: 'singleSelect',
       valueOptions: ['0', '1', '2', '3'],
@@ -180,7 +180,7 @@ export default function GridTablaCrud() {
     {
       field: 'dia',
       headerName: 'Día',
-      width: 80,
+      width: 100,
       editable: true,
       type: 'singleSelect',
       valueOptions: ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'],
@@ -196,7 +196,7 @@ export default function GridTablaCrud() {
       field: 'acciones',
       type: 'actions',
       headerName: 'Acciones',
-      width: 110,
+      width: 140,
       cellClassName: 'actions',
       getActions: ({ id }) => {
         const estaModoEdicion = filasModificadas[id]?.mode === GridRowModes.Edit;
