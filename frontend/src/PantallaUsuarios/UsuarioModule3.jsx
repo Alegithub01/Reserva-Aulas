@@ -67,7 +67,6 @@ const AdminHomeModule3 = () => {
         }));
       };
       leerArchivo.readAsText(archivo);
-      console.log("Archivo cargado:", archivo);
     }
   };
 
@@ -77,12 +76,9 @@ const AdminHomeModule3 = () => {
       return;
     }
     setCargando(true);
-    console.log("Datos para el backend:", datosJson);
 
     const formData = new FormData();
     formData.append("file", documento);
-    console.log(formData);
-
     axios.post("http://localhost:8000/api/auth/registerMany", datosJson)
       .then(response => {
         console.log(response.data);
