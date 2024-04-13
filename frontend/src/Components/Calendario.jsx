@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { startOfWeek, addDays, format } from 'date-fns';
 
 const calendarStyles = {
   display: 'flex',
@@ -27,26 +28,48 @@ const occupiedCellStyles = {
 };
 
 const Calendar = ({ schedule }) => {
+  const [currentWeekStart, setCurrentWeekStart] = useState(startOfWeek(new Date(), { weekStartsOn: 1 }));
+
+  const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
   const hours = ['08:15', '09:45', '11:15', '12:45', '14:15', '15:45', '17:15', '18:45', '20:15', '21:45'];
-  const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+
+  const goToPreviousWeek = () => {
+    setCurrentWeekStart(addDays(currentWeekStart, -7));
+  };
+
+  const goToNextWeek = () => {
+    setCurrentWeekStart(addDays(currentWeekStart, 7));
+  };
 
   return (
     <div style={calendarStyles}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+        <button onClick={goToPreviousWeek}>{"<"}</button>
+        <button onClick={goToNextWeek}>{">"}</button>
+      </div>
       <div style={rowStyles}>
-        {days.map(day => (
-          <div key={day} style={{ ...cellStyles, fontWeight: 'bold' }}>{day}</div>
-        ))}
+        {days.map((day, index) => {
+          const date = addDays(currentWeekStart, index);
+          return (
+            <div key={day} style={{ ...cellStyles, fontWeight: 'bold' }}>
+              {`${day} ${format(date, 'dd')}`}
+            </div>
+          );
+        })}
       </div>
       {hours.map(hour => (
         <div key={hour} style={rowStyles}>
-          {days.map(day => (
-            <div
-              key={`${day}-${hour}`}
-              style={schedule[day] && schedule[day][hour] ? occupiedCellStyles : cellStyles}
-            >
-              {schedule[day] && schedule[day][hour] ? 'Ocupado' : ''}
-            </div>
-          ))}
+          {days.map((day, index) => {
+            const dayDate = format(addDays(currentWeekStart, index), 'yyyy-MM-dd');
+            return (
+              <div
+                key={`${day}-${hour}`}
+                style={schedule[dayDate] && schedule[dayDate][hour] ? occupiedCellStyles : cellStyles}
+              >
+                {schedule[dayDate] && schedule[dayDate][hour] ? 'Ocupado' : ''}
+              </div>
+            );
+          })}
         </div>
       ))}
     </div>

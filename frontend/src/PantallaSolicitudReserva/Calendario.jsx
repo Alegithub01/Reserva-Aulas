@@ -198,6 +198,7 @@ const Calendario = () => {
         newSchedule[ambiente.dia][inicio] = true;
       });
     });
+    console.log(newSchedule)
     return newSchedule;
   };
 
