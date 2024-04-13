@@ -6,6 +6,8 @@ import CalendarioComp from "../Components/Calendario";
 import RowPercentage from "../Responsive/RowPercentage";
 import Dropdown from "../Utils/Dropdown";
 import { useCallback } from 'react';
+import { format, addDays, startOfWeek } from 'date-fns';
+
 function useAmbientes() {
   const [aulas, setAulas] = useState([]);
   const [auditorios, setAuditorios] = useState([]);
@@ -13,8 +15,10 @@ function useAmbientes() {
 
   useEffect(() => {
     const fetchData = async () => {
-      // Simulación de datos
-      // data son los datos obtenidos por el backend
+      // OBTENER DATOS DEL BACKEND
+      // SE NECESITAN LOS AMBIENTES REGISTRADOS
+      // TODAS LAS RESERVAS
+        
       const data = [
         {
           nombre: "690C",
@@ -156,15 +160,12 @@ const Calendario = () => {
   const [tipoAmbiente, setTipoAmbiente] = useState('');
   const [aulaEspecifica, setAulaEspecifica] = useState('');
   const [ambientesDropdown, setAmbientesDropdown] = useState([]);
-  const [schedule, setSchedule] = useState({});
+  
+  const handleAulaEspecificaChange = (value) => {
+    setAulaEspecifica(value);
+  };
 
-  useEffect(() => {
-    const scheduleActualizado = aulaEspecifica ? crearScheduleParaAula(aulaEspecifica) : {};
-    setSchedule(scheduleActualizado);
-  }, [aulaEspecifica, tipoAmbiente]);
-
-  const handleTipoAmbienteChange = useCallback((value) => {
-    
+  const handleTipoAmbienteChange = useCallback((value) => {   
     setTipoAmbiente(value);
     setAmbientesDropdown(getDropdownOptions(value));
     setAulaEspecifica('');
@@ -189,23 +190,6 @@ const Calendario = () => {
     return options;
   };
 
-  const crearScheduleParaAula = (nombreAula) => {
-    let newSchedule = { 'Lunes': {}, 'Martes': {}, 'Miércoles': {}, 'Jueves': {}, 'Viernes': {} };
-    const ambientesFiltrados = [...aulas, ...auditorios, ...laboratorios].filter(amb => amb.nombre === nombreAula);
-    ambientesFiltrados.forEach(ambiente => {
-      ambiente.periodos.forEach(periodo => {
-        const [inicio, _] = periodo.split('-');
-        newSchedule[ambiente.dia][inicio] = true;
-      });
-    });
-    console.log(newSchedule)
-    return newSchedule;
-  };
-
-  const handleAulaEspecificaChange = (value) => {
-    setAulaEspecifica(value);
-  };
-
   const defaultStyle = {
     outerContainer: {
       display: 'flex',
@@ -223,6 +207,21 @@ const Calendario = () => {
     },
   };
 
+const testSchedule = {
+  "2024-04-12": ["06:45", "09:45", "14:15", "15:45", "21:45"],
+  "2024-04-13": ["08:15", "11:15", "14:15", "17:15", "20:15"],
+  "2024-04-14": ["09:45", "12:45", "15:45", "18:45"],
+  "2024-04-15": ["06:45", "11:15", "14:15", "17:15", "20:15"],
+  "2024-04-16": ["08:15", "09:45", "15:45", "18:45", "21:45"],
+  "2024-04-17": ["11:15", "12:45", "14:15", "17:15", "21:45"],
+  "2024-04-18": ["06:45", "08:15", "09:45", "15:45"],
+  "2024-04-19": ["12:45", "14:15", "20:15", "21:45"],
+  "2024-04-20": ["06:45", "17:15", "18:45"],
+  "2024-04-21": ["08:15", "09:45", "11:15", "15:45"],
+  "2024-04-22": ["12:45", "14:15", "17:15", "21:45"],
+  "2024-04-23": ["06:45", "09:45", "11:15", "20:15"],
+  "2024-04-24": ["08:15", "14:15", "15:45", "18:45"],
+};
   return (
     <div style={defaultStyle.outerContainer}>
       <div style={defaultStyle.container}>
@@ -250,7 +249,7 @@ const Calendario = () => {
             <div style={{ height: "10%", display: "flex", justifyContent: "center", alignItems: "center"}}>
               {aulaEspecifica && <StyledText> Aula: {aulaEspecifica} </StyledText>}
             </div>
-            <CalendarioComp schedule={schedule} />
+            <CalendarioComp schedule={testSchedule} />
           </div>
         </Card>
       </div>
