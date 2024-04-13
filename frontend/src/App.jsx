@@ -2,12 +2,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./Contexts/ThemeContext";
 import Layout from "./Navegacion/Layout";
-import PantallaAmbientes from "./PantallaAmbientes/PantallaAmbientes";
 import PantallaInicioSesion from "./PantallaInicioSesion/PantallaInicioSesion";
 import PantallaRegistro from "./PantallaRegistro/PantallaRegistro";
 import PantallaModulos from "./PantallaModulos/PantallaModulos";
 import PantallaPrincipal from "./PantallaPrincipal/PantallaPrincipal";
-import PantallaUsuarios from "./PantallaUsuarios/PantallaUsuarios";
 import PanelGestionUsuarios from "./PantallaModulos/PanelGestionUsuarios";
 import CrearRol from "../src/PantallaUsuarios/UsuarioModule2"
 import RegistroMasivoUsuarios from "../src/PantallaUsuarios/UsuarioModule3"
@@ -71,22 +69,6 @@ function App() {
             }
           />
           <Route
-            path="/GestionAmbientes"
-            element={
-              <Layout>
-                <div
-                  style={{
-                    width: "100vw",
-                    height: "calc(100vh - 50px)",
-                    overflow: "auto",
-                  }}
-                >
-                  <PantallaAmbientes />
-                </div>
-              </Layout>
-            }
-          />
-          <Route
             path="/"
             element={
                 <div
@@ -99,22 +81,6 @@ function App() {
                   <PantallaPrincipal />
                 </div>
               }
-          />
-          <Route
-            path="/Gestion-Usuarios"
-            element={
-              <Layout>
-                <div
-                  style={{
-                    width: "100vw",
-                    height: "calc(100vh - 50px)",
-                    overflow: "auto",
-                  }}
-                >
-                  <PantallaUsuarios />
-                </div>
-              </Layout>
-            }
           />
           <Route
             path="/Panel-Gestion-Usuarios"
