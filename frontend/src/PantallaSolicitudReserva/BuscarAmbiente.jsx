@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Card from "../Utils/Card";
 import StyledText from "../StyledText";
 import TextInput from "../Utils/TextInput";
@@ -7,6 +7,26 @@ import RowPercentage from "../Responsive/RowPercentage";
 import { useTheme } from '../Contexts/ThemeContext';
 import SearchIcon from '@mui/icons-material/Search';
 import TablaAmbiente from "../Components/TablaAmbienteVistaDocente";
+import { IconButton } from "@mui/material";
+import axios from 'axios';
+
+const informacion = [
+  { id: 1, nombre: "691A", capacidad: 100, tipo: "Aula", planta: "1", servicios: 'Data display', },
+  { id: 2, nombre: "691B", capacidad: 110, tipo: "Aula", planta: "1", servicios: 'Data display', },
+  { id: 3, nombre: "691C", capacidad: 90, tipo: "Aula", planta: "1", servicios: 'Data display', },
+  { id: 4, nombre: "692A", capacidad: 120, tipo: "Aula", planta: "2", servicios: 'Data display', },
+  { id: 5, nombre: "692B", capacidad: 125, tipo: "Aula", planta: "2", servicios: 'Data display', },
+  { id: 6, nombre: "693C", capacidad: 125, tipo: "Auditorio", planta: "3", servicios: 'Data display' },
+  { id: 7, nombre: "693A", capacidad: 125, tipo: "Auditorio", planta: "3", servicios: 'compu' },
+];
+//PARA BACKEND -----------------*********************************-----------------------------------------
+//acá cambiar informacion por datos cargados reales de los ambientes, no importa si tienen más atributos
+
+const tipos =[
+  {value: "10", label: "Aula"},
+  {value: "20", label: "Auditorio"},
+  {value: "30", label: "Laboratorio"},
+];
 
 const BusquedaAmbiente = () => {
   const [filtroCapacidad, setFiltroCapacidad] = useState('');
@@ -14,19 +34,51 @@ const BusquedaAmbiente = () => {
   const [filtroServicios, setFiltroServicios] = useState('');
   const [mensajeError, cambiarMensajeError] = useState({ capacidad: "" });
   const { theme } = useTheme();
+  const [informacionFinal, setInformacionFinal] = useState([]);
+  let informacionAuxi = informacion;
+  let tipoFinal = "";
+
+  const funciona = () => {
+    if (filtroCapacidad.trim() === "" && filtroTipo.trim() === "" && filtroServicios.trim() === "") {
+      return;
+    }else{
+      tipoFinal = tipos.filter((tipo => tipo.value === filtroTipo));
+      // informacionAuxi = (informacionFinal.length > 0 ? informacionFinal : informacion); linea triste del error
+      
+      if (filtroCapacidad.trim() !== "") {
+        informacionAuxi = (informacionAuxi.filter((ambiente) => ambiente.capacidad >= filtroCapacidad));
+      }
+      
+      if(filtroTipo.trim() !== ""){
+        informacionAuxi = (informacionAuxi.filter((ambiente) => ambiente.tipo === tipoFinal[0].label));
+      }
+
+      if(filtroServicios.trim() !== ""){
+        informacionAuxi = (informacionAuxi.filter((ambiente) => ambiente.servicios.includes(filtroServicios)));
+      }
+
+      setInformacionFinal(informacionAuxi);
+    }
+  }
+
 
   const manejarCambioCapacidad = (event, pattern) => {
     const valor = event.target.value;
     if (pattern && RegExp(pattern).test(valor)) {
       setFiltroCapacidad(valor);
-
     }
   };
+
   const validarVacioCapacidad = () => {
     if (filtroCapacidad.trim() === "") {
       cambiarMensajeError(previo => ({ ...previo, capacidad: "" }));
     }
   };
+
+  const manejarCambioServicios = (event) => {
+    setFiltroServicios(event.target.value);
+  }
+
   const ambientes = [
     { value: "10", label: "Aula" },
     { value: "20", label: "Auditorio" },
@@ -48,11 +100,9 @@ const BusquedaAmbiente = () => {
       minHeight: '450px',
     },
     iconContainer: {
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center', 
-      borderRadius: 15, 
-      border: `2px solid ${theme.secondary}`
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
     }
   };
   return (
@@ -90,7 +140,7 @@ const BusquedaAmbiente = () => {
             <RowPercentage firstChildPercentage={60} gap="10px">
               <div>
                 <TextInput
-                  label="Capacidad"
+                  label="Capacidad Minima"
                   fullWidth={true}
                   onChange={(event) => manejarCambioCapacidad(event, "^[0-9]*$", { min: 10, max: 300 })}
                   onBlur={validarVacioCapacidad}
@@ -115,14 +165,16 @@ const BusquedaAmbiente = () => {
                 <TextInput
                   label="Servicios"
                   pattern='^[A-Za-z0-9, ]{0,50}$'
-                  onChange={(event) => setFiltroServicios(event.target.value)}
+                  onChange={(event) => manejarCambioServicios(event)}
                 />
               </div>
-              <div style={defaultStyle.iconContainer} onClick={()=>{}}>
-                <SearchIcon style={{ fontSize: 30, color: theme.highlight }} />
+              <div style={defaultStyle.iconContainer} onClick={() => { }}>
+                <IconButton onClick={funciona} style={{ color: "black" }}>
+                  <SearchIcon style={{ fontSize: 30, color: theme.highlight }} />
+                </IconButton>
               </div>
             </RowPercentage>
-            <TablaAmbiente />
+            <TablaAmbiente informacion={informacionFinal} />
             <div
               style={{
                 height: "0%",
