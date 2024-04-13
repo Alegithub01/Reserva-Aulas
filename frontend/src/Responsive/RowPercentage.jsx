@@ -1,12 +1,15 @@
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
-const StyledRowPercentage = styled.div`
+const StyledRowPercentage = styled.div.attrs(props => ({
+  gap: props.gap || "0px",
+  backgroundColor: props.backgroundColor || "transparent",
+}))`
   display: flex;
   flex-direction: row;
   width: 100%;
-  gap: ${(props) => props.gap || "0px"};
-  background-color: ${(props) => props.backgroundColor || "transparent"};
+  gap: ${(props) => props.gap};
+  background-color: ${(props) => props.backgroundColor};
   > div:first-child {
     flex-grow: 1;
   }
@@ -41,10 +44,3 @@ RowPercentage.propTypes = {
 };
 
 export default RowPercentage;
-
-{
-  /* <RowPercentage firstChildPercentage={30} gap="20px">
-  <div>Primer hijo (30% del ancho)</div>
-  <div>Segundo hijo (70% del ancho restante)</div>
-</RowPercentage> */
-}

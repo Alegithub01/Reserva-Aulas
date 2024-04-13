@@ -15,7 +15,6 @@ import {
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import UsuarioStore from '../Contexts/UsuarioStore';
-import PropTypes from 'prop-types';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const BarraSuperior = () => {
@@ -106,7 +105,6 @@ const BarraSuperior = () => {
 };
 
 BarraSuperior.propTypes = {
-  onToggleSidebar: PropTypes.func.isRequired,
 };
 
 export default BarraSuperior;
