@@ -4,6 +4,7 @@ import Card from "../Utils/Card";
 import StyledText from "../StyledText";
 import { useTheme } from '../Contexts/ThemeContext';
 import ButtonEstilizado from "../Utils/Button";
+import MensajeExito from "../Utils/MensajeExito";
 
 const TextAreaP = ({ onChange, value }) => {
   const [valor, setValor] = useState(value);
@@ -14,13 +15,13 @@ const TextAreaP = ({ onChange, value }) => {
 
   const cambio = (e) => {
     if (e && e.target) {
-    if (onChange) {
-      onChange(valor)
+      if (onChange) {
+        onChange(valor)
+      }
+      if (valor.length < 219) {
+        setValor(e.target.value);
+      }
     }
-    if(valor.length < 219){
-      setValor(e.target.value);
-    }
-  }
   };
   return (
     <textarea
@@ -47,14 +48,30 @@ TextAreaP.propTypes = {
 const AdminHomeModule3 = () => {
   const { theme } = useTheme();
   const [reglas, setReglas] = useState('');
+  const [publicado, setPublicado] = useState(false);
+  const [guardado, setGuardado] = useState(false);
 
   const guardarBaseDatos = () => {
     console.log(reglas);
-    //aca guardar en la base de datos reglas, considerando el estado publicado false
+    if (reglas.length < 10) {
+      return;
+    } else {
+      //PARA BACKEND --------------------------------------------*****************--------------------
+      //aca guardar en la base de datos reglas, considerando el estado publicado false
+      setGuardado(true);
+    }
+
   }
 
   const publicar = () => {
-    //aca actualizar el estado de publicado a true
+    if (reglas.length < 10) {
+      return;
+    } else {
+      //PARA BACKEND --------------------------------------------*****************--------------------
+      //aca actualizar el estado de publicado a true
+      setPublicado(true);
+    }
+
   }
 
   const defaultStyle = {
@@ -112,14 +129,27 @@ const AdminHomeModule3 = () => {
               <StyledText boldText >Reglas de Reserva</StyledText>
             </div>
             <TextAreaP
-              onChange={setReglas }
+              onChange={setReglas}
               value={reglas}
             />
             <div style={defaultStyle.buttonsField}>
               <ButtonEstilizado fullWidth={true} onClick={guardarBaseDatos} >Guardar</ButtonEstilizado>
               <ButtonEstilizado fullWidth={true} onClick={publicar} >Publicar</ButtonEstilizado>
             </div>
-
+            <MensajeExito
+              abrirDialogo={guardado}
+              cerrarDialogo={() => {
+                setGuardado(false);
+              }}
+              mensaje="Regla guardada con éxito"
+            />
+            <MensajeExito
+              abrirDialogo={publicado}
+              cerrarDialogo={() => {
+                setPublicado(false);
+              }}
+              mensaje="Publicado con éxito"
+            />
           </div>
 
         </Card>
