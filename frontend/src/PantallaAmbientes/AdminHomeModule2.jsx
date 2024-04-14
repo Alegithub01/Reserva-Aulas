@@ -30,27 +30,32 @@ const AdminHomeModule2 = () => {
     horas: "",
   });
 
-const registrarAmbiente = async () => {
+  const registrarAmbiente = async () => {
+    const valorTipo = ambientes.find(opcion => opcion.value === tipo).label;
+    const valorPlanta = plantas.find(opcion => opcion.value === planta).label;
+    const valorDia = dias.find(opcion => opcion.value === dia).label;
+    const valorHoras = horas.map(hora => horarios.find(opcion => opcion.value === hora).label);
+    console.log(valorTipo, valorPlanta, valorDia, valorHoras);
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/ambientes', {
         nombre: nombre,
         capacidad: capacidad,
-        tipo: tipo,
-        planta: planta,
+        tipo: valorTipo,
+        planta: valorPlanta,
         ubicacion: ubicacion,
         servicios: servicios,
-        dia: dia,
-        horas: horas
+        dia: valorDia,
+        horas: valorHoras,
       });
       console.log(response.data);
       cambiarAbrirDialogo(true);
     } catch (error) {
       console.error('Error al registrar ambiente:', error);
-    
+
     }
   };
- 
- 
+
+
 
   const ambientes = [
     { value: "10", label: "Aula" },
@@ -87,7 +92,7 @@ const registrarAmbiente = async () => {
     { value: "30", label: "Planta 2" },
     { value: "40", label: "Planta 3" },
   ];
-  
+
   const validarInfoOblig = () => {
     console.log(nombre, capacidad, tipo, planta, ubicacion, servicios, dia, horas);
     validarVacioNombre();
@@ -96,90 +101,67 @@ const registrarAmbiente = async () => {
     validarSeleccionPlanta();
     validarSeleccionDia();
     validarSeleccionHoras();
-    
-    if(nombre.trim() !== "" && capacidad.trim() !== "" && tipo.trim() !== "" && planta.trim() !== "" && dia.trim() !== "" && horas.length !== 0){
+
+    if (nombre.trim() !== "" && capacidad.trim() !== "" && tipo.trim() !== "" && planta.trim() !== "" && dia.trim() !== "" && horas.length !== 0) {
       registrarAmbiente();
       cambiarAbrirDialogo(true);
-    }else{
+    } else {
       cambiarAbrirDialogo(false);
     }
-    
-    const valorTipo= ambientes.find(opcion => opcion.value === tipo).label;
-    const valorPlanta = plantas.find(opcion => opcion.value === planta).label;
-    const valorDia = dias.find(opcion => opcion.value === dia).label;
-    const valorHoras = horas.map(hora => horarios.find(opcion => opcion.value === hora).label);
-    console.log(valorTipo, valorPlanta, valorDia, valorHoras);
-    // if(abrirDialogo){
-    //   axios.post('http://localhost:5000/ambientes', {
-    //     nombre: nombre,
-    //     capacidad: capacidad,
-    //     tipo: valorTipo,
-    //     planta: valorPlanta,
-    //     ubicacion: ubicacion,
-    //     servicios: servicios,
-    //     dia: valorDia,
-    //     horas: valorHoras
-    //   })
-    //   .then((response) => {
-    //     console.log(response);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-    // }
+
   }
 
   const manejarCambioNombre = (event, pattern) => {
     const valor = event.target.value;
-    if(pattern && RegExp(pattern).test(valor)){
+    if (pattern && RegExp(pattern).test(valor)) {
       cambiarNombre(valor);
-      cambiarMensajeError({ ...mensajeError, nombre: ""});
+      cambiarMensajeError({ ...mensajeError, nombre: "" });
     }
   };
   const validarVacioNombre = () => {
-    if(nombre.trim() === "" ){
-      cambiarMensajeError(previo => ({ ...previo, nombre: "Ingrese nombre del ambiente"}));
+    if (nombre.trim() === "") {
+      cambiarMensajeError(previo => ({ ...previo, nombre: "Ingrese nombre del ambiente" }));
     }
   }
 
   const manejarCambioCapacidad = (event, pattern) => {
     const valor = event.target.value;
-    if(pattern && RegExp(pattern).test(valor)){
+    if (pattern && RegExp(pattern).test(valor)) {
       cambiarCapacidad(valor);
-      cambiarMensajeError({ ...mensajeError, capacidad: ""});
+      cambiarMensajeError({ ...mensajeError, capacidad: "" });
     }
   };
-  const validarVacioCapacidad= () => {
-    if(capacidad.trim() === "" ){
-      cambiarMensajeError(previo =>({ ...previo, capacidad: "Ingrese la capacidad del ambiente"}));
+  const validarVacioCapacidad = () => {
+    if (capacidad.trim() === "") {
+      cambiarMensajeError(previo => ({ ...previo, capacidad: "Ingrese la capacidad del ambiente" }));
     }
   };
 
   const validarSeleccionTipo = () => {
-    if(tipo.trim() === ''){
-      cambiarMensajeError(previo => ({ ...previo, tipo: "Seleccione el tipo de ambiente"}));
+    if (tipo.trim() === '') {
+      cambiarMensajeError(previo => ({ ...previo, tipo: "Seleccione el tipo de ambiente" }));
     }
   };
 
   const validarSeleccionPlanta = () => {
-    if(planta.trim() === ''){
-      cambiarMensajeError(previo => ({ ...previo, planta: "Seleccione la planta"}));
-    }else{
-      cambiarMensajeError(previo => ({ ...previo, planta: ""}));
+    if (planta.trim() === '') {
+      cambiarMensajeError(previo => ({ ...previo, planta: "Seleccione la planta" }));
+    } else {
+      cambiarMensajeError(previo => ({ ...previo, planta: "" }));
     }
   };
 
   const validarSeleccionDia = () => {
-    if(dia.trim() === ''){
-      cambiarMensajeError(previo => ({ ...previo, dia: "Seleccione el día"}));
+    if (dia.trim() === '') {
+      cambiarMensajeError(previo => ({ ...previo, dia: "Seleccione el día" }));
     }
   };
 
   const validarSeleccionHoras = () => {
-    if(horas.length === 0){
-      cambiarMensajeError(previo => ({ ...previo, horas: "Seleccione los periodos de hora"}));
-    }else{
-      cambiarMensajeError(previo => ({ ...previo, horas: ""}))    
+    if (horas.length === 0) {
+      cambiarMensajeError(previo => ({ ...previo, horas: "Seleccione los periodos de hora" }));
+    } else {
+      cambiarMensajeError(previo => ({ ...previo, horas: "" }))
     }
   };
   const defaultStyle = {
@@ -188,7 +170,7 @@ const registrarAmbiente = async () => {
       justifyContent: 'center',
       alignItems: 'center',
       height: '100%',
-      with:'100%',
+      with: '100%',
       background: theme.bgmain,
     },
     container: {
@@ -246,7 +228,7 @@ const registrarAmbiente = async () => {
                 <TextInput
                   label="Capacidad"
                   fullWidth={true}
-                  onChange={(event) => manejarCambioCapacidad(event, "^[0-9]*$", {min: 10, max: 300})}
+                  onChange={(event) => manejarCambioCapacidad(event, "^[0-9]*$", { min: 10, max: 300 })}
                   onBlur={validarVacioCapacidad}
                   isRequired={true}
                   validationMessage={mensajeError.capacidad}
@@ -280,12 +262,12 @@ const registrarAmbiente = async () => {
             <TextInput
               label="Ubicación"
               pattern='^[A-Za-z0-9, ]{0,50}$'
-              onChange={(event)=> cambiarUbicacion(event.target.value)}
+              onChange={(event) => cambiarUbicacion(event.target.value)}
             />
             <TextInput
               label="Servicios"
               pattern='^[A-Za-z0-9, ]{0,50}$'
-              onChange={(event)=> cambiarServicios(event.target.value)}
+              onChange={(event) => cambiarServicios(event.target.value)}
             />
 
             <RowPercentage firstChildPercentage={60} gap="10px">
@@ -300,19 +282,20 @@ const registrarAmbiente = async () => {
                 />
               </div>
               <div>
-                  <SelectorMultiple
-                    etiqueta="Periodos de hora"
-                    opciones={horarios}
-                    cambio={cambiarHoras}
-                    llenado={validarSeleccionHoras}
-                    esRequerido={true}
-                    mensajeValidacion={mensajeError.horas}
-                  />
-              </div> 
+                <SelectorMultiple
+                  etiqueta="Periodos de hora"
+                  opciones={horarios}
+                  cambio={cambiarHoras}
+                  llenado={validarSeleccionHoras}
+                  esRequerido={true}
+                  mensajeValidacion={mensajeError.horas}
+                />
+              </div>
             </RowPercentage>
             <MensajeExito
               abrirDialogo={abrirDialogo}
-              cerrarDialogo={() => {cambiarAbrirDialogo(false); window.location.reload();
+              cerrarDialogo={() => {
+                cambiarAbrirDialogo(false); window.location.reload();
               }}
               mensaje="Ambiente registrado con éxito"
             />
