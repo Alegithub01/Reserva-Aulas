@@ -6,11 +6,12 @@ import ButtonEstilizado from "../Utils/Button";
 import TextInput from "../Utils/TextInput";
 import Dropdown from "../Utils/Dropdown";
 import RowPercentage from "../Responsive/RowPercentage";
+import MensajeExito from "../Utils/MensajeExito";
 
 /*datos de prueba para los dropdowns */
 const cargarBDMateria = [
-  { value: 1, label: "Progr. Funcional" }, 
-  { value: 2, label: "Base de datos 2" }, 
+  { value: 1, label: "Progr. Funcional" },
+  { value: 2, label: "Base de datos 2" },
   { value: 3, label: "Taller de Base de Datos" },
 ];
 
@@ -21,10 +22,10 @@ const cargarBDGrupo = [  //cambiamos a numeros para texto?
 ];
 
 const cargarBDAmbiente = [
-  { value: 1, label: "691A",},
+  { value: 1, label: "691A", },
   { value: 2, label: "691B", },
   { value: 3, label: "691C", },
-  { value: 4, label: "692A",  },
+  { value: 4, label: "692A", },
   { value: 5, label: "692B", },
   { value: 6, label: "693C", },
   { value: 7, label: "693A", },
@@ -43,6 +44,7 @@ const Solicitud = () => {
   const [hora, setHora] = useState('');
   const [serviciosSolicitados, setServiciosSolicitados] = useState('');
   const [detalles, setDetalles] = useState('');
+  const [abrirDialogo, cambiarAbrirDialogo] = useState(false);
   const [mensajeError, setMensajeError] = useState({
     nombreDocente: '',
     materia: '',
@@ -85,7 +87,7 @@ const Solicitud = () => {
     const valor = event.target.value;
     if (pattern && RegExp(pattern).test(valor)) {
       setCapacidad(valor);
-      setMensajeError+({ ...mensajeError, capacidad: "" });
+      setMensajeError + ({ ...mensajeError, capacidad: "" });
     }
   };
   const validarVacioCapacidad = () => {
@@ -106,7 +108,10 @@ const Solicitud = () => {
     }
   }
 
-  const manejarCambioFecha = (event) => {}
+  const manejarCambioFecha = (event) => {
+    setFecha(event.target.value);
+    setMensajeError({ ...mensajeError, fecha: '' });
+  }
   const validarFecha = () => {
     if (fecha === '') {
       setMensajeError({ ...mensajeError, fecha: 'Seleccione una fecha' });
@@ -116,9 +121,25 @@ const Solicitud = () => {
   const validarSeleccionHora = () => {
     if (hora === '') {
       setMensajeError({ ...mensajeError, hora: 'Seleccione una hora' });
-    }}
-  
+    }
+  }
 
+
+  const validarTodo = () => {
+    validarNombreDocente();
+    validarSeleccionMateria();
+    validarSeleccionGrupo();
+    validarFecha();
+    validarSeleccionHora();
+    validarVacioCapacidad();
+    if (nombreDocente.trim() !== '' && materia !== '' && grupo !== '' && fecha !== '' && hora !== '' && capacidad.trim() !== '') {
+      console.log("Solicitud enviada");
+      cambiarAbrirDialogo(true);
+    } else {
+      cambiarAbrirDialogo(false);
+      console.log("Error en la solicitud");
+    }
+  }
 
   const defaultStyle = {
     outerContainer: {
@@ -258,8 +279,14 @@ const Solicitud = () => {
               pattern='^[A-Za-z0-9, ]{0,50}$'
               onChange={(event) => setDetalles(event.target.value)}
             />
-
-            <ButtonEstilizado fullWidth={true} onClick={() => { }}>Enviar Solicitud</ButtonEstilizado>
+            <MensajeExito
+              abrirDialogo={abrirDialogo}
+              cerrarDialogo={() => {
+                cambiarAbrirDialogo(false); window.location.reload();
+              }}
+              mensaje="Solicitud registrada con éxito"
+            />
+            <ButtonEstilizado fullWidth={true} onClick={() => { validarTodo }}>Enviar Solicitud</ButtonEstilizado>
             <div
               style={{
                 height: "0%",
