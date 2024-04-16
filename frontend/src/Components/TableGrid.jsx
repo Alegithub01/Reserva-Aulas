@@ -84,18 +84,72 @@ export default function GridTablaCrud() {
   };
 
   const manejoEditar = (id) => () => {
-    setFilasModificadas((filasModificadasAnteriores) => ({
-      ...filasModificadasAnteriores,
-      [id]: { mode: GridRowModes.Edit },
-    }));
+    // Obtener la fila actualmente editada
+    const filaEditada = filas.find((fila) => fila.id === id);
+  
+    // Verificar si la fila ya existe en filasModificadas
+    if (filasModificadas[id]) {
+      // Conservar los cambios realizados previamente
+      setFilasModificadas((filasModificadasAnteriores) => ({
+        ...filasModificadasAnteriores,
+        [id]: {
+          ...filasModificadasAnteriores[id],
+          mode: GridRowModes.Edit,
+        },
+      }));
+    } else {
+      // Copiar la fila editada en filasModificadas
+      setFilasModificadas((filasModificadasAnteriores) => ({
+        ...filasModificadasAnteriores,
+        [id]: {
+          ...filaEditada,
+          mode: GridRowModes.Edit,
+        },
+      }));
+    }
   };
 
-  const manejoGuardarClick = (id) => () => {
-    setFilasModificadas((filasModificadasAnteriores) => ({
-      ...filasModificadasAnteriores,
-      [id]: { mode: GridRowModes.View },
-    }));
-  };
+  const manejoGuardarClick = useCallback((id) => async () => {
+    try {
+      // Verificar si la fila ha sido modificada
+      if (filasModificadas[id]) {
+        // Obtener la fila específica que estamos intentando guardar
+        const filaAModificar = filasModificadas[id] || filas.find((fila) => fila.id === id);
+  
+        // Realizar la solicitud PUT al backend con los cambios
+        const response = await axios.put(`http://127.0.0.1:8000/api/ambientes/${id}`, filaAModificar);
+  
+        // Verificar si la solicitud PUT fue exitosa
+        if (response.status === 200) {
+          // Actualizar filasModificadas para reflejar los cambios guardados
+          setFilasModificadas((filasModificadasAnteriores) => {
+            const updatedModifications = { ...filasModificadasAnteriores };
+            updatedModifications[id] = { mode: 'view' };
+            return updatedModifications;
+          });
+  
+          // Actualizar la fila en el estado local
+          setFilas((filasAnteriores) => {
+            return filasAnteriores.map((fila) => {
+              if (fila.id === id) {
+                return filaAModificar;
+              }
+              return fila;
+            });
+          });
+        } else {
+          console.error('Error al guardar los cambios: ', response.statusText);
+        }
+      }
+    } catch (error) {
+      console.error('Error al guardar los cambios.', error);
+    }
+  }, [filas, filasModificadas, setFilasModificadas]);
+  
+  
+  
+  
+  
 
   const manejoCancelar = (id) => () => {
     setFilasModificadas({
@@ -110,9 +164,11 @@ export default function GridTablaCrud() {
 
   const procesarFilasModificadas = (nuevaFila) => {
     const filaModificada = { ...nuevaFila, isNew: false };
+    // Actualiza filas con los nuevos valores de la fila editada
     setFilas(filas.map((fila) => (fila.id === nuevaFila.id ? filaModificada : fila)));
     return filaModificada;
   };
+  
 
   const manejoFilasEnCambio = (nuevasFilasModelo) => {
     setFilasModificadas(nuevasFilasModelo);
@@ -123,10 +179,15 @@ export default function GridTablaCrud() {
     setDialogoAbierto(true);
   };
 
-  const manejoConfirmarEliminar = () => {
-    setFilas(filas.filter((fila) => fila.id !== idAEliminar));
-    setDialogoAbierto(false);
-    setIdAEliminar(null);
+  const manejoConfirmarEliminar = async () => {
+    try {
+      await axios.delete(`http://127.0.0.1:8000/api/ambientes/${idAEliminar}`);
+      setFilas((filasAnteriores) => filasAnteriores.filter((fila) => fila.id !== idAEliminar));
+      setDialogoAbierto(false);
+      setIdAEliminar(null);
+    } catch (error) {
+      console.error('Error al eliminar la fila.', error);
+    }
   };
 
   const manejoCancelarEliminacion = () => {
