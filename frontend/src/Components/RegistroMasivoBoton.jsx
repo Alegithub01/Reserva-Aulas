@@ -66,8 +66,8 @@ const RegistroMasivoBoton = () => {
             campos[7] = campos.slice(7).join(',');
             campos = campos.slice(0, 8);
           }
-          campos[7] = campos[7] ? campos[7].split(',') : []; // Convertir a array si hay múltiples horas
-          campos[7] = campos[7].map((hora) => hora.replace(/^\"|\"\r$/g, '')); // Limpiar el formato de las horas
+          campos[7] = campos[7] ? campos[7].split(',') : []; 
+          campos[7] = campos[7].map((hora) => hora.replace(/^\"|\"\r$/g, '')); 
           return {
             nombre: campos[0],
             capacidad: parseInt(campos[1]),
@@ -83,7 +83,7 @@ const RegistroMasivoBoton = () => {
         console.log(registros);
         localStorage.setItem('registros', JSON.stringify(registros));
 
-        // Envolver los registros en un objeto con la clave "registros"
+        
         enviarDatosAlBackend({ registros });
 
         setDatosJson(registros);
@@ -120,12 +120,12 @@ const RegistroMasivoBoton = () => {
         },
       });
   
-      // Mostrar mensaje de éxito
+      
       setMostrarMensajeExito('Datos registrados exitosamente');
       setSnackbarOpenSuccess(true);
     } catch (error) {
       console.error('Error al enviar los datos al backend:', error);
-      // Mostrar mensaje de error
+      
       cambiarMostrarMensajeError(true);
     }
   };

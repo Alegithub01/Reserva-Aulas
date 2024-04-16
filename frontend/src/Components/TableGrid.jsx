@@ -62,7 +62,7 @@ export default function GridTablaCrud() {
           const response = await axios.get('http://127.0.0.1:8000/api/ambientes');
           const ambientes = response.data.map(ambiente => ({
               ...ambiente,
-              horas: JSON.parse(ambiente.horas) // Convertir la cadena JSON a un arreglo
+              horas: JSON.parse(ambiente.horas) 
           }));
           console.log(ambientes);
           setFilas(ambientes);
@@ -192,7 +192,7 @@ export default function GridTablaCrud() {
       valueOptions: ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'],
     },
     {
-      field: 'horas', // Cambiar 'periodos' por 'horas'
+      field: 'horas', 
       headerName: 'Horas',
       width: 280,
       editable: true,

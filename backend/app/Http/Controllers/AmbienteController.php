@@ -70,7 +70,7 @@ class AmbienteController extends Controller
         $registrosImportados = $request->registros;
 
         foreach ($registrosImportados as $registroImportado) {
-            // Verificar si todos los campos obligatorios están presentes y no son nulos
+            
             if (isset($registroImportado['nombre'], $registroImportado['capacidad'], $registroImportado['tipo'], $registroImportado['planta'])) {
                 $ambienteData = [
                     'nombre' => $registroImportado['nombre'],
@@ -83,7 +83,7 @@ class AmbienteController extends Controller
                     'horas' => isset($registroImportado['horas']) ? json_encode($registroImportado['horas']) : null,
                 ];
         
-                // Crear el registro solo si todos los campos obligatorios están presentes y no son nulos
+            
                 Ambiente::create(array_filter($ambienteData));
             }
         }
