@@ -17,7 +17,7 @@ function useAmbientes() {
     const fetchData = async () => {
       // OBTENER DATOS DEL BACKEND
       // SE NECESITAN LOS AMBIENTES REGISTRADOS
-      // TODAS LAS RESERVAS
+      // Y TODAS LAS RESERVAS
         
       const data = [
         {
@@ -227,8 +227,10 @@ const testSchedule = {
       <div style={defaultStyle.container}>
         <Card minWidth="100px" minHeight="100px" fullWidth alignCenter padding="30px 50px" borderColor="blue" borderRadius="15px">
           <div style={{ width: "100%", flexDirection: "column", height: "100%", display: "flex", justifyContent: "space-between" }}>
-            <div style={{ height: "20%", display: "flex", justifyContent: "center", alignItems: "center"}}>
-              <StyledText boldText>Disponibilidad de ambientes</StyledText>
+            <div style={{ height: "20%", display: "flex", justifyContent: "center", alignItems: "center", paddingBottom:'15px'}}>
+              <StyledText boldText>
+                Disponibilidad de ambientes{aulaEspecifica ? ` (${aulaEspecifica})` : ''}
+              </StyledText>
             </div>
             <RowPercentage firstChildPercentage={40} gap="10px">
               <Dropdown
@@ -246,9 +248,6 @@ const testSchedule = {
                 cambio={handleAulaEspecificaChange}
               />
             </RowPercentage>
-            <div style={{ height: "10%", display: "flex", justifyContent: "center", alignItems: "center"}}>
-              {aulaEspecifica && <StyledText> Aula: {aulaEspecifica} </StyledText>}
-            </div>
             <CalendarioComp schedule={testSchedule} />
           </div>
         </Card>
