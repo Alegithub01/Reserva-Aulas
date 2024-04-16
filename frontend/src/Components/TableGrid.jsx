@@ -59,15 +59,21 @@ export default function GridTablaCrud() {
   useEffect(() => {
     const obtenerAmbientes = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/ambientes');
-        setFilas(response.data); 
+          const response = await axios.get('http://127.0.0.1:8000/api/ambientes');
+          const ambientes = response.data.map(ambiente => ({
+              ...ambiente,
+              horas: JSON.parse(ambiente.horas) // Convertir la cadena JSON a un arreglo
+          }));
+          console.log(ambientes);
+          setFilas(ambientes);
       } catch (error) {
-        setError('Error al obtener los ambientes.'); 
+          setError('Error al obtener los ambientes.');
       }
-    };
+  };
+  
 
     obtenerAmbientes();
-  }, []);
+}, []);
 
 
 
@@ -132,7 +138,7 @@ export default function GridTablaCrud() {
     {
       field: 'nombre',
       headerName: 'Nombre',
-      width: 100,
+      width: 120,
       editable: true,
       valueFormatter: (params) => {
         const patronNombre = /^[0-9(A-Z)+]{0,8}$/;
@@ -186,12 +192,25 @@ export default function GridTablaCrud() {
       valueOptions: ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'],
     },
     {
-      field: 'periodos',
-      headerName: 'Periodos',
+      field: 'horas', // Cambiar 'periodos' por 'horas'
+      headerName: 'Horas',
       width: 280,
       editable: true,
       valueOptions: ["06:45-08:15", "08:30-09:45", "10:00-11:15", "11:30-12:45", "13:00-14:15", "14:30-15:45", "16:00-17:15", "17:30-18:45", "19:00-20:15", "20:30-21:45"],
+      valueFormatter: (params) => {
+        // Verificar si 'params.value' es un array
+        if (Array.isArray(params.value)) {
+          // Convertir el array de horas a una cadena de texto separada por coma
+          const formattedHours = params.value.join(', ');
+          return formattedHours;
+        }
+        // Si no es un array, devolver el valor sin modificar
+        return params.value;
+      },
     },
+    
+    
+
     {
       field: 'acciones',
       type: 'actions',
