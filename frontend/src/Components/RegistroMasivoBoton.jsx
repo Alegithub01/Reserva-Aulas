@@ -6,6 +6,7 @@ import { Cancel } from '@mui/icons-material';
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import CircularProgress from '@mui/material/CircularProgress';
+import axios from 'axios';
 
 const RegistroMasivoBoton = () => {
   const [documento, setDocumento] = useState(null);
@@ -53,48 +54,53 @@ const RegistroMasivoBoton = () => {
   }
 
   const manejoDocumentoSubido = () => {
-    if (documento) {
-      const leerArchivo = new FileReader();
-      leerArchivo.onload = (e) => {
-        const texto = e.target.result;
-        if (texto.includes('Periodos', 'Dia', 'Servicios', 'Ubicacion', 'Planta', 'Tipo', 'Capacidad', 'Nombre')) {
-          const lineas = texto.split('\n').slice(1);
-          const registros = lineas.map((linea) => {
-            let campos = linea.split(',');
-            if(campos.length > 8) {
-              campos[7] = campos.slice(7).join(',');
-              campos = campos.slice(0,8);
-            }
-            campos[7] = campos[7]?campos[7].replace(/^\"|\"\r$/g, ''):campos[7];
-            return {
-              nombre: campos[0],
-              capacidad: parseInt(campos[1]),
-              tipo: campos[2],
-              planta: campos[3],
-              ubicacion: campos[4],
-              servicios: campos[5],
-              dia: campos[6],
-              horas: campos[7],
-            };
-          });
-        
-          console.log(registros);
-          localStorage.setItem('registros', JSON.stringify(registros));
+  if (documento) {
+    const leerArchivo = new FileReader();
+    leerArchivo.onload = (e) => {
+      const texto = e.target.result;
+      if (texto.includes('horas', 'dia', 'servicios', 'ubicacion', 'planta', 'tipo', 'capacidad', 'nombre')) {
+        const lineas = texto.split('\n').slice(1);
+        const registros = lineas.map((linea) => {
+          let campos = linea.split(',');
+          if (campos.length > 8) {
+            campos[7] = campos.slice(7).join(',');
+            campos = campos.slice(0, 8);
+          }
+          campos[7] = campos[7] ? campos[7].split(',') : []; // Convertir a array si hay múltiples horas
+          campos[7] = campos[7].map((hora) => hora.replace(/^\"|\"\r$/g, '')); // Limpiar el formato de las horas
+          return {
+            nombre: campos[0],
+            capacidad: parseInt(campos[1]),
+            tipo: campos[2],
+            planta: campos[3],
+            ubicacion: campos[4],
+            servicios: campos[5],
+            dia: campos[6],
+            horas: campos[7],
+          };
+        });
 
-          //acá se debería hacer la petición POST
-          setDatosJson(registros);
-          setDetallesArchivo((detalles) => ({ ...detalles, registros: registros.length }));
+        console.log(registros);
+        localStorage.setItem('registros', JSON.stringify(registros));
 
-          cambiarMostrarMensaje(false);
-        } else {
-          cambiarMostrarMensaje(true);
-        }
-      };
-      leerArchivo.readAsText(documento);
-    } else {
-      cambiarMostrarMensaje(true);
-    }
+        // Envolver los registros en un objeto con la clave "registros"
+        enviarDatosAlBackend({ registros });
+
+        setDatosJson(registros);
+        setDetallesArchivo((detalles) => ({ ...detalles, registros: registros.length }));
+
+        cambiarMostrarMensaje(false);
+      } else {
+        cambiarMostrarMensaje(true);
+      }
+    };
+    leerArchivo.readAsText(documento);
+  } else {
+    cambiarMostrarMensaje(true);
   }
+};
+  
+
   const manejoCancelacion = () => {
     setDocumento(null);
     setDetallesArchivo({
@@ -103,6 +109,25 @@ const RegistroMasivoBoton = () => {
       registros: 0,
     });
     setDatosJson([]);
+  };
+
+  const enviarDatosAlBackend = async (registros) => {
+    console.log(registros)
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/importar-ambientes', registros, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      // Mostrar mensaje de éxito
+      setMostrarMensajeExito('Datos registrados exitosamente');
+      setSnackbarOpenSuccess(true);
+    } catch (error) {
+      console.error('Error al enviar los datos al backend:', error);
+      // Mostrar mensaje de error
+      cambiarMostrarMensajeError(true);
+    }
   };
 
   const defaultStyle = {
@@ -160,7 +185,16 @@ const RegistroMasivoBoton = () => {
         </Button>
       </div>
       {mostrarMensaje && <div style={mensajeValidacionEstilo}>Seleccione un archivo con un tamaño menor para registrar</div>}
-
+      <Snackbar open={snackbarOpenSuccess} autoHideDuration={6000} onClose={handleCloseSnackbarSuccess}>
+        <Alert onClose={handleCloseSnackbarSuccess} severity="success">
+          {mostrarMensajeExito}
+        </Alert>
+      </Snackbar>
+      <Snackbar open={snackbarOpenError} autoHideDuration={6000} onClose={handleCloseSnackbarError}>
+        <Alert onClose={handleCloseSnackbarError} severity="error">
+          Error al enviar los datos al backend
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
