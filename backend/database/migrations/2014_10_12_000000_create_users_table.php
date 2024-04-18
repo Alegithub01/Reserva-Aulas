@@ -15,7 +15,7 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->integer('idRol')->nullable();
+            $table->unsignedBigInteger('rol_id')->nullable();
             $table->string('nombres');
             $table->string('apellidos');
             $table->string('email')->unique();
@@ -24,6 +24,8 @@ class CreateUsersTable extends Migration
             $table->string('estado')->default('habilitado');
             $table->rememberToken();
             $table->timestamps();
+
+            $table->foreign('rol_id')->references('id')->on('rols');
         });
     }
 
