@@ -29,29 +29,29 @@ const Solicitud = () => {
     fecha: '',
     hora: '',
   });
-/*datos de prueba para los dropdowns */
-const cargarBDMateria = [
-  { value: 1, label: "Progr. Funcional" },
-  { value: 2, label: "Base de datos 2" },
-  { value: 3, label: "Taller de Base de Datos" },
-];
+  /*datos de prueba para los dropdowns */
+  const cargarBDMateria = [
+    { value: 1, label: "Progr. Funcional" },
+    { value: 2, label: "Base de datos 2" },
+    { value: 3, label: "Taller de Base de Datos" },
+  ];
 
-const cargarBDGrupo = [  //cambiamos a numeros para texto?
-  { value: 1, label: "Grupo 1" },
-  { value: 2, label: "Grupo 2" },
-  { value: 3, label: "Grupo 3" },
-];
+  const cargarBDGrupo = [  //cambiamos a numeros para texto?
+    { value: 1, label: "Grupo 1" },
+    { value: 2, label: "Grupo 2" },
+    { value: 3, label: "Grupo 3" },
+  ];
 
-const cargarBDAmbiente = [
-  { value: 1, label: "691A", },
-  { value: 2, label: "691B", },
-  { value: 3, label: "691C", },
-  { value: 4, label: "692A", },
-  { value: 5, label: "692B", },
-  { value: 6, label: "693C", },
-  { value: 7, label: "693A", },
-];
-/* */
+  const cargarBDAmbiente = [
+    { value: 1, label: "691A", },
+    { value: 2, label: "691B", },
+    { value: 3, label: "691C", },
+    { value: 4, label: "692A", },
+    { value: 5, label: "692B", },
+    { value: 6, label: "693C", },
+    { value: 7, label: "693A", },
+  ];
+  /* */
   const horas = [
     { value: "10", label: "06:45-08:15" },
     { value: "20", label: "08:15-09:45" },
@@ -74,206 +74,214 @@ const cargarBDAmbiente = [
   const validarNombreDocente = () => {
     //falta lo de verificar si esta realmente en la base de datos(trabajo mio)
     if (nombreDocente.trim() === '') {
-      setMensajeError(previo=>({...previo, nombreDocente: "Ingrese nombre de docente"}));
+      setMensajeError(previo => ({ ...previo, nombreDocente: "Ingrese nombre de docente" }));
     }
   }
 
   const validarSeleccionMateria = () => {
     if (materia === '') {
-      setMensajeError(previo => ({ ...previo ,materia: 'Seleccione una materia' }));
+      setMensajeError(previo => ({ ...previo, materia: 'Seleccione una materia' }));
     }
   }
 
   const validarSeleccionGrupo = () => {
     if (grupo === '') {
-      setMensajeError(previo => ({ ...previo ,grupo: 'Seleccione un grupo' }));
+      setMensajeError(previo => ({ ...previo, grupo: 'Seleccione un grupo' }));
     }
   }
 
-  const manejarCambioFecha = (event) => {
-    console.log("entree",event.target.value);
-    setFecha(event.target.value);
-    setMensajeError(previo => ({ ...previo , fecha: '' }));
-  }
   const validarFecha = () => {
     if (fecha === null || fecha === '') {
-      setMensajeError(previo => ({ ...previo , fecha: 'Seleccione una fecha' }));
+      setMensajeError(previo => ({ ...previo, fecha: 'Seleccione una fecha' }));
     }
   }
 
   const validarSeleccionHora = () => {
     if (hora === '') {
-      setMensajeError(previo => ({ ...previo ,hora: 'Seleccione una hora' }));
-    }
-  }
-
-  const validarSeleccionAmbiente = () => {
-    if (ambiente === '') {
-      setMensajeError(previo => ({ ...previo ,ambiente: 'Seleccione un ambiente' }));
-    }}
-
-  const validarTodo = () => {
-    console.log(nombreDocente, materia, grupo, ambiente, fecha, hora);
-    validarNombreDocente();
-    validarSeleccionMateria();
-    validarSeleccionAmbiente();
-    validarSeleccionGrupo();
-    validarFecha();
-    validarSeleccionHora();
-    if (nombreDocente.trim() !== '' && materia !== '' && grupo !== '' && fecha !== '' && hora !== '' ) {
-      console.log("Solicitud enviada");
-      cambiarAbrirDialogo(true);
+      setMensajeError(previo => ({ ...previo, hora: 'Seleccione una hora' }));
     } else {
-      cambiarAbrirDialogo(false);
-      console.log("Error en la solicitud");
+      const horaOrdenada = hora.sort();
+      for (let i = 1; i < horaOrdenada.length; i++) {
+        const before = parseInt(horaOrdenada[i - 1]);
+        const current = parseInt(horaOrdenada[i]);
+        if (before !== current - 10) {
+          setMensajeError(previo => ({ ...previo, hora: 'Seleccione periodos de hora consecutivos' }));
+          break;
+        }else{
+          setMensajeError(previo => ({ ...previo, hora: '' }));
+        }
+      }
     }
-  }
+}
 
-  const defaultStyle = {
-    outerContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '100%',
-      with: '100%',
-      background: theme.bgmain,
-    },
-    container: {
-      display: 'flex',
-      width: '50%',
-      minWidth: '600px',
-      minHeight: '450px',
-    },
-  };
-  return (
-    <div style={defaultStyle.outerContainer}>
-      <div style={defaultStyle.container}>
-        <Card
-          minWidth="100px"
-          minHeight="100px"
-          fullWidth
-          alignCenter
-          padding="30px 50px"
-          borderColor="blue"
-          borderRadius="15px"
+const validarSeleccionAmbiente = () => {
+  if (ambiente === '') {
+    setMensajeError(previo => ({ ...previo, ambiente: 'Seleccione un ambiente' }));
+  }
+}
+
+const validarTodo = () => {
+  console.log(nombreDocente, materia, grupo, ambiente, fecha, hora);
+  validarNombreDocente();
+  validarSeleccionMateria();
+  validarSeleccionAmbiente();
+  validarSeleccionGrupo();
+  validarFecha();
+  validarSeleccionHora();
+  if (nombreDocente.trim() !== '' && materia !== '' && grupo !== '' && fecha !== '' && hora !== '') {
+    console.log("Solicitud enviada");
+    cambiarAbrirDialogo(true);
+  } else {
+    cambiarAbrirDialogo(false);
+    console.log("Error en la solicitud");
+  }
+}
+
+const defaultStyle = {
+  outerContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    with: '100%',
+    background: theme.bgmain,
+  },
+  container: {
+    display: 'flex',
+    width: '50%',
+    minWidth: '600px',
+    minHeight: '450px',
+  },
+};
+return (
+  <div style={defaultStyle.outerContainer}>
+    <div style={defaultStyle.container}>
+      <Card
+        minWidth="100px"
+        minHeight="100px"
+        fullWidth
+        alignCenter
+        padding="30px 50px"
+        borderColor="blue"
+        borderRadius="15px"
+      >
+        <div
+          style={{
+            width: "100%",
+            flexDirection: "column",
+            height: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+            gap: "15px",
+          }}
         >
           <div
             style={{
-              width: "100%",
-              flexDirection: "column",
-              height: "100%",
+              height: "10%",
               display: "flex",
-              justifyContent: "space-between",
-              gap: "15px",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            <div
-              style={{
-                height: "10%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <StyledText boldText>Solicitud de Reserva</StyledText>
-            </div>
-
-            <RowPercentage firstChildPercentage={0}>
-              <TextInput
-                label="Nombre del docente"
-                fullWidth={true}
-                onChange={(event) => manejarCambioNombreDocente(event, "^[a-zA-Z ]*$")}
-                onBlur={validarNombreDocente}
-                isRequired={true}
-                validationMessage={mensajeError.nombreDocente}
-                pattern="^[a-zA-Z ]*$"
-              />
-            </RowPercentage>
-            <RowPercentage firstChildPercentage={40} gap="10px">
-              <div>
-                <Dropdown
-                  etiqueta="Materia"
-                  opciones={cargarBDMateria}
-                  cambio={setMateria}
-                  onBlur={validarSeleccionMateria}
-                  esRequerido={true}
-                  mensajeValidacion={mensajeError.materia}
-                />
-              </div>
-              <div>
-                <Dropdown
-                  etiqueta="Grupo"
-                  opciones={cargarBDGrupo}
-                  cambio={setGrupo}
-                  onBlur={validarSeleccionGrupo}
-                  esRequerido={true}
-                  mensajeValidacion={mensajeError.grupo}
-                />
-              </div>
-            </RowPercentage>
-            <RowPercentage firstChildPercentage={40} gap="10px">
-              <div>
-                <Dropdown
-                  etiqueta="Ambiente"
-                  opciones={cargarBDAmbiente}
-                  cambio={setAmbiente}
-                  onBlur={validarSeleccionAmbiente}
-                  esRequerido={true}
-                  mensajeValidacion={mensajeError.ambiente}  //ref
-                />
-              </div>
-            </RowPercentage>
-            <RowPercentage firstChildPercentage={50} gap="10px">
-              <div>
-                <EntradaFecha 
-                etiqueta = "Fecha"
-                enCambio = {setFecha}
-                onBlur = {validarFecha}
-                mensajeValidacion={fecha === ""? mensajeError.fecha:""}
-                />
-              </div>
-              <div>
-                <Dropdown
-                  etiqueta="Hora"
-                  opciones={horas}
-                  cambio={setHora}
-                  onBlur={validarSeleccionHora}
-                  esRequerido={true}
-                  mensajeValidacion={mensajeError.hora}
-                />
-              </div>
-            </RowPercentage>
-            <TextInput
-              label="Servicios solicitados"
-              pattern='^[A-Za-z0-9, ]{0,50}$'
-              onChange={(event) => setServiciosSolicitados(event.target.value)}
-            />
-            <TextInput
-              label="Detalles de Solicitud"
-              pattern='^[A-Za-z0-9, ]{0,50}$'
-              onChange={(event) => setDetalles(event.target.value)}
-            />
-            <MensajeExito
-              abrirDialogo={abrirDialogo}
-              cerrarDialogo={() => {
-                cambiarAbrirDialogo(false); window.location.reload();
-              }}
-              mensaje="Solicitud registrada con éxito"
-            />
-            <Button fullWidth={true} onClick={validarTodo}>Enviar Solicitud</Button>
-            <div
-              style={{
-                height: "0%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            ></div>
+            <StyledText boldText>Solicitud de Reserva</StyledText>
           </div>
-        </Card>
-      </div>
+
+          <RowPercentage firstChildPercentage={0}>
+            <TextInput
+              label="Nombre del docente"
+              fullWidth={true}
+              onChange={(event) => manejarCambioNombreDocente(event, "^[a-zA-Z ]*$")}
+              onBlur={validarNombreDocente}
+              isRequired={true}
+              validationMessage={mensajeError.nombreDocente}
+              pattern="^[a-zA-Z ]*$"
+            />
+          </RowPercentage>
+          <RowPercentage firstChildPercentage={40} gap="10px">
+            <div>
+              <Dropdown
+                etiqueta="Materia"
+                opciones={cargarBDMateria}
+                cambio={setMateria}
+                onBlur={validarSeleccionMateria}
+                esRequerido={true}
+                mensajeValidacion={mensajeError.materia}
+              />
+            </div>
+            <div>
+              <Dropdown
+                etiqueta="Grupo"
+                opciones={cargarBDGrupo}
+                cambio={setGrupo}
+                onBlur={validarSeleccionGrupo}
+                esRequerido={true}
+                mensajeValidacion={mensajeError.grupo}
+              />
+            </div>
+          </RowPercentage>
+          <RowPercentage firstChildPercentage={40} gap="10px">
+            <div>
+              <Dropdown
+                etiqueta="Ambiente"
+                opciones={cargarBDAmbiente}
+                cambio={setAmbiente}
+                onBlur={validarSeleccionAmbiente}
+                esRequerido={true}
+                mensajeValidacion={mensajeError.ambiente}  //ref
+              />
+            </div>
+          </RowPercentage>
+          <RowPercentage firstChildPercentage={50} gap="10px">
+            <div>
+              <EntradaFecha
+                etiqueta="Fecha"
+                enCambio={setFecha}
+                onBlur={validarFecha}
+                mensajeValidacion={fecha === "" ? mensajeError.fecha : ""}
+              />
+            </div>
+            <div>
+              <SelectorMultiple
+                etiqueta="Periodos de hora"
+                opciones={horas}
+                cambio={setHora}
+                llenado={validarSeleccionHora}
+                esRequerido={true}
+                mensajeValidacion={mensajeError.hora}
+              />
+            </div>
+          </RowPercentage>
+          <TextInput
+            label="Servicios solicitados"
+            pattern='^[A-Za-z0-9, ]{0,50}$'
+            onChange={(event) => setServiciosSolicitados(event.target.value)}
+          />
+          <TextInput
+            label="Detalles de Solicitud"
+            pattern='^[A-Za-z0-9, ]{0,50}$'
+            onChange={(event) => setDetalles(event.target.value)}
+          />
+          <MensajeExito
+            abrirDialogo={abrirDialogo}
+            cerrarDialogo={() => {
+              cambiarAbrirDialogo(false); window.location.reload();
+            }}
+            mensaje="Solicitud registrada con éxito"
+          />
+          <Button fullWidth={true} onClick={validarTodo}>Enviar Solicitud</Button>
+          <div
+            style={{
+              height: "0%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          ></div>
+        </div>
+      </Card>
     </div>
-  );
+  </div>
+);
 };
 
 export default Solicitud;

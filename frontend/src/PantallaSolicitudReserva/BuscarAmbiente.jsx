@@ -9,6 +9,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import TablaAmbiente from "../Components/TablaAmbienteVistaDocente";
 import { IconButton } from "@mui/material";
 import axios from 'axios';
+import EntradaFecha from "../Utils/EntradaFecha";
 
 const informacion = [
   { id: 1, nombre: "691A", capacidad: 100, tipo: "Aula", planta: "1", servicios: 'Data display', },
@@ -154,13 +155,10 @@ const BusquedaAmbiente = () => {
             </div>
             <RowPercentage firstChildPercentage={60} gap="10px">
               <div>
-                <TextInput
-                  label= "Fecha"
-                  fullWidth={true}
-                  type="date"
-                  onChange={(event) => setFiltroFecha(event.target.value)}
-                  onBlur={() => {}}
-                  isRequired={true}
+                <EntradaFecha
+                  etiqueta="Fecha"
+                  valor={filtroFecha}
+                  cambio={setFiltroFecha}
                 />
               </div>
             <div>
