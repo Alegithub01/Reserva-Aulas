@@ -7,13 +7,13 @@ import PantallaRegistro from "./PantallaRegistro/PantallaRegistro";
 import PantallaModulos from "./PantallaModulos/PantallaModulos";
 import PantallaPrincipal from "./PantallaPrincipal/PantallaPrincipal";
 import PanelGestionUsuarios from "./PantallaModulos/PanelGestionUsuarios";
-import CrearRol from "../src/PantallaUsuarios/UsuarioModule2"
-import RegistroMasivoUsuarios from "../src/PantallaUsuarios/UsuarioModule3"
-import ListaUsuarios from "../src/PantallaUsuarios/UsuarioModule1"
+import CrearRol from "../src/PantallaUsuarios/UsuarioModule2";
+import RegistroMasivoUsuarios from "../src/PantallaUsuarios/UsuarioModule3";
+import ListaUsuarios from "../src/PantallaUsuarios/UsuarioModule1";
 import PanelGestionAmbientes from "./PantallaModulos/PanelGestionAmbientes";
-import ListaAmbientes from "../src/PantallaAmbientes/AdminHomeModule1"
-import RegistroAmbiente from "../src/PantallaAmbientes/AdminHomeModule2"
-import RegistroMasivoAmbientes from "../src/PantallaAmbientes/AdminHomeModule3"
+import ListaAmbientes from "../src/PantallaAmbientes/AdminHomeModule1";
+import RegistroAmbiente from "../src/PantallaAmbientes/AdminHomeModule2";
+import RegistroMasivoAmbientes from "../src/PantallaAmbientes/AdminHomeModule3";
 import GestionReservas from "./PantallaGestionReserva/GestionReservas";
 import PanelSolicitudReservas from "./PantallaModulos/PanelSolicitudReservas";
 import Solicitud from "./PantallaSolicitudReserva/Solicitud";
@@ -21,6 +21,7 @@ import Calendario from "./PantallaSolicitudReserva/Calendario";
 import Reservas from "./PantallaSolicitudReserva/Reservas";
 import BuscarAmbiente from "./PantallaSolicitudReserva/BuscarAmbiente";
 import PantallaReglas from "./PantallaAmbientes/PantallaReglas";
+import ProtectedRoute from "./Navegacion/ProtectedRoute";
 
 function App() {
   return (
@@ -63,7 +64,9 @@ function App() {
                     height: "100vh",
                   }}
                 >
-                  <PantallaModulos />
+                  <ProtectedRoute>
+                    <PantallaModulos />
+                  </ProtectedRoute>
                 </div>
               </Layout>
             }
@@ -71,16 +74,16 @@ function App() {
           <Route
             path="/"
             element={
-                <div
-                  style={{
-                    width: "100vw",
-                    height: "100vh",
-                    overflow: "auto",
-                  }}
-                >
-                  <PantallaPrincipal />
-                </div>
-              }
+              <div
+                style={{
+                  width: "100vw",
+                  height: "100vh",
+                  overflow: "auto",
+                }}
+              >
+                <PantallaPrincipal />
+              </div>
+            }
           />
           <Route
             path="/Panel-Gestion-Usuarios"
@@ -93,7 +96,9 @@ function App() {
                     overflow: "auto",
                   }}
                 >
-                  <PanelGestionUsuarios />
+                  <ProtectedRoute>
+                    <PanelGestionUsuarios />
+                  </ProtectedRoute>
                 </div>
               </Layout>
             }
@@ -109,7 +114,9 @@ function App() {
                     overflow: "auto",
                   }}
                 >
-                  <PanelGestionAmbientes />
+                  <ProtectedRoute>
+                    <PanelGestionAmbientes />
+                  </ProtectedRoute>
                 </div>
               </Layout>
             }
@@ -125,7 +132,9 @@ function App() {
                     overflow: "auto",
                   }}
                 >
-                  <PanelSolicitudReservas />
+                  <ProtectedRoute>
+                    <PanelSolicitudReservas />
+                  </ProtectedRoute>
                 </div>
               </Layout>
             }
@@ -141,7 +150,9 @@ function App() {
                     overflow: "auto",
                   }}
                 >
-                  <CrearRol />
+                  <ProtectedRoute>
+                    <CrearRol />
+                  </ProtectedRoute>
                 </div>
               </Layout>
             }
@@ -157,7 +168,9 @@ function App() {
                     overflow: "auto",
                   }}
                 >
-                  <RegistroMasivoUsuarios />
+                  <ProtectedRoute>
+                    <RegistroMasivoUsuarios />
+                  </ProtectedRoute>
                 </div>
               </Layout>
             }
@@ -173,7 +186,9 @@ function App() {
                     overflow: "auto",
                   }}
                 >
-                  <ListaUsuarios />
+                  <ProtectedRoute>
+                    <ListaUsuarios />
+                  </ProtectedRoute>
                 </div>
               </Layout>
             }
@@ -189,7 +204,9 @@ function App() {
                     overflow: "auto",
                   }}
                 >
-                  <ListaAmbientes />
+                  <ProtectedRoute>
+                    <ListaAmbientes />
+                  </ProtectedRoute>
                 </div>
               </Layout>
             }
@@ -205,7 +222,9 @@ function App() {
                     overflow: "auto",
                   }}
                 >
-                  <RegistroAmbiente />
+                  <ProtectedRoute>
+                    <RegistroAmbiente />
+                  </ProtectedRoute>
                 </div>
               </Layout>
             }
@@ -221,7 +240,9 @@ function App() {
                     overflow: "auto",
                   }}
                 >
-                  <RegistroMasivoAmbientes />
+                  <ProtectedRoute>
+                    <RegistroMasivoAmbientes />
+                  </ProtectedRoute>
                 </div>
               </Layout>
             }
@@ -237,7 +258,9 @@ function App() {
                     overflow: "auto",
                   }}
                 >
-                  <PantallaReglas />
+                  <ProtectedRoute>
+                    <PantallaReglas />
+                  </ProtectedRoute>
                 </div>
               </Layout>
             }
@@ -253,7 +276,9 @@ function App() {
                     overflow: "auto",
                   }}
                 >
-                  <GestionReservas />
+                  <ProtectedRoute>
+                    <GestionReservas />
+                  </ProtectedRoute>
                 </div>
               </Layout>
             }
@@ -269,7 +294,9 @@ function App() {
                     overflow: "auto",
                   }}
                 >
-                  <Solicitud />
+                  <ProtectedRoute>
+                    <Solicitud />
+                  </ProtectedRoute>
                 </div>
               </Layout>
             }
@@ -285,7 +312,9 @@ function App() {
                     overflow: "auto",
                   }}
                 >
-                  <Calendario />
+                  <ProtectedRoute>
+                    <Calendario />
+                  </ProtectedRoute>
                 </div>
               </Layout>
             }
@@ -301,7 +330,9 @@ function App() {
                     overflow: "auto",
                   }}
                 >
-                  <Reservas />
+                  <ProtectedRoute>
+                    <Reservas />
+                  </ProtectedRoute>
                 </div>
               </Layout>
             }
@@ -317,7 +348,9 @@ function App() {
                     overflow: "auto",
                   }}
                 >
-                  <BuscarAmbiente />
+                  <ProtectedRoute>
+                    <BuscarAmbiente />
+                  </ProtectedRoute>
                 </div>
               </Layout>
             }

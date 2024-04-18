@@ -74,7 +74,10 @@ const PantallaModulos = () => {
                     cursor: "pointer",
                     marginTop: "15px",
                 }}
-                onClick={() => navegar("/")}
+                onClick={() => {
+                    localStorage.removeItem('access_token');
+                    navegar("/");
+                }}
                 onMouseOver={(e) => (e.target.style.color = "#3661EB")}
                 onMouseOut={(e) => (e.target.style.color = "black")}
             >

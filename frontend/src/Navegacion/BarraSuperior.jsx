@@ -25,6 +25,7 @@ const BarraSuperior = () => {
   const navigate = useNavigate();
 
   const manejarCierreSesion = () => {
+    localStorage.removeItem('access_token');
     navigate('/');
   };
 
