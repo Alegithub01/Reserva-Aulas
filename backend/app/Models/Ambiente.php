@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Ambiente extends Model
 {
     use HasFactory;
+    public function solicitudes()
+    {
+        return $this->hasMany(Solicitud::class);
+    }
     protected $fillable = [
         'nombre',
         'capacidad',
