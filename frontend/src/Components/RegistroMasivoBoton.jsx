@@ -1,11 +1,27 @@
 import { useState } from 'react';
 import Button from '../Utils/Button';
-import MensajeExito from '../Utils/MensajeExito';
 import { useTheme } from '../Contexts/ThemeContext';
+import EntradaArchivo from "../Utils/EntradaArchivo";
+import { Cancel } from '@mui/icons-material';
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import CircularProgress from '@mui/material/CircularProgress';
+import axios from 'axios';
 
 const RegistroMasivoBoton = () => {
   const [documento, setDocumento] = useState(null);
-  const [abrirDialogo, cambiarAbrirDialogo] = useState(false);
+  const [snackbarOpenSuccess, setSnackbarOpenSuccess] = useState(false);
+  const [snackbarOpenError, setSnackbarOpenError] = useState(false);
+  const [detallesArchivo, setDetallesArchivo] = useState({
+    nombre: "",
+    tamano: "",
+    registros: 0,
+  });
+  const [mostrarMensaje, cambiarMostrarMensaje] = useState(false);
+  const [mostrarMensajeError, cambiarMostrarMensajeError] = useState(false);
+  const [datosJson, setDatosJson] = useState([]);
+  const [mostrarMensajeExito, setMostrarMensajeExito] = useState("");
+  const [cargando, setCargando] = useState(false);
   const { theme } = useTheme();
 
   const mensajeValidacionEstilo = {
@@ -14,52 +30,171 @@ const RegistroMasivoBoton = () => {
     transition: 'opacity 0.3s ease',
     overflow: 'hidden',
   };
+  const handleCloseSnackbarSuccess = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpenSuccess(false);
+  };
 
-  const manejoDocumentoCambio = (e) => {
-    setDocumento(e.target.files[0]);
+  const handleCloseSnackbarError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackbarOpenError(false);
+  };
+
+  const manejoDocumentoCambio = (e, valor) => {
+    setDocumento(valor ? e.target.files[0] : null);
+    setDetallesArchivo({
+      nombre: valor ? e.target.files[0].name : "",
+      tamano: valor ? (e.target.files[0].size / 1024).toFixed(2) + " KB" : "",
+      registros: 0,
+    });
   }
 
   const manejoDocumentoSubido = () => {
-    const documentos = new FormData();
-    documentos.append('file', documento);
+  if (documento) {
+    const leerArchivo = new FileReader();
+    leerArchivo.onload = (e) => {
+      const texto = e.target.result;
+      if (texto.includes('horas', 'dia', 'servicios', 'ubicacion', 'planta', 'tipo', 'capacidad', 'nombre')) {
+        const lineas = texto.split('\n').slice(1);
+        const registros = lineas.map((linea) => {
+          let campos = linea.split(',');
+          if (campos.length > 8) {
+            campos[7] = campos.slice(7).join(',');
+            campos = campos.slice(0, 8);
+          }
+          campos[7] = campos[7] ? campos[7].split(',') : []; 
+          campos[7] = campos[7].map((hora) => hora.replace(/^\"|\"\r$/g, '')); 
+          return {
+            nombre: campos[0],
+            capacidad: parseInt(campos[1]),
+            tipo: campos[2],
+            planta: campos[3],
+            ubicacion: campos[4],
+            servicios: campos[5],
+            dia: campos[6],
+            horas: campos[7],
+          };
+        });
 
-    fetch('http://localhost:5173/api/usuarios/masivo', {  //cambiar a la ruta de la API laravel
-      method: 'POST',
-      body: documentos
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-    if (documento) {
-      const leerArchivo = new FileReader();
-      leerArchivo.onload = (e) => {
-        const texto = e.target.result;
-        console.log(texto);
-        localStorage.setItem('texto', texto);
-      };
-      leerArchivo.readAsText(documento);
-      cambiarAbrirDialogo(true);
-    }
+        console.log(registros);
+        localStorage.setItem('registros', JSON.stringify(registros));
+
+        
+        enviarDatosAlBackend({ registros });
+
+        setDatosJson(registros);
+        setDetallesArchivo((detalles) => ({ ...detalles, registros: registros.length }));
+
+        cambiarMostrarMensaje(false);
+      } else {
+        cambiarMostrarMensaje(true);
+      }
+    };
+    leerArchivo.readAsText(documento);
+  } else {
+    cambiarMostrarMensaje(true);
   }
+};
+  
+
+  const manejoCancelacion = () => {
+    setDocumento(null);
+    setDetallesArchivo({
+      nombre: "",
+      tamano: "",
+      registros: 0,
+    });
+    setDatosJson([]);
+  };
+
+  const enviarDatosAlBackend = async (registros) => {
+    console.log(registros)
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/importar-ambientes', registros, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      
+      setMostrarMensajeExito('Datos registrados exitosamente');
+      setSnackbarOpenSuccess(true);
+    } catch (error) {
+      console.error('Error al enviar los datos al backend:', error);
+      
+      cambiarMostrarMensajeError(true);
+    }
+  };
+
+  const defaultStyle = {
+    loadingOverlay: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'rgba(255, 255, 255, 0.5)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 1000,
+    },
+    container: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '20px',
+    }
+  };
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-      <input
-        accept=".csv"
-        style={{ padding: '10px', margin: '20px', border: `1px solid ${theme.secondary}`, backgroundColor: theme.secondary, borderRadius: '15px', fontSize: '0.98rem' }}
-        type="file"
-        onChange={manejoDocumentoCambio}
-      />
-      <MensajeExito
-        abrirDialogo={abrirDialogo}
-        cerrarDialogo={() => cambiarAbrirDialogo(false)}
-        mensaje="Registros subidos con éxito"
-      />
-      <Button onClick={manejoDocumentoSubido}>Procesar CSV</Button>
-      {!documento && <div style={mensajeValidacionEstilo}>Seleccione un archivo correcto para registrar</div>}
+    <div style={defaultStyle.container}>
+      {cargando && (
+        <div style={defaultStyle.loadingOverlay}>
+          <CircularProgress />
+        </div>
+      )}
+      <div style={{display:'flex', justifyContent: 'space-between'}}>
+        <div>
+          <span style={{ color: documento ? 'black' : '#888' }}>Nombre del archivo: {documento ? detallesArchivo.nombre : 'No disponible'}</span>
+        </div>
+        {documento && (
+          <Cancel
+            onClick={manejoCancelacion}
+            style={{
+              cursor: 'pointer',
+
+              color: 'black',
+            }}
+          />
+        )}
+      </div>
+
+      <div>
+        <span style={{ color: documento ? 'black' : '#888' }}>Cantidad de registros: {documento ? detallesArchivo.registros : 'No disponible'}</span>
+      </div>
+      <div >
+        <EntradaArchivo onChange={e => manejoDocumentoCambio(e, true)} accept=".csv" />
+      </div>
+      <div >
+        <Button onClick={manejoDocumentoSubido} fullWidth>
+          Procesar
+        </Button>
+      </div>
+      {mostrarMensaje && <div style={mensajeValidacionEstilo}>Seleccione un archivo con un tamaño menor para registrar</div>}
+      <Snackbar open={snackbarOpenSuccess} autoHideDuration={6000} onClose={handleCloseSnackbarSuccess}>
+        <Alert onClose={handleCloseSnackbarSuccess} severity="success">
+          {mostrarMensajeExito}
+        </Alert>
+      </Snackbar>
+      <Snackbar open={snackbarOpenError} autoHideDuration={6000} onClose={handleCloseSnackbarError}>
+        <Alert onClose={handleCloseSnackbarError} severity="error">
+          Error al enviar los datos al backend
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

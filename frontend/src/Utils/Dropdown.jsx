@@ -11,7 +11,8 @@ function Dropdown({ etiqueta, opciones, mensajeValidacion = '', esRequerido, cam
   const { theme } = useTheme();
 
   const manejarCambio = (event) => {
-    cambiarValorSeleccionado(event.target.value);
+    const valor = event.target.value;
+    cambiarValorSeleccionado(valor);
   }
   const manejarPresionado = () => {
     if(onBlur){
@@ -103,8 +104,8 @@ function Dropdown({ etiqueta, opciones, mensajeValidacion = '', esRequerido, cam
 }
 
 Dropdown.propTypes = {
-  label: PropTypes.string.isRequired,
-  options: PropTypes.arrayOf(PropTypes.shape({
+  etiqueta: PropTypes.string.isRequired,
+  opciones: PropTypes.arrayOf(PropTypes.shape({
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     label: PropTypes.string.isRequired,
   })).isRequired,

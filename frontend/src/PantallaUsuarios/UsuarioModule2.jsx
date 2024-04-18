@@ -7,8 +7,10 @@ import Casilla from "../Utils/Casilla";
 import RowPercentage from "../Responsive/RowPercentage";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { useTheme } from '../Contexts/ThemeContext';
 
 const AdminHomeModule2 = () => {
+  const { theme } = useTheme();
   const [nombreDelRol, setNombreDelRol] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [casillas, setCasillas] = useState({
@@ -62,15 +64,16 @@ const AdminHomeModule2 = () => {
 
     if(nombreDelRol !== "" && Object.values(casillas).some((value) => value === true)){
       setSnackbarOpen(true);
+      setNombreDelRol("");
+      setCasillas({
+        gestionDeUsuario: false,
+        gestionDeAmbientes: false,
+        gestionDeReservas: false,
+        solicitudDeReservas: false,
+      });
     }else{
-
+      setSnackbarOpen(false);
     }
-    console.log("Nombre del rol:", nombreDelRol);
-    console.log("Casillas seleccionadas:");
-    Object.entries(casillas).forEach(([key, value]) => {
-      if (value) console.log(key.replace(/([A-Z])/g, " $1").trim());
-    });
-    // guaradr rol
     
   };
   const handleCloseSnackbar = (event, reason) => {
@@ -80,113 +83,132 @@ const AdminHomeModule2 = () => {
     setSnackbarOpen(false);
   };
 
+  const defaultStyle = {
+    outerContainer: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: '100%',
+      with:'100%',
+      background: theme.bgmain,
+    },
+    container: {
+      display: 'flex',
+      width: '50%',
+      minWidth: '600px',
+      minHeight: '450px',
+    },
+  };
   return (
-    <Card
-      minWidth="300px"
-      minHeight="100px"
-      fullWidth
-      fullHeight
-      alignCenter
-      padding="30px 60px"
-      borderColor="blue"
-      borderRadius="15px"
-    >
-      <div
-        style={{
-          width: "100%",
-          flexDirection: "column",
-          height: "100%",
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        <div
-          style={{
-            height: "15%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+    <div style={defaultStyle.outerContainer}>
+      <div style={defaultStyle.container}>
+        <Card
+          minWidth="200px"
+          minHeight="200px"
+          fullWidth
+          alignCenter
+          padding="30px 60px"
+          borderColor="blue"
+          borderRadius="15px"
         >
-          <StyledText boldText>Crear Nuevo Rol</StyledText>
-        </div>
+          <div
+            style={{
+              width: "100%",
+              flexDirection: "column",
+              height: "100%",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <div
+              style={{
+                height: "15%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <StyledText boldText>Crear Nuevo Rol</StyledText>
+            </div>
 
-        <div style={{ marginBottom: "20px" }}>
-          <CampoValidado
-            label="Nombre del rol"
-            value={nombreDelRol}
-            validationMessage={errores.nombreDelRol}
-            onChange={(event)=>manejarCambioNombreRol(event, "^[0-9(a-zA-Z)+]*$")}
-            onBlur={validarNombreRol}
-          />
-        </div>
-        <div style={{ marginBottom: "10px" }}>
-          <RowPercentage firstChildPercentage={45} gap="20px">
-            <div>
-              <Casilla
-                label="Gestión de Usuario"
-                name="gestionDeUsuario"
-                checked={casillas.gestionDeUsuario}
-                onCheckboxChange={handleCheckboxChange}
+            <div style={{ marginBottom: "20px" }}>
+              <CampoValidado
+                label="Nombre del rol"
+                value={nombreDelRol}
+                validationMessage={errores.nombreDelRol}
+                onChange={(event)=>manejarCambioNombreRol(event, "^[0-9(a-zA-Z)+]*$")}
+                onBlur={validarNombreRol}
               />
             </div>
-            <div>
-              <Casilla
-                label="Gestión de Ambientes"
-                name="gestionDeAmbientes"
-                checked={casillas.gestionDeAmbientes}
-                onCheckboxChange={handleCheckboxChange}
-              />
+            <div style={{ marginBottom: "10px" }}>
+              <RowPercentage firstChildPercentage={45} gap="20px">
+                <div>
+                  <Casilla
+                    label="Gestión de Usuario"
+                    name="gestionDeUsuario"
+                    checked={casillas.gestionDeUsuario}
+                    onCheckboxChange={handleCheckboxChange}
+                  />
+                </div>
+                <div>
+                  <Casilla
+                    label="Gestión de Ambientes"
+                    name="gestionDeAmbientes"
+                    checked={casillas.gestionDeAmbientes}
+                    onCheckboxChange={handleCheckboxChange}
+                  />
+                </div>
+              </RowPercentage>
             </div>
-          </RowPercentage>
-        </div>
-        <div style={{ marginBottom: "20px" }}>
-          <RowPercentage firstChildPercentage={45} gap="20px">
-            <div>
-              <Casilla
-                label="Gestión de Reservas"
-                name="gestionDeReservas"
-                checked={casillas.gestionDeReservas}
-                onCheckboxChange={handleCheckboxChange}
-              />
+            <div style={{ marginBottom: "20px" }}>
+              <RowPercentage firstChildPercentage={45} gap="20px">
+                <div>
+                  <Casilla
+                    label="Gestión de Reservas"
+                    name="gestionDeReservas"
+                    checked={casillas.gestionDeReservas}
+                    onCheckboxChange={handleCheckboxChange}
+                  />
+                </div>
+                <div>
+                  <Casilla
+                    label="Solicitud de Reservas"
+                    name="solicitudDeReservas"
+                    checked={casillas.solicitudDeReservas}
+                    onCheckboxChange={handleCheckboxChange}
+                  />
+                </div>
+              </RowPercentage>
+              {errores.casillas && <div style={mensajeErrorEstilo}>{errores.casillas}</div>}
             </div>
-            <div>
-              <Casilla
-                label="Solicitud de Reservas"
-                name="solicitudDeReservas"
-                checked={casillas.solicitudDeReservas}
-                onCheckboxChange={handleCheckboxChange}
-              />
-            </div>
-          </RowPercentage>
-          {errores.casillas && <div style={mensajeErrorEstilo}>{errores.casillas}</div>}
-        </div>
-        <Button fullWidth={true} onClick={handleSave}>
-          Guardar
-        </Button>
-        <div
-          style={{
-            height: "0%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        ></div>
+            <Button fullWidth={true} onClick={handleSave}>
+              Guardar
+            </Button>
+            <div
+              style={{
+                height: "0%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            ></div>
+          </div>
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={6000}
+            onClose={handleCloseSnackbar}
+          >
+            <Alert
+              onClose={handleCloseSnackbar}
+              severity="success"
+              sx={{ width: "100%" }}
+            >
+              Rol creado con éxito
+            </Alert>
+          </Snackbar>
+        </Card>
       </div>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Rol creado con éxito
-        </Alert>
-      </Snackbar>
-    </Card>
+    </div>
   );
 };
 

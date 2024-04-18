@@ -1,4 +1,3 @@
-// esp
 import { useNavigate } from 'react-router-dom';
 import { useState } from "react";
 import {
@@ -15,34 +14,48 @@ import {
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import UsuarioStore from '../Contexts/UsuarioStore';
-import { useTheme } from "../Contexts/ThemeContext";
-import TituloStore from '../Contexts/TituloStore';
-import PropTypes from 'prop-types';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-
 const BarraSuperior = () => {
-  const { theme } = useTheme();
   const { nombre, correo } = UsuarioStore();
-  const { titulo } = TituloStore();
-  const [anchorEl, setAnchorEl] = useState(null);
-  const abierto = Boolean(anchorEl);
+  const [anchorElPerfil, setAnchorElPerfil] = useState(null);
+  const abiertoPerfil = Boolean(anchorElPerfil);
+  const [anchorElNotificaciones, setAnchorElNotificaciones] = useState(null);
+  const abiertoNotificaciones = Boolean(anchorElNotificaciones);
   const navigate = useNavigate();
+
   const manejarCierreSesion = () => {
     navigate('/');
   };
+
   const manejarAperturaMenuPerfil = (evento) => {
-    setAnchorEl(evento.currentTarget);
+    if (anchorElPerfil) {
+      setAnchorElPerfil(null);
+    } else {
+      setAnchorElPerfil(evento.currentTarget);
+    }
   };
 
   const manejarCierreMenu = () => {
-    setAnchorEl(null);
+    setAnchorElPerfil(null);
+  };
+
+  const manejarAperturaNotificaciones = (evento) => {
+    if (anchorElNotificaciones) {
+      setAnchorElNotificaciones(null);
+    } else {
+      setAnchorElNotificaciones(evento.currentTarget);
+    }
+  };
+
+  const manejarCierreNotificaciones = () => {
+    setAnchorElNotificaciones(null);
   };
 
   return (
-    <AppBar elevation={2} sx={{ bgcolor: theme.highlight }}>
+    <AppBar elevation={0} sx={{ bgcolor: 'transparent', position: 'absolute', zIndex: 1400 }}>
       <Toolbar variant="dense">
-        <IconButton color="inherit" onClick={() => navigate('/ModulosAdmin')}>
+        <IconButton style={{ color: 'white' }} onClick={() => navigate(-1)}>
           <ArrowBackIcon />
         </IconButton>
         <Box
@@ -54,29 +67,16 @@ const BarraSuperior = () => {
             marginRight: 2,
           }}
         >
-          <Typography variant="h6" noWrap>
-            { titulo }
-          </Typography>
         </Box>
         <Box sx={{ display: "flex" }}>
           <Tooltip title="Notificaciones">
-            <IconButton color="inherit" size="large">
+            <IconButton style={{ color: 'white' }} size="large" onClick={manejarAperturaNotificaciones}>
               <NotificationsIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Perfil">
-            <IconButton
-              edge="end"
-              color="inherit"
-              size="large"
-              onClick={manejarAperturaMenuPerfil}
-            >
-              <AccountCircle />
-            </IconButton>
-          </Tooltip>
           <Menu
-            id="menu-appbar"
-            anchorEl={anchorEl}
+            id="menu-notificaciones"
+            anchorEl={anchorElNotificaciones}
             anchorOrigin={{
               vertical: "bottom",
               horizontal: "right",
@@ -86,7 +86,37 @@ const BarraSuperior = () => {
               vertical: "top",
               horizontal: "right",
             }}
-            open={abierto}
+            open={abiertoNotificaciones}
+            onClose={manejarCierreNotificaciones}
+          >
+            <MenuItem onClick={manejarCierreNotificaciones}>Notificación 1</MenuItem>
+            <MenuItem onClick={manejarCierreNotificaciones}>Notificación 2</MenuItem>
+            <Divider />
+            <MenuItem onClick={manejarCierreNotificaciones}>Ver todas</MenuItem>
+          </Menu>
+          <Tooltip title="Perfil">
+            <IconButton
+              edge="end"
+              style={{ color: 'white' }}
+              size="large"
+              onClick={manejarAperturaMenuPerfil}
+            >
+              <AccountCircle />
+            </IconButton>
+          </Tooltip>
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorElPerfil}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={abiertoPerfil}
             onClose={manejarCierreMenu}
           >
             <Typography
@@ -109,10 +139,6 @@ const BarraSuperior = () => {
       </Toolbar>
     </AppBar>
   );
-};
-
-BarraSuperior.propTypes = {
-  onToggleSidebar: PropTypes.func.isRequired,
 };
 
 export default BarraSuperior;

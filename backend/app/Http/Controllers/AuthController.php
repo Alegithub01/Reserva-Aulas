@@ -18,7 +18,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register', 'dummyGet']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'dummyGet','registerMany']]);
     }
 
     public function dummyGet()
@@ -110,6 +110,35 @@ class AuthController extends Controller
         return response()->json([
             'message' => '¡Usuario registrado exitosamente!',
             'user' => $user
+        ], 201);
+    }
+
+    public function registerMany(Request $request)
+    {
+        $users = $request->all();
+        $response = [];
+        foreach ($users as $user) {
+            $validator = Validator::make($user, [
+                'nombres' => 'required',
+                'apellidos'=> 'required',
+                'email' => 'required|string|email|max:100|unique:users',
+                'password' => 'required|string|min:6',
+            ]);
+            if($validator->fails()){
+                return response()->json($validator->errors()->toJson(),400);
+            }
+
+            $user = User::create(array_merge(
+                $validator->validate(),
+                ['password' => bcrypt($user['password'])]
+            ));
+
+            $response[] = $user;
+        }
+
+        return response()->json([
+            'message' => '¡Usuarios registrados exitosamente!',
+            'users' => $response
         ], 201);
     }
 

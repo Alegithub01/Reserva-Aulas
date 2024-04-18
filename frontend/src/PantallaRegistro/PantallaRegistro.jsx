@@ -165,7 +165,7 @@ const RegistroDocente = () => {
     axios.post('http://localhost:8000/api/auth/register', datos)
       .then(response => {
         console.log('Datos registrados exitosamente', response.data);
-        navegar('/');
+        navegar('/inicioSesion');
       })
       .catch(error => {
         console.error('Error al enviar datos al api:', error);
@@ -275,7 +275,7 @@ const RegistroDocente = () => {
           cursor: "pointer",
           marginTop: "10px",
         }}
-        onClick={() => navegar("/")}
+        onClick={() => navegar("/inicioSesion")}
         onMouseOver={(e) => (e.target.style.color = "#3661EB")}
         onMouseOut={(e) => (e.target.style.color = "black")}
       >
@@ -315,7 +315,7 @@ const RegistroDocente = () => {
           <Button
             onClick={() => {
               setDialogoAbierto(false);
-              navegar("/");
+              navegar("/inicioSesion");
             }}
             color="primary"
             autoFocus

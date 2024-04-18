@@ -73,7 +73,7 @@ const PantallaEfecto = () => {
           <StyledText boldWhiteText style={style.titulo}>Reservación de Ambientes FCYT</StyledText>
           <div style={style.contenedorBotones}>
             <Button fullWidth={false} onClick={() => { navegacion("/registro")}}>Registrarse</Button>
-            <Button fullWidth={false} onClick={() => { navegacion("/") }}>Iniciar sesión</Button>
+            <Button fullWidth={false} onClick={() => { navegacion("/inicioSesion") }}>Iniciar sesión</Button>
           </div>
         </div>
       </Zoom>
