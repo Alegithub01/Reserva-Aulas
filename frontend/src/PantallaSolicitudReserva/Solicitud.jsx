@@ -2,12 +2,33 @@ import Card from "../Utils/Card";
 import StyledText from "../StyledText";
 import { useTheme } from '../Contexts/ThemeContext';
 import { useState } from "react";
-import ButtonEstilizado from "../Utils/Button";
 import TextInput from "../Utils/TextInput";
 import Dropdown from "../Utils/Dropdown";
+import SelectorMultiple from '../Utils/SelectorMultiple';
 import RowPercentage from "../Responsive/RowPercentage";
 import MensajeExito from "../Utils/MensajeExito";
+import EntradaFecha from "../Utils/EntradaFecha";
+import Button from "../Utils/Button";
 
+const Solicitud = () => {
+  const { theme } = useTheme();
+  const [nombreDocente, setNombreDocente] = useState('');
+  const [materia, setMateria] = useState('');
+  const [grupo, setGrupo] = useState('');
+  const [ambiente, setAmbiente] = useState('');
+  const [fecha, setFecha] = useState("");
+  const [hora, setHora] = useState('');
+  const [serviciosSolicitados, setServiciosSolicitados] = useState('');
+  const [detalles, setDetalles] = useState('');
+  const [abrirDialogo, cambiarAbrirDialogo] = useState(false);
+  const [mensajeError, setMensajeError] = useState({
+    nombreDocente: '',
+    materia: '',
+    grupo: '',
+    ambiente: '',
+    fecha: '',
+    hora: '',
+  });
 /*datos de prueba para los dropdowns */
 const cargarBDMateria = [
   { value: 1, label: "Progr. Funcional" },
@@ -31,32 +52,6 @@ const cargarBDAmbiente = [
   { value: 7, label: "693A", },
 ];
 /* */
-
-
-const Solicitud = () => {
-  const { theme } = useTheme();
-  const [nombreDocente, setNombreDocente] = useState('');
-  const [materia, setMateria] = useState('');
-  const [grupo, setGrupo] = useState('');
-  const [ambiente, setAmbiente] = useState('');
-  const [capacidad, setCapacidad] = useState('');
-  const [fecha, setFecha] = useState('');
-  const [hora, setHora] = useState('');
-  const [serviciosSolicitados, setServiciosSolicitados] = useState('');
-  const [detalles, setDetalles] = useState('');
-  const [abrirDialogo, cambiarAbrirDialogo] = useState(false);
-  const [mensajeError, setMensajeError] = useState({
-    nombreDocente: '',
-    materia: '',
-    grupo: '',
-    ambiente: '',
-    capacidad: '',
-    fecha: '',
-    hora: '',
-    serviciosSolicitados: '',
-    detalles: '',
-  });
-
   const horas = [
     { value: "10", label: "06:45-08:15" },
     { value: "20", label: "08:15-09:45" },
@@ -79,60 +74,53 @@ const Solicitud = () => {
   const validarNombreDocente = () => {
     //falta lo de verificar si esta realmente en la base de datos(trabajo mio)
     if (nombreDocente.trim() === '') {
-      setMensajeError({ ...mensajeError, nombreDocente: 'Ingrese el nombre del docente' });
+      setMensajeError(previo=>({...previo, nombreDocente: "Ingrese nombre de docente"}));
     }
   }
 
-  const manejarCambioCapacidad = (event, pattern) => {
-    const valor = event.target.value;
-    if (pattern && RegExp(pattern).test(valor)) {
-      setCapacidad(valor);
-      setMensajeError + ({ ...mensajeError, capacidad: "" });
-    }
-  };
-  const validarVacioCapacidad = () => {
-    if (capacidad.trim() === "") {
-      setMensajeError(previo => ({ ...previo, capacidad: "Ingrese la capacidad del ambiente" }));
-    }
-  };
-
   const validarSeleccionMateria = () => {
     if (materia === '') {
-      setMensajeError({ ...mensajeError, materia: 'Seleccione una materia' });
+      setMensajeError(previo => ({ ...previo ,materia: 'Seleccione una materia' }));
     }
   }
 
   const validarSeleccionGrupo = () => {
     if (grupo === '') {
-      setMensajeError({ ...mensajeError, grupo: 'Seleccione un grupo' });
+      setMensajeError(previo => ({ ...previo ,grupo: 'Seleccione un grupo' }));
     }
   }
 
   const manejarCambioFecha = (event) => {
+    console.log("entree",event.target.value);
     setFecha(event.target.value);
-    setMensajeError({ ...mensajeError, fecha: '' });
+    setMensajeError(previo => ({ ...previo , fecha: '' }));
   }
   const validarFecha = () => {
-    if (fecha === '') {
-      setMensajeError({ ...mensajeError, fecha: 'Seleccione una fecha' });
+    if (fecha === null || fecha === '') {
+      setMensajeError(previo => ({ ...previo , fecha: 'Seleccione una fecha' }));
     }
   }
 
   const validarSeleccionHora = () => {
     if (hora === '') {
-      setMensajeError({ ...mensajeError, hora: 'Seleccione una hora' });
+      setMensajeError(previo => ({ ...previo ,hora: 'Seleccione una hora' }));
     }
   }
 
+  const validarSeleccionAmbiente = () => {
+    if (ambiente === '') {
+      setMensajeError(previo => ({ ...previo ,ambiente: 'Seleccione un ambiente' }));
+    }}
 
   const validarTodo = () => {
+    console.log(nombreDocente, materia, grupo, ambiente, fecha, hora);
     validarNombreDocente();
     validarSeleccionMateria();
+    validarSeleccionAmbiente();
     validarSeleccionGrupo();
     validarFecha();
     validarSeleccionHora();
-    validarVacioCapacidad();
-    if (nombreDocente.trim() !== '' && materia !== '' && grupo !== '' && fecha !== '' && hora !== '' && capacidad.trim() !== '') {
+    if (nombreDocente.trim() !== '' && materia !== '' && grupo !== '' && fecha !== '' && hora !== '' ) {
       console.log("Solicitud enviada");
       cambiarAbrirDialogo(true);
     } else {
@@ -229,33 +217,19 @@ const Solicitud = () => {
                   etiqueta="Ambiente"
                   opciones={cargarBDAmbiente}
                   cambio={setAmbiente}
+                  onBlur={validarSeleccionAmbiente}
                   esRequerido={true}
                   mensajeValidacion={mensajeError.ambiente}  //ref
-                />
-              </div>
-              <div>
-                <TextInput
-                  label="Capacidad"
-                  fullWidth={true}
-                  onChange={(event) => manejarCambioCapacidad(event, "^[0-9]*$", { min: 10, max: 300 })}
-                  onBlur={validarVacioCapacidad}
-                  isRequired={true}
-                  validationMessage={mensajeError.capacidad}
-                  pattern="^[0-9]*$"
-                  rango={{ min: 10, max: 300 }}
                 />
               </div>
             </RowPercentage>
             <RowPercentage firstChildPercentage={50} gap="10px">
               <div>
-                <TextInput
-                  label="Fecha"
-                  fullWidth={true}
-                  onChange={(event) => manejarCambioFecha(event)}
-                  onBlur={validarFecha}
-                  isRequired={true}
-                  validationMessage={mensajeError.fecha}
-                  type="date"
+                <EntradaFecha 
+                etiqueta = "Fecha"
+                enCambio = {setFecha}
+                onBlur = {validarFecha}
+                mensajeValidacion={fecha === ""? mensajeError.fecha:""}
                 />
               </div>
               <div>
@@ -286,7 +260,7 @@ const Solicitud = () => {
               }}
               mensaje="Solicitud registrada con éxito"
             />
-            <ButtonEstilizado fullWidth={true} onClick={() => { validarTodo }}>Enviar Solicitud</ButtonEstilizado>
+            <Button fullWidth={true} onClick={validarTodo}>Enviar Solicitud</Button>
             <div
               style={{
                 height: "0%",

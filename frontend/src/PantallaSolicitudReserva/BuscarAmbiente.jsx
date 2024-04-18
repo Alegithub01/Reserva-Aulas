@@ -28,7 +28,22 @@ const tipos =[
   {value: "30", label: "Laboratorio"},
 ];
 
+const opcionesHorario = [
+  { value: "10", label: "06:45-08:15" },
+  { value: "20", label: "08:15-09:45" },
+  { value: "30", label: "09:45-11:15" },
+  { value: "40", label: "11:15-12:45" },
+  { value: "50", label: "12:45-14:15" },
+  { value: "60", label: "14:15-15:45" },
+  { value: "70", label: "15:45-17:15" },
+  { value: "80", label: "17:15-18:45" },
+  { value: "90", label: "18:45-20:15" },
+  { value: "100", label: "20:30-21:45" },
+];
+
 const BusquedaAmbiente = () => {
+  const [filtroFecha, setFiltroFecha] = useState('');
+  const [filtroHorario, setFiltroHorario] = useState('');
   const [filtroCapacidad, setFiltroCapacidad] = useState('');
   const [filtroTipo, setFiltroTipo] = useState('');
   const [filtroServicios, setFiltroServicios] = useState('');
@@ -137,6 +152,26 @@ const BusquedaAmbiente = () => {
             >
               <StyledText boldText>Buscar ambientes</StyledText>
             </div>
+            <RowPercentage firstChildPercentage={60} gap="10px">
+              <div>
+                <TextInput
+                  label= "Fecha"
+                  fullWidth={true}
+                  type="date"
+                  onChange={(event) => setFiltroFecha(event.target.value)}
+                  onBlur={() => {}}
+                  isRequired={true}
+                />
+              </div>
+            <div>
+              <Dropdown
+                etiqueta="Horario"
+                opciones={opcionesHorario}
+                cambio={setFiltroHorario}
+                esRequerido={true}
+                />
+            </div>
+            </RowPercentage>
             <RowPercentage firstChildPercentage={60} gap="10px">
               <div>
                 <TextInput
