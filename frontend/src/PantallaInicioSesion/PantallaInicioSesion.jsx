@@ -112,6 +112,18 @@ const PantallaInicioSesionProfesor = () => {
     // });
   };
 
+  const manejarAbrirSnackbar = (mensaje) => {
+    setMensajeSnackbar(mensaje);
+    setSnackbarAbierto(true);
+  };
+  
+  const manejarCerrarSnackbar = (evento, razon) => {
+    if (razon === 'clickaway') {
+      return;
+    }
+    setSnackbarAbierto(false);
+  };
+
   const contenidoIzquierdo = (
     <div
       style={{
