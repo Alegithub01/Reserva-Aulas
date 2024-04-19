@@ -26,6 +26,7 @@ const SolicitudMultiple = () => {
   const [abrirDialogo, cambiarAbrirDialogo] = useState(false);
   const [mensajeError, setMensajeError] = useState({
     nombreDocente: '',
+    nroDocentes: '',
     materia: '',
     grupo: '',
     ambiente: '',
@@ -74,13 +75,30 @@ const SolicitudMultiple = () => {
       setMensajeError({ ...mensajeError, nombreDocente: '' });
     }
   }
-  const validarNombreDocente = () => {
-    //falta lo de verificar si esta realmente en la base de datos(trabajo mio)
+  const validarNombresDocentes = () => {
+    for (let i = 0; i < docentes.length; i++) {
+      if (docentes[i].nombre.trim() === '') {
+        setMensajeError(previo => ({ ...previo, nombreDocente: "Ingrese nombre de docente" }));
+        break;
+      }
+    }
     if (nombreDocente.trim() === '') {
       setMensajeError(previo => ({ ...previo, nombreDocente: "Ingrese nombre de docente" }));
     }
   }
 
+  const manejarCambioNroDocentes = (event, pattern) => {
+    const valor = event.target.value;
+    if (pattern && RegExp(pattern).test(valor)) {
+      setNroDocentes(valor);
+      setMensajeError({ ...mensajeError, nroDocentes: '' });
+    }
+  }
+  const validarVacioNroDocentes = () => {
+    if (nroDocentes.trim() === '') {
+      setMensajeError(previo => ({ ...previo, nroDocentes: "Ingrese cantidad de docentes" }));
+    }
+  }
   const validarSeleccionMateria = () => {
     if (materia === '') {
       setMensajeError(previo => ({ ...previo, materia: 'Seleccione una materia' }));
@@ -100,7 +118,7 @@ const SolicitudMultiple = () => {
   }
 
   const validarSeleccionHora = () => {
-    if (hora === '') {
+    if (hora.length === 0) {
       setMensajeError(previo => ({ ...previo, hora: 'Seleccione una hora' }));
     } else {
       const horaOrdenada = hora.sort();
@@ -125,8 +143,9 @@ const SolicitudMultiple = () => {
 
   const validarTodo = () => {
     console.log(nombreDocente, materia, grupo, ambiente, fecha, hora);
-    validarNombreDocente();
+    // validarNombresDocentes();
     validarSeleccionMateria();
+    validarVacioNroDocentes();
     validarSeleccionAmbiente();
     validarSeleccionGrupo();
     validarFecha();
@@ -143,23 +162,25 @@ const SolicitudMultiple = () => {
   useEffect(() => {
     const initialDocentes = [];
     for (let i = 0; i < nroDocentes; i++) {
-      initialDocentes.push({ nombre: "", grupo: "" });
+      initialDocentes.push({ nombre: "", grupo: "", error: false });
     }
     setDocentes(initialDocentes);
   }, [nroDocentes]);
 
-  const handleNombreChange = (index, event) => {
+  const manejarCambioNombre = (index, event) => {
     const newDocentes = [...docentes];
     newDocentes[index].nombre = event.target.value;
     setDocentes(newDocentes);
   };
 
-  const handleGrupoChange = (index, value) => {
+  const manejarCambioGrupo = (index, event, pattern) => {
     const newDocentes = [...docentes];
-    newDocentes[index].grupo = value;
+    newDocentes[index].grupo = event.target.value;
+    if(pattern && RegExp(pattern).test(newDocentes[index].grupo)){
+      newDocentes[index].errorGrupo = false;
+    }
     setDocentes(newDocentes);
-  };
-
+  }
 
   const defaultStyle = {
     outerContainer: {
@@ -221,41 +242,46 @@ const SolicitudMultiple = () => {
                 />
               </div>
               <div>
-                <Dropdown
-                  etiqueta="Nro docentes"
-                  opciones={[{ value: "1", label: "1" },
-                  { value: "2", label: "2" },
-                  { value: "3", label: "3" },
-                  { value: "4", label: "4" },
-                  { value: "5", label: "5" }]}
-                  cambio={setNroDocentes}
+                <TextInput
+                  label="Nro docentes"
+                  fullWidth={true}
+                  value={nroDocentes}
+                  onChange={(event) => manejarCambioNroDocentes(event, "^[0-9]{0,2}$")}
+                  onBlur={validarVacioNroDocentes}
+                  validationMessage={mensajeError.nroDocentes}
+                  pattern="^[0-9]{1,2}$"
+                  isRequired={true}
                 />
               </div>
             </RowPercentage>
 
             {docentes.map((docente, index) => (
-        <RowPercentage key={index} firstChildPercentage={25} gap="10px">
-          <div>
-            <TextInput
-              label="Nombre del docente"
-              fullWidth={true}
-              value={docente.nombre}
-              onChange={event => handleNombreChange(index, event)}
-              pattern="^[a-zA-Z ]*$"
-              isRequired={true}
-            />
-          </div>
-          <div>
-            <Dropdown
-              etiqueta="Grupo"
-              opciones={cargarBDGrupo}
-              valor={docente.grupo}
-              cambio={value => handleGrupoChange(index, value)}
-              esRequerido={true}
-            />
-          </div>
-        </RowPercentage>
-      ))}
+              <RowPercentage key={index} firstChildPercentage={25} gap="10px">
+                <div>
+                  <TextInput
+                    label="Nombre del docente"
+                    fullWidth={true}
+                    value={docente.nombre}
+                    onChange={event => manejarCambioNombre(index, event)}
+                    pattern="^[a-zA-Z ]*$"
+                    isRequired={true}
+                    validationMessage={docente.errorNombre ? "Ingrese nombre de docente" : ""}
+                  />
+                </div>
+                <div>
+                  <TextInput
+                    label="Grupo"
+                    fullWidth={true}
+                    value={docente.grupo}
+                    onChange={(event) => manejarCambioGrupo(index, event, "^[0-9]{0,2}$")}
+                    onBlur={validarVacioNroDocentes}
+                    validationMessage={docente.errorGrupo ? "Ingrese grupo" : ""}
+                    pattern="^[0-9]{1,2}$"
+                    isRequired={true}
+                  />
+                </div>
+              </RowPercentage>
+            ))}
             <RowPercentage firstChildPercentage={40} gap="10px">
               <div>
                 <Dropdown
