@@ -75,16 +75,12 @@ const SolicitudMultiple = () => {
       setMensajeError({ ...mensajeError, nombreDocente: '' });
     }
   }
-  const validarNombresDocentes = () => {
-    for (let i = 0; i < docentes.length; i++) {
-      if (docentes[i].nombre.trim() === '') {
-        setMensajeError(previo => ({ ...previo, nombreDocente: "Ingrese nombre de docente" }));
-        break;
-      }
-    }
-    if (nombreDocente.trim() === '') {
-      setMensajeError(previo => ({ ...previo, nombreDocente: "Ingrese nombre de docente" }));
-    }
+  const validarNombresDocentes = (index) => {
+    docentes[index].errorNombre = docentes[index].nombre.trim() === '';
+  }
+
+  const validarGruposDocentes = (index) => {
+    docentes[index].errorGrupo = docentes[index].grupo.trim() === '';
   }
 
   const manejarCambioNroDocentes = (event, pattern) => {
@@ -162,15 +158,18 @@ const SolicitudMultiple = () => {
   useEffect(() => {
     const initialDocentes = [];
     for (let i = 0; i < nroDocentes; i++) {
-      initialDocentes.push({ nombre: "", grupo: "", error: false });
+      initialDocentes.push({ nombre: "", grupo: "", errorNombre: true, errorGrupo: true});
     }
     setDocentes(initialDocentes);
   }, [nroDocentes]);
 
-  const manejarCambioNombre = (index, event) => {
+  const manejarCambioNombre = (index, event, pattern) => {
     const newDocentes = [...docentes];
     newDocentes[index].nombre = event.target.value;
-    setDocentes(newDocentes);
+    if(pattern && RegExp(pattern).test(newDocentes[index].nombre)){
+      newDocentes[index].errorNombre = false;
+      setDocentes(newDocentes);
+    }
   };
 
   const manejarCambioGrupo = (index, event, pattern) => {
@@ -178,8 +177,8 @@ const SolicitudMultiple = () => {
     newDocentes[index].grupo = event.target.value;
     if(pattern && RegExp(pattern).test(newDocentes[index].grupo)){
       newDocentes[index].errorGrupo = false;
+      setDocentes(newDocentes);
     }
-    setDocentes(newDocentes);
   }
 
   const defaultStyle = {
@@ -262,7 +261,8 @@ const SolicitudMultiple = () => {
                     label="Nombre del docente"
                     fullWidth={true}
                     value={docente.nombre}
-                    onChange={event => manejarCambioNombre(index, event)}
+                    onChange={event => manejarCambioNombre(index, event, "^[a-zA-Z ]*$")}
+                    onBlur={()=>validarNombresDocentes(index)}
                     pattern="^[a-zA-Z ]*$"
                     isRequired={true}
                     validationMessage={docente.errorNombre ? "Ingrese nombre de docente" : ""}
@@ -274,9 +274,9 @@ const SolicitudMultiple = () => {
                     fullWidth={true}
                     value={docente.grupo}
                     onChange={(event) => manejarCambioGrupo(index, event, "^[0-9]{0,2}$")}
-                    onBlur={validarVacioNroDocentes}
+                    onBlur={()=>validarGruposDocentes(index)}
                     validationMessage={docente.errorGrupo ? "Ingrese grupo" : ""}
-                    pattern="^[0-9]{1,2}$"
+                    pattern="^[0-9]{0,2}$"
                     isRequired={true}
                   />
                 </div>
