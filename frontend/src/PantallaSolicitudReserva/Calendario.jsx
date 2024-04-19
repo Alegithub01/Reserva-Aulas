@@ -248,7 +248,7 @@ const testSchedule = {
                 cambio={handleAulaEspecificaChange}
               />
             </RowPercentage>
-            <CalendarioComp schedule={testSchedule} />
+            <CalendarioComp schedule={testSchedule} aula={aulaEspecifica}/>
           </div>
         </Card>
       </div>
