@@ -1,62 +1,54 @@
 import Card from "../Utils/Card";
 import StyledText from "../StyledText";
 import { useTheme } from '../Contexts/ThemeContext';
-import { useState } from "react";
-import ButtonEstilizado from "../Utils/Button";
+import { useEffect, useState } from "react";
 import TextInput from "../Utils/TextInput";
 import Dropdown from "../Utils/Dropdown";
+import SelectorMultiple from '../Utils/SelectorMultiple';
 import RowPercentage from "../Responsive/RowPercentage";
 import MensajeExito from "../Utils/MensajeExito";
-
-/*datos de prueba para los dropdowns */
-const cargarBDMateria = [
-  { value: 1, label: "Progr. Funcional" },
-  { value: 2, label: "Base de datos 2" },
-  { value: 3, label: "Taller de Base de Datos" },
-];
-
-const cargarBDGrupo = [  //cambiamos a numeros para texto?
-  { value: 1, label: "Grupo 1" },
-  { value: 2, label: "Grupo 2" },
-  { value: 3, label: "Grupo 3" },
-];
-
-const cargarBDAmbiente = [
-  { value: 1, label: "691A", },
-  { value: 2, label: "691B", },
-  { value: 3, label: "691C", },
-  { value: 4, label: "692A", },
-  { value: 5, label: "692B", },
-  { value: 6, label: "693C", },
-  { value: 7, label: "693A", },
-];
-/* */
+import EntradaFecha from "../Utils/EntradaFecha";
+import Button from "../Utils/Button";
 
 
-const Solicitud = () => {
+const SolicitudMultiple = () => {
   const { theme } = useTheme();
-  const [nombreDocente, setNombreDocente] = useState('');
   const [materia, setMateria] = useState('');
-  const [grupo, setGrupo] = useState('');
+  const [nroDocentes, setNroDocentes] = useState("1");
+  const [nombreDocente, setNombreDocente] = useState('Tatiana Aparicio Yuja'); //nombre del docente loggeado
+  const [grupoDocente, setGrupoDocente] = useState(''); //grupo del docente loggeado
+  const [docentes, setDocentes] = useState([]);
   const [ambiente, setAmbiente] = useState('');
-  const [capacidad, setCapacidad] = useState('');
-  const [fecha, setFecha] = useState('');
+  const [fecha, setFecha] = useState("");
   const [hora, setHora] = useState('');
   const [serviciosSolicitados, setServiciosSolicitados] = useState('');
   const [detalles, setDetalles] = useState('');
   const [abrirDialogo, cambiarAbrirDialogo] = useState(false);
   const [mensajeError, setMensajeError] = useState({
-    nombreDocente: '',
+    nroDocentes: '',
+    grupoDocente: '',
     materia: '',
-    grupo: '',
     ambiente: '',
-    capacidad: '',
     fecha: '',
     hora: '',
-    serviciosSolicitados: '',
-    detalles: '',
   });
+  /*datos de prueba para los dropdowns */
+  const cargarBDMateria = [
+    { value: 1, label: "Progr. Funcional" },
+    { value: 2, label: "Base de datos 2" },
+    { value: 3, label: "Taller de Base de Datos" },
+  ];   //convertir info de materias en este diccionario (solo nombres de materias no importa el valor)
 
+  const cargarBDAmbiente = [
+    { value: "691A", label: "691A", },
+    { value: "691B", label: "691B", },
+    { value: "691C", label: "691C", },
+    { value: "692A", label: "692A", },
+    { value: "692B", label: "692B", },
+    { value: "693C", label: "693C", },
+    { value: "693A", label: "693A", },
+  ];    //convertir info de ambientes en este diccionario (solo nombres de ambientes)
+  /* */
   const horas = [
     { value: "10", label: "06:45-08:15" },
     { value: "20", label: "08:15-09:45" },
@@ -69,75 +61,139 @@ const Solicitud = () => {
     { value: "90", label: "18:45-20:15" },
     { value: "100", label: "20:30-21:45" },
   ];
-  const manejarCambioNombreDocente = (event, pattern) => {
+
+  const cambiarNombreDocente = (event, pattern) => {
     const valor = event.target.value;
     if (pattern && RegExp(pattern).test(valor)) {
       setNombreDocente(valor);
-      setMensajeError({ ...mensajeError, nombreDocente: '' });
-    }
-  }
-  const validarNombreDocente = () => {
-    //falta lo de verificar si esta realmente en la base de datos(trabajo mio)
-    if (nombreDocente.trim() === '') {
-      setMensajeError({ ...mensajeError, nombreDocente: 'Ingrese el nombre del docente' });
+      setMensajeError(previo => ({ ...previo, nombreDocente: '' }));
     }
   }
 
-  const manejarCambioCapacidad = (event, pattern) => {
+  const cambiarGrupoDocente = (event, pattern) => {
     const valor = event.target.value;
     if (pattern && RegExp(pattern).test(valor)) {
-      setCapacidad(valor);
-      setMensajeError + ({ ...mensajeError, capacidad: "" });
+      setGrupoDocente(valor);
+      setMensajeError(previo => ({ ...previo, grupoDocente: '' }));
     }
-  };
-  const validarVacioCapacidad = () => {
-    if (capacidad.trim() === "") {
-      setMensajeError(previo => ({ ...previo, capacidad: "Ingrese la capacidad del ambiente" }));
+  }
+  const validarGrupoDocente = () => {
+    if (grupoDocente.trim() === '') {
+      setMensajeError(previo => ({ ...previo, grupoDocente: "Ingrese grupo" }));
     }
-  };
+  }
+  const validarNombresDocentes = (index) => {
+    docentes[index].errorNombre = docentes[index].nombre.trim() === '';
+  }
 
+  const validarGruposDocentes = (index) => {
+    docentes[index].errorGrupo = docentes[index].grupo.trim() === '';
+  }
+
+  const manejarCambioNroDocentes = (event, pattern) => {
+    const valor = event.target.value;
+    if (pattern && RegExp(pattern).test(valor)) {
+      setNroDocentes(valor);
+      setMensajeError({ ...mensajeError, nroDocentes: '' });
+    }
+  }
+  const validarVacioNroDocentes = () => {
+    if (nroDocentes.trim() === '') {
+      setMensajeError(previo => ({ ...previo, nroDocentes: "Ingrese cantidad de docentes" }));
+    }
+  }
   const validarSeleccionMateria = () => {
     if (materia === '') {
-      setMensajeError({ ...mensajeError, materia: 'Seleccione una materia' });
+      setMensajeError(previo => ({ ...previo, materia: 'Seleccione una materia' }));
     }
   }
 
-  const validarSeleccionGrupo = () => {
-    if (grupo === '') {
-      setMensajeError({ ...mensajeError, grupo: 'Seleccione un grupo' });
-    }
-  }
-
-  const manejarCambioFecha = (event) => {
-    setFecha(event.target.value);
-    setMensajeError({ ...mensajeError, fecha: '' });
-  }
   const validarFecha = () => {
-    if (fecha === '') {
-      setMensajeError({ ...mensajeError, fecha: 'Seleccione una fecha' });
+    if (fecha === null || fecha === '') {
+      setMensajeError(previo => ({ ...previo, fecha: 'Seleccione una fecha' }));
     }
   }
 
   const validarSeleccionHora = () => {
-    if (hora === '') {
-      setMensajeError({ ...mensajeError, hora: 'Seleccione una hora' });
+    if (hora.length === 0) {
+      setMensajeError(previo => ({ ...previo, hora: 'Seleccione una hora' }));
+    } else {
+      const horaOrdenada = hora.sort();
+      for (let i = 1; i < horaOrdenada.length; i++) {
+        const before = parseInt(horaOrdenada[i - 1]);
+        const current = parseInt(horaOrdenada[i]);
+        if (before !== current - 10) {
+          setMensajeError(previo => ({ ...previo, hora: 'Seleccione periodos de hora consecutivos' }));
+          break;
+        } else {
+          setMensajeError(previo => ({ ...previo, hora: '' }));
+        }
+      }
     }
   }
 
+  const validarSeleccionAmbiente = () => {
+    if (ambiente.length === 0) {
+      setMensajeError(previo => ({ ...previo, ambiente: 'Seleccione un ambiente' }));
+    } else {
+      for (let i = 1; i < ambiente.length; i++) {
+        const before = ambiente[i - 1];
+        const current = ambiente[i];
+        console.log(before, current);
+        if (before.slice(0, 3) !== current.slice(0, 3)) {
+          setMensajeError(previo => ({ ...previo, ambiente: 'Seleccione ambientes contiguos' }));
+          break;
+        } else {
+          setMensajeError(previo => ({ ...previo, ambiente: '' }));
+        }
+      }
+    }
+  };
 
   const validarTodo = () => {
-    validarNombreDocente();
     validarSeleccionMateria();
-    validarSeleccionGrupo();
+    validarVacioNroDocentes();
+    validarGrupoDocente();
+    validarSeleccionAmbiente();
     validarFecha();
     validarSeleccionHora();
-    validarVacioCapacidad();
-    if (nombreDocente.trim() !== '' && materia !== '' && grupo !== '' && fecha !== '' && hora !== '' && capacidad.trim() !== '') {
+    docentes.forEach((docente, index) => {
+      validarNombresDocentes(index);
+      validarGruposDocentes(index);
+    });
+    if (materia !== '' && fecha !== '' && hora.length !== 0 && ambiente !== '' && nroDocentes.trim() !== '' && docentes.every(docente => docente.nombre.trim() !== '' && docente.grupo.trim() !== '')) {
       console.log("Solicitud enviada");
       cambiarAbrirDialogo(true);
     } else {
       cambiarAbrirDialogo(false);
       console.log("Error en la solicitud");
+    }
+  }
+
+  useEffect(() => {
+    const initialDocentes = [];  
+    // initialDocentes.push({nombre: "Nombreauto completado", grupo:"", errorNombre:false, errorGrupo: true}); //aca se pasara info del docente loggeado
+    for (let i = 0; i < nroDocentes-1; i++) {
+      initialDocentes.push({ nombre: "", grupo: "", errorNombre: true, errorGrupo: true });
+    }
+    setDocentes(initialDocentes);
+  }, [nroDocentes]);
+
+  const manejarCambioNombre = (index, event, pattern) => {
+    const newDocentes = [...docentes];
+    newDocentes[index].nombre = event.target.value;
+    if (pattern && RegExp(pattern).test(newDocentes[index].nombre)) {
+      newDocentes[index].errorNombre = false;
+      setDocentes(newDocentes);
+    }
+  };
+
+  const manejarCambioGrupo = (index, event, pattern) => {
+    const newDocentes = [...docentes];
+    newDocentes[index].grupo = event.target.value;
+    if (pattern && RegExp(pattern).test(newDocentes[index].grupo)) {
+      newDocentes[index].errorGrupo = false;
+      setDocentes(newDocentes);
     }
   }
 
@@ -189,18 +245,6 @@ const Solicitud = () => {
             >
               <StyledText boldText>Solicitud de Reserva</StyledText>
             </div>
-
-            <RowPercentage firstChildPercentage={0}>
-              <TextInput
-                label="Nombre del docente"
-                fullWidth={true}
-                onChange={(event) => manejarCambioNombreDocente(event, "^[a-zA-Z ]*$")}
-                onBlur={validarNombreDocente}
-                isRequired={true}
-                validationMessage={mensajeError.nombreDocente}
-                pattern="^[a-zA-Z ]*$"
-              />
-            </RowPercentage>
             <RowPercentage firstChildPercentage={40} gap="10px">
               <div>
                 <Dropdown
@@ -213,57 +257,102 @@ const Solicitud = () => {
                 />
               </div>
               <div>
-                <Dropdown
-                  etiqueta="Grupo"
-                  opciones={cargarBDGrupo}
-                  cambio={setGrupo}
-                  onBlur={validarSeleccionGrupo}
-                  esRequerido={true}
-                  mensajeValidacion={mensajeError.grupo}
+                <TextInput
+                  label="Nro docentes"
+                  fullWidth={true}
+                  value={nroDocentes}
+                  onChange={(event) => manejarCambioNroDocentes(event, "^[0-9]{0,2}$", { min: 1, max: 15 })}
+                  onBlur={validarVacioNroDocentes}
+                  validationMessage={mensajeError.nroDocentes}
+                  pattern="^[0-9]{1,2}$"
+                  isRequired={true}
+                  rango={{ min: 1, max: 15 }}
+                  isFocusedDefault={true}
                 />
               </div>
             </RowPercentage>
+            <RowPercentage firstChildPercentage={25} gap="10px">
+                <div>
+                  <TextInput
+                    label="Nombre del docente"
+                    fullWidth={true}
+                    value={nombreDocente}
+                    onChange={event => cambiarNombreDocente( event, "^[a-zA-Z ]*$")}
+                    pattern="^[a-zA-Z ]*$"
+                    isRequired={true}
+                    validationMessage={mensajeError.nombreDocente}
+                    isFocusedDefault={true}
+                    isDisabled={true}
+                  />
+                </div>
+                <div>
+                  <TextInput
+                    label="Grupo"
+                    fullWidth={true}
+                    value={grupoDocente}
+                    onChange={(event) => cambiarGrupoDocente( event, "^[0-9]{0,2}$")}
+                    onBlur={validarGrupoDocente}
+                    validationMessage={mensajeError.grupoDocente}
+                    pattern="^[0-9]{0,2}$"
+                    isRequired={true}
+                  />
+                </div>
+              </RowPercentage>
+            {docentes.map((docente, index) => (
+              <RowPercentage key={index} firstChildPercentage={25} gap="10px">
+                <div>
+                  <TextInput
+                    label="Nombre del docente"
+                    fullWidth={true}
+                    value={docente.nombre}
+                    onChange={event => manejarCambioNombre(index, event, "^[a-zA-Z ]*$")}
+                    onBlur={() => validarNombresDocentes(index)}
+                    pattern="^[a-zA-Z ]*$"
+                    isRequired={true}
+                    validationMessage={docente.errorNombre ? "Ingrese nombre de docente" : ""}
+                  />
+                </div>
+                <div>
+                  <TextInput
+                    label="Grupo"
+                    fullWidth={true}
+                    value={docente.grupo}
+                    onChange={(event) => manejarCambioGrupo(index, event, "^[0-9]{0,2}$")}
+                    onBlur={() => validarGruposDocentes(index)}
+                    validationMessage={docente.errorGrupo ? "Ingrese grupo" : ""}
+                    pattern="^[0-9]{0,2}$"
+                    isRequired={true}
+                  />
+                </div>
+              </RowPercentage>
+            ))}
             <RowPercentage firstChildPercentage={40} gap="10px">
               <div>
-                <Dropdown
+                <SelectorMultiple
                   etiqueta="Ambiente"
                   opciones={cargarBDAmbiente}
                   cambio={setAmbiente}
+                  llenado={validarSeleccionAmbiente}
                   esRequerido={true}
-                  mensajeValidacion={mensajeError.ambiente}  //ref
-                />
-              </div>
-              <div>
-                <TextInput
-                  label="Capacidad"
-                  fullWidth={true}
-                  onChange={(event) => manejarCambioCapacidad(event, "^[0-9]*$", { min: 10, max: 300 })}
-                  onBlur={validarVacioCapacidad}
-                  isRequired={true}
-                  validationMessage={mensajeError.capacidad}
-                  pattern="^[0-9]*$"
-                  rango={{ min: 10, max: 300 }}
+                  mensajeValidacion={mensajeError.ambiente}
                 />
               </div>
             </RowPercentage>
             <RowPercentage firstChildPercentage={50} gap="10px">
               <div>
-                <TextInput
-                  label="Fecha"
-                  fullWidth={true}
-                  onChange={(event) => manejarCambioFecha(event)}
+                <EntradaFecha
+                  etiqueta="Fecha"
+                  enCambio={setFecha}
                   onBlur={validarFecha}
-                  isRequired={true}
-                  validationMessage={mensajeError.fecha}
-                  type="date"
+                  mensajeValidacion={fecha === "" ? mensajeError.fecha : ""}
                 />
               </div>
               <div>
-                <Dropdown
-                  etiqueta="Hora"
+                <SelectorMultiple
+                  etiqueta="Periodos de hora"
                   opciones={horas}
                   cambio={setHora}
-                  onBlur={validarSeleccionHora}
+                  llenado={validarSeleccionHora}
                   esRequerido={true}
                   mensajeValidacion={mensajeError.hora}
                 />
@@ -286,7 +375,7 @@ const Solicitud = () => {
               }}
               mensaje="Solicitud registrada con éxito"
             />
-            <ButtonEstilizado fullWidth={true} onClick={() => { validarTodo }}>Enviar Solicitud</ButtonEstilizado>
+            <Button fullWidth={true} onClick={validarTodo}>Enviar Solicitud</Button>
             <div
               style={{
                 height: "0%",
@@ -302,4 +391,4 @@ const Solicitud = () => {
   );
 };
 
-export default Solicitud;
+export default SolicitudMultiple;
