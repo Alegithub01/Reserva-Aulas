@@ -12,13 +12,13 @@ import axios from 'axios';
 import EntradaFecha from "../Utils/EntradaFecha";
 
 const informacion = [
-  { id: 1, nombre: "691A", capacidad: 100, tipo: "Aula", planta: "1", servicios: 'Data display', },
-  { id: 2, nombre: "691B", capacidad: 110, tipo: "Aula", planta: "1", servicios: 'Data display', },
-  { id: 3, nombre: "691C", capacidad: 90, tipo: "Aula", planta: "1", servicios: 'Data display', },
-  { id: 4, nombre: "692A", capacidad: 120, tipo: "Aula", planta: "2", servicios: 'Data display', },
-  { id: 5, nombre: "692B", capacidad: 125, tipo: "Aula", planta: "2", servicios: 'Data display', },
-  { id: 6, nombre: "693C", capacidad: 125, tipo: "Auditorio", planta: "3", servicios: 'Data display' },
-  { id: 7, nombre: "693A", capacidad: 125, tipo: "Auditorio", planta: "3", servicios: 'compu' },
+  { id: 1, nombre: "691A", capacidad: 100, tipo: "Aula", planta: "1", servicios: 'Data display', fecha: "2024-10-10", horario: "06:45-08:15" },
+  { id: 2, nombre: "691B", capacidad: 110, tipo: "Aula", planta: "1", servicios: 'Data display', fecha: "2024-10-12", horario: "09:45-11:15" },
+  { id: 3, nombre: "691C", capacidad: 90, tipo: "Aula", planta: "1", servicios: 'Data display',  fecha: "2024-04-19", horario: "12:45-14:15" },
+  { id: 4, nombre: "692A", capacidad: 120, tipo: "Aula", planta: "2", servicios: 'Data display', fecha: "2024-04-19", horario: "12:45-14:15"},
+  { id: 5, nombre: "692B", capacidad: 125, tipo: "Aula", planta: "2", servicios: 'Data display', fecha: "2024-04-19", horario: "12:45-14:15"},
+  { id: 6, nombre: "693C", capacidad: 125, tipo: "Auditorio", planta: "3", servicios: 'Data display', fecha: "2024-04-19", horario: "12:45-14:15"},
+  { id: 7, nombre: "693A", capacidad: 125, tipo: "Auditorio", planta: "3", servicios: 'compu' ,fecha: "2024-04-19", horario: "12:45-14:15"},
 ];
 //PARA BACKEND -----------------*********************************-----------------------------------------
 //acá cambiar informacion por datos cargados reales de los ambientes, no importa si tienen más atributos
@@ -43,7 +43,7 @@ const opcionesHorario = [
 ];
 
 const BusquedaAmbiente = () => {
-  const [filtroFecha, setFiltroFecha] = useState('');
+  const [filtroFecha, setFiltroFecha] = useState("");
   const [filtroHorario, setFiltroHorario] = useState('');
   const [filtroCapacidad, setFiltroCapacidad] = useState('');
   const [filtroTipo, setFiltroTipo] = useState('');
@@ -53,14 +53,24 @@ const BusquedaAmbiente = () => {
   const [informacionFinal, setInformacionFinal] = useState([]);
   let informacionAuxi = informacion;
   let tipoFinal = "";
+  let horarioLabel = "";
 
   const funciona = () => {
-    if (filtroCapacidad.trim() === "" && filtroTipo.trim() === "" && filtroServicios.trim() === "") {
+    if (filtroFecha === "" && filtroHorario.trim() ==""
+    &&    filtroCapacidad.trim() === "" && filtroTipo.trim() === "" && filtroServicios.trim() === "") {
       return;
     }else{
+      console.log(filtroHorario, "llegamos");
       tipoFinal = tipos.filter((tipo => tipo.value === filtroTipo));
-      // informacionAuxi = (informacionFinal.length > 0 ? informacionFinal : informacion); linea triste del error
-      
+      horarioLabel = opcionesHorario.filter((horario => horario.value === filtroHorario));
+
+      if(filtroFecha.trim() !== ""){
+        informacionAuxi = (informacionAuxi.filter((ambiente) => ambiente.fecha === filtroFecha));
+      }
+
+      if(filtroHorario.trim() !== ""){
+        informacionAuxi = (informacionAuxi.filter((ambiente) => ambiente.horario === horarioLabel[0].label));
+      }
       if (filtroCapacidad.trim() !== "") {
         informacionAuxi = (informacionAuxi.filter((ambiente) => ambiente.capacidad >= filtroCapacidad));
       }
@@ -76,7 +86,6 @@ const BusquedaAmbiente = () => {
       setInformacionFinal(informacionAuxi);
     }
   }
-
 
   const manejarCambioCapacidad = (event, pattern) => {
     const valor = event.target.value;
@@ -157,8 +166,8 @@ const BusquedaAmbiente = () => {
               <div>
                 <EntradaFecha
                   etiqueta="Fecha"
-                  valor={filtroFecha}
-                  cambio={setFiltroFecha}
+                  enCambio={setFiltroFecha}
+                  mensajeValidacion=""
                 />
               </div>
             <div>

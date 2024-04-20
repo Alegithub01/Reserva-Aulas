@@ -21,7 +21,6 @@ import Calendario from "./PantallaSolicitudReserva/Calendario";
 import Reservas from "./PantallaSolicitudReserva/Reservas";
 import BuscarAmbiente from "./PantallaSolicitudReserva/BuscarAmbiente";
 import PantallaReglas from "./PantallaAmbientes/PantallaReglas";
-import SolicitudMultiple from "./PantallaSolicitudReserva/SolicitudMultiple";
 
 function App() {
   return (
@@ -319,22 +318,6 @@ function App() {
                   }}
                 >
                   <BuscarAmbiente />
-                </div>
-              </Layout>
-            }
-          />
-          <Route
-            path="/Solicitud-Multiple"
-            element={
-              <Layout>
-                <div
-                  style={{
-                    width: "100vw",
-                    height: "100vh",
-                    overflow: "auto",
-                  }}
-                >
-                  <SolicitudMultiple />
                 </div>
               </Layout>
             }
