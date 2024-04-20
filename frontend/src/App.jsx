@@ -265,7 +265,7 @@ function App() {
                 <div
                   style={{
                     width: "100vw",
-                    height: "100vh",
+                    height: "100%",
                     overflow: "auto",
                   }}
                 >
@@ -297,7 +297,7 @@ function App() {
                 <div
                   style={{
                     width: "100vw",
-                    height: "100vh",
+                    height: "100%",
                     overflow: "auto",
                   }}
                 >
@@ -313,7 +313,7 @@ function App() {
                 <div
                   style={{
                     width: "100vw",
-                    height: "100vh",
+                    height: "100%",
                     overflow: "auto",
                   }}
                 >
