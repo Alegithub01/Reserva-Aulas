@@ -14,10 +14,10 @@ import Button from "../Utils/Button";
 const SolicitudMultiple = () => {
   const { theme } = useTheme();
   const [materia, setMateria] = useState('');
-  const [nroDocentes, setNroDocentes] = useState("");
+  const [nroDocentes, setNroDocentes] = useState("1");
+  const [nombreDocente, setNombreDocente] = useState('Tatiana Aparicio Yuja'); //nombre del docente loggeado
+  const [grupoDocente, setGrupoDocente] = useState(''); //grupo del docente loggeado
   const [docentes, setDocentes] = useState([]);
-  const [nombreDocente, setNombreDocente] = useState(["Docente por defecto"]);
-  const [grupo, setGrupo] = useState('');
   const [ambiente, setAmbiente] = useState('');
   const [fecha, setFecha] = useState("");
   const [hora, setHora] = useState('');
@@ -25,10 +25,9 @@ const SolicitudMultiple = () => {
   const [detalles, setDetalles] = useState('');
   const [abrirDialogo, cambiarAbrirDialogo] = useState(false);
   const [mensajeError, setMensajeError] = useState({
-    nombreDocente: '',
     nroDocentes: '',
+    grupoDocente: '',
     materia: '',
-    grupo: '',
     ambiente: '',
     fecha: '',
     hora: '',
@@ -38,23 +37,17 @@ const SolicitudMultiple = () => {
     { value: 1, label: "Progr. Funcional" },
     { value: 2, label: "Base de datos 2" },
     { value: 3, label: "Taller de Base de Datos" },
-  ];
-
-  const cargarBDGrupo = [  //cambiamos a numeros para texto?
-    { value: 1, label: "Grupo 1" },
-    { value: 2, label: "Grupo 2" },
-    { value: 3, label: "Grupo 3" },
-  ];
+  ];   //convertir info de materias en este diccionario (solo nombres de materias no importa el valor)
 
   const cargarBDAmbiente = [
-    { value: 1, label: "691A", },
-    { value: 2, label: "691B", },
-    { value: 3, label: "691C", },
-    { value: 4, label: "692A", },
-    { value: 5, label: "692B", },
-    { value: 6, label: "693C", },
-    { value: 7, label: "693A", },
-  ];
+    { value: "691A", label: "691A", },
+    { value: "691B", label: "691B", },
+    { value: "691C", label: "691C", },
+    { value: "692A", label: "692A", },
+    { value: "692B", label: "692B", },
+    { value: "693C", label: "693C", },
+    { value: "693A", label: "693A", },
+  ];    //convertir info de ambientes en este diccionario (solo nombres de ambientes)
   /* */
   const horas = [
     { value: "10", label: "06:45-08:15" },
@@ -68,11 +61,25 @@ const SolicitudMultiple = () => {
     { value: "90", label: "18:45-20:15" },
     { value: "100", label: "20:30-21:45" },
   ];
-  const manejarCambioNombreDocente = (event, pattern) => {
+
+  const cambiarNombreDocente = (event, pattern) => {
     const valor = event.target.value;
     if (pattern && RegExp(pattern).test(valor)) {
       setNombreDocente(valor);
-      setMensajeError({ ...mensajeError, nombreDocente: '' });
+      setMensajeError(previo => ({ ...previo, nombreDocente: '' }));
+    }
+  }
+
+  const cambiarGrupoDocente = (event, pattern) => {
+    const valor = event.target.value;
+    if (pattern && RegExp(pattern).test(valor)) {
+      setGrupoDocente(valor);
+      setMensajeError(previo => ({ ...previo, grupoDocente: '' }));
+    }
+  }
+  const validarGrupoDocente = () => {
+    if (grupoDocente.trim() === '') {
+      setMensajeError(previo => ({ ...previo, grupoDocente: "Ingrese grupo" }));
     }
   }
   const validarNombresDocentes = (index) => {
@@ -101,12 +108,6 @@ const SolicitudMultiple = () => {
     }
   }
 
-  const validarSeleccionGrupo = () => {
-    if (grupo === '') {
-      setMensajeError(previo => ({ ...previo, grupo: 'Seleccione un grupo' }));
-    }
-  }
-
   const validarFecha = () => {
     if (fecha === null || fecha === '') {
       setMensajeError(previo => ({ ...previo, fecha: 'Seleccione una fecha' }));
@@ -132,21 +133,35 @@ const SolicitudMultiple = () => {
   }
 
   const validarSeleccionAmbiente = () => {
-    if (ambiente === '') {
+    if (ambiente.length === 0) {
       setMensajeError(previo => ({ ...previo, ambiente: 'Seleccione un ambiente' }));
+    } else {
+      for (let i = 1; i < ambiente.length; i++) {
+        const before = ambiente[i - 1];
+        const current = ambiente[i];
+        console.log(before, current);
+        if (before.slice(0, 3) !== current.slice(0, 3)) {
+          setMensajeError(previo => ({ ...previo, ambiente: 'Seleccione ambientes contiguos' }));
+          break;
+        } else {
+          setMensajeError(previo => ({ ...previo, ambiente: '' }));
+        }
+      }
     }
-  }
+  };
 
   const validarTodo = () => {
-    console.log(nombreDocente, materia, grupo, ambiente, fecha, hora);
-    // validarNombresDocentes();
     validarSeleccionMateria();
     validarVacioNroDocentes();
+    validarGrupoDocente();
     validarSeleccionAmbiente();
-    validarSeleccionGrupo();
     validarFecha();
     validarSeleccionHora();
-    if (nombreDocente.trim() !== '' && materia !== '' && grupo !== '' && fecha !== '' && hora !== '') {
+    docentes.forEach((docente, index) => {
+      validarNombresDocentes(index);
+      validarGruposDocentes(index);
+    });
+    if (materia !== '' && fecha !== '' && hora.length !== 0 && ambiente !== '' && nroDocentes.trim() !== '' && docentes.every(docente => docente.nombre.trim() !== '' && docente.grupo.trim() !== '')) {
       console.log("Solicitud enviada");
       cambiarAbrirDialogo(true);
     } else {
@@ -156,9 +171,10 @@ const SolicitudMultiple = () => {
   }
 
   useEffect(() => {
-    const initialDocentes = [];
-    for (let i = 0; i < nroDocentes; i++) {
-      initialDocentes.push({ nombre: "", grupo: "", errorNombre: true, errorGrupo: true});
+    const initialDocentes = [];  
+    // initialDocentes.push({nombre: "Nombreauto completado", grupo:"", errorNombre:false, errorGrupo: true}); //aca se pasara info del docente loggeado
+    for (let i = 0; i < nroDocentes-1; i++) {
+      initialDocentes.push({ nombre: "", grupo: "", errorNombre: true, errorGrupo: true });
     }
     setDocentes(initialDocentes);
   }, [nroDocentes]);
@@ -166,7 +182,7 @@ const SolicitudMultiple = () => {
   const manejarCambioNombre = (index, event, pattern) => {
     const newDocentes = [...docentes];
     newDocentes[index].nombre = event.target.value;
-    if(pattern && RegExp(pattern).test(newDocentes[index].nombre)){
+    if (pattern && RegExp(pattern).test(newDocentes[index].nombre)) {
       newDocentes[index].errorNombre = false;
       setDocentes(newDocentes);
     }
@@ -175,7 +191,7 @@ const SolicitudMultiple = () => {
   const manejarCambioGrupo = (index, event, pattern) => {
     const newDocentes = [...docentes];
     newDocentes[index].grupo = event.target.value;
-    if(pattern && RegExp(pattern).test(newDocentes[index].grupo)){
+    if (pattern && RegExp(pattern).test(newDocentes[index].grupo)) {
       newDocentes[index].errorGrupo = false;
       setDocentes(newDocentes);
     }
@@ -245,15 +261,43 @@ const SolicitudMultiple = () => {
                   label="Nro docentes"
                   fullWidth={true}
                   value={nroDocentes}
-                  onChange={(event) => manejarCambioNroDocentes(event, "^[0-9]{0,2}$")}
+                  onChange={(event) => manejarCambioNroDocentes(event, "^[0-9]{0,2}$", { min: 1, max: 15 })}
                   onBlur={validarVacioNroDocentes}
                   validationMessage={mensajeError.nroDocentes}
                   pattern="^[0-9]{1,2}$"
                   isRequired={true}
+                  rango={{ min: 1, max: 15 }}
+                  isFocusedDefault={true}
                 />
               </div>
             </RowPercentage>
-
+            <RowPercentage firstChildPercentage={25} gap="10px">
+                <div>
+                  <TextInput
+                    label="Nombre del docente"
+                    fullWidth={true}
+                    value={nombreDocente}
+                    onChange={event => cambiarNombreDocente( event, "^[a-zA-Z ]*$")}
+                    pattern="^[a-zA-Z ]*$"
+                    isRequired={true}
+                    validationMessage={mensajeError.nombreDocente}
+                    isFocusedDefault={true}
+                    isDisabled={true}
+                  />
+                </div>
+                <div>
+                  <TextInput
+                    label="Grupo"
+                    fullWidth={true}
+                    value={grupoDocente}
+                    onChange={(event) => cambiarGrupoDocente( event, "^[0-9]{0,2}$")}
+                    onBlur={validarGrupoDocente}
+                    validationMessage={mensajeError.grupoDocente}
+                    pattern="^[0-9]{0,2}$"
+                    isRequired={true}
+                  />
+                </div>
+              </RowPercentage>
             {docentes.map((docente, index) => (
               <RowPercentage key={index} firstChildPercentage={25} gap="10px">
                 <div>
@@ -262,7 +306,7 @@ const SolicitudMultiple = () => {
                     fullWidth={true}
                     value={docente.nombre}
                     onChange={event => manejarCambioNombre(index, event, "^[a-zA-Z ]*$")}
-                    onBlur={()=>validarNombresDocentes(index)}
+                    onBlur={() => validarNombresDocentes(index)}
                     pattern="^[a-zA-Z ]*$"
                     isRequired={true}
                     validationMessage={docente.errorNombre ? "Ingrese nombre de docente" : ""}
@@ -274,7 +318,7 @@ const SolicitudMultiple = () => {
                     fullWidth={true}
                     value={docente.grupo}
                     onChange={(event) => manejarCambioGrupo(index, event, "^[0-9]{0,2}$")}
-                    onBlur={()=>validarGruposDocentes(index)}
+                    onBlur={() => validarGruposDocentes(index)}
                     validationMessage={docente.errorGrupo ? "Ingrese grupo" : ""}
                     pattern="^[0-9]{0,2}$"
                     isRequired={true}
@@ -284,13 +328,13 @@ const SolicitudMultiple = () => {
             ))}
             <RowPercentage firstChildPercentage={40} gap="10px">
               <div>
-                <Dropdown
+                <SelectorMultiple
                   etiqueta="Ambiente"
                   opciones={cargarBDAmbiente}
                   cambio={setAmbiente}
-                  onBlur={validarSeleccionAmbiente}
+                  llenado={validarSeleccionAmbiente}
                   esRequerido={true}
-                  mensajeValidacion={mensajeError.ambiente}  //ref
+                  mensajeValidacion={mensajeError.ambiente}
                 />
               </div>
             </RowPercentage>
