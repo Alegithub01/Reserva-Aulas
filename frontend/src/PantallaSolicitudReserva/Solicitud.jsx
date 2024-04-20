@@ -33,25 +33,16 @@ const SolicitudMultiple = () => {
     fecha: '',
     hora: '',
   });
-  // useEffect para imprimir el valor de 'ambiente' cada vez que cambia
-  useEffect(() => {
-    // console.log("Ambiente seleccionado:", ambiente);
-  }, [ambiente]);
 
-  // useEffect para imprimir el valor de 'fecha' cada vez que cambia
-  useEffect(() => {
-    console.log("Fecha seleccionada:", fecha);
-  }, [fecha]);
-
-  // useEffect para imprimir el valor de 'hora' cada vez que cambia
-  useEffect(() => {
-    // console.log("Hora seleccionada:", hora);
-  }, [hora]);
-
-  useEffect(() => {
-    console.log("MIdia:", dia);
-  }, [dia]);
-  
+  function obtenerValorHora(horaBuscada, listaHoras) {
+    for (const slot of listaHoras) {
+      const inicioRango = slot.label.split('-')[0].trim();
+      if (inicioRango === horaBuscada) {
+        return slot.value;
+      }
+    }
+    return null;
+  }
   /*datos de prueba para los dropdowns */
   const cargarBDMateria = [
     { value: 1, label: "Progr. Funcional" },
@@ -233,6 +224,10 @@ const SolicitudMultiple = () => {
       minHeight: '450px',
     },
   };
+
+  const valorDeHora = obtenerValorHora(horario, horas);
+  const horaInicial = valorDeHora ? [valorDeHora] : null;
+  const aulaInicial = aula ? [aula] : null;
   return (
     <div style={defaultStyle.outerContainer}>
       <div style={defaultStyle.container}>
@@ -356,7 +351,7 @@ const SolicitudMultiple = () => {
                   esRequerido={true}
                   mensajeValidacion={mensajeError.ambiente}
                   valorSeleccionado={ambiente}
-                  valorInicial={[aula]}
+                  valorInicial={aulaInicial}
                 />
               </div>
             </RowPercentage>
@@ -367,6 +362,7 @@ const SolicitudMultiple = () => {
                   enCambio={setFecha}
                   onBlur={validarFecha}
                   mensajeValidacion={fecha === "" ? mensajeError.fecha : ""}
+                  valorInicial={dia}
                 />
               </div>
               <div>
@@ -377,6 +373,7 @@ const SolicitudMultiple = () => {
                   llenado={validarSeleccionHora}
                   esRequerido={true}
                   mensajeValidacion={mensajeError.hora}
+                  valorInicial={horaInicial}
                 />
               </div>
             </RowPercentage>

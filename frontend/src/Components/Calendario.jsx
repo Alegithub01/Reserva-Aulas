@@ -85,12 +85,11 @@ const Calendar = ({ schedule, aula }) => {
     setCurrentDate(addMonths(currentDate, 1));
   };
 
-  const onCellClick = (day, hour, isReserved) => {
+  const onCellClick = (date, hour, isReserved) => {
     if (!isReserved) {
       setAula(aula);
-      setDia(format(addDays(currentWeekStart, days.indexOf(day)), 'yyyy-MM-dd'));
+      setDia(format(date, 'yyyy-MM-dd'));
       setHora(hour);
-      console.log(`Aula: ${aula}, Día: ${day}, Hora: ${hour}`);
       navigate('/solicitud');
     }
   };
@@ -126,7 +125,7 @@ const Calendar = ({ schedule, aula }) => {
             return (
               <Tooltip key={`${day}-${hour}`} title={`${day}, ${format(addDays(currentWeekStart, index), 'dd/MM/yyyy')} - ${hour} ${isReserved ? ' (Ocupado)' : ' (Disponible)'}`}>
                 <CellStyles style={{ backgroundColor: isReserved ? '#F1F5FF' : 'transparent', color: isReserved ? '#55555D' : '#000' }}
-                  onClick={() => onCellClick(format(addDays(currentWeekStart, index), 'dd/MM/yyyy'), hour, isReserved)}>
+                  onClick={() => onCellClick(addDays(currentWeekStart, index), hour, isReserved)}>
                   {isReserved ? 'Ocupado' : ''}
                 </CellStyles>
               </Tooltip>

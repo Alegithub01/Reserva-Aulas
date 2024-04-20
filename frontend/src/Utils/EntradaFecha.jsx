@@ -1,13 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import { useTheme } from '../Contexts/ThemeContext';
 
-const EntradaFecha = ({etiqueta, enCambio, onBlur = null, mensajeValidacion}) => {
-  const [valor, setValor] = useState(null);
+const EntradaFecha = ({etiqueta, enCambio, onBlur = null, mensajeValidacion, valorInicial}) => {
+  const [valor, setValor] = useState(valorInicial || null);
   const { theme } = useTheme();
   let mostrarMensajeDeError = true;
+
+  useEffect(() => {
+    setValor(valorInicial);
+  }, [valorInicial]);
 
   const manejarCambio = (event) => {
     console.log(event.target.value, typeof event.target.value)
@@ -100,7 +104,8 @@ EntradaFecha.propTypes = {
   etiqueta: PropTypes.string,
   enCambio: PropTypes.func,
   onBlur: PropTypes.func,
-  mensajeValidacion: PropTypes.string
+  mensajeValidacion: PropTypes.string,
+  valorInicial: PropTypes.string
 };
 
 export default EntradaFecha;
