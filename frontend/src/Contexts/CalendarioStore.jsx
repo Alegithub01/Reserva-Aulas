@@ -3,13 +3,13 @@
 import create from 'zustand';
 
 const useCalendarStore = create((set) => ({
-  aula: null,
-  dia: null,
-  hora: null,
+  aula: "",
+  dia: "",
+  horario: "",
   setAula: (aula) => set({ aula }),
   setDia: (dia) => set({ dia }),
-  setHora: (hora) => set({ hora }),
-  setSelected: (aula, dia, hora) => set({ aula, dia, hora })
+  setHora: (horario) => set({ horario}),
+  setSelected: (aula, dia, horario) => set({ aula, dia, horario })
 }));
 
 export default useCalendarStore;

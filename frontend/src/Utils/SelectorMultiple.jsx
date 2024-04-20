@@ -16,10 +16,11 @@ function obtenerEstilos(hora, valorSeleccionado, theme) {
   };
 }
 
-function SelectorMultiple({ etiqueta, opciones, cambio, llenado = null, esRequerido, mensajeValidacion = "" }) {
-  const [valorSeleccionado, cambiarValorSeleccionado] = useState([]);
+function SelectorMultiple({ etiqueta, opciones, cambio, valorInicial = [], llenado = null, esRequerido, mensajeValidacion = "" }) {
+  const [valorSeleccionado, cambiarValorSeleccionado] = useState(valorInicial|| []);
   const { theme } = useTheme();
 
+  
   useEffect(() => {
     cambio && cambio(valorSeleccionado);
   }, [valorSeleccionado, cambio]);
@@ -129,6 +130,7 @@ SelectorMultiple.propTypes = {
     label: PropTypes.string.isRequired,
   })).isRequired,
   cambio: PropTypes.func.isRequired,
+  valorInicial: PropTypes.array,
   llenado: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number])),
   esRequerido: PropTypes.bool,
   mensajeValidacion: PropTypes.string,
