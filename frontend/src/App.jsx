@@ -185,8 +185,7 @@ function App() {
                 <div
                   style={{
                     width: "100vw",
-                    height: "100vh",
-                    overflow: "auto",
+                    height: "100%",
                   }}
                 >
                   <ListaAmbientes />
@@ -217,7 +216,7 @@ function App() {
                 <div
                   style={{
                     width: "100vw",
-                    height: "100%",
+                    height: "100vh",
                     overflow: "auto",
                   }}
                 >
@@ -266,7 +265,6 @@ function App() {
                   style={{
                     width: "100vw",
                     height: "100%",
-                    overflow: "auto",
                   }}
                 >
                   <Solicitud />
@@ -298,7 +296,6 @@ function App() {
                   style={{
                     width: "100vw",
                     height: "100%",
-                    overflow: "auto",
                   }}
                 >
                   <Reservas />
@@ -314,7 +311,6 @@ function App() {
                   style={{
                     width: "100vw",
                     height: "100%",
-                    overflow: "auto",
                   }}
                 >
                   <BuscarAmbiente />
