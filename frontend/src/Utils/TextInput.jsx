@@ -12,10 +12,12 @@ const TextInput = ({
   pattern = ".*",
   rango,
   cambio,
+  isFocusedDefault = false,
+  isDisabled = false,
   ...otherProps
 }) => {
   const { theme } = useTheme();
-  const [isFocused, setIsFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState(isFocusedDefault);
   const [isHovered, setIsHovered] = useState(false);
   const [value, setValue] = useState('');
   const [showValidationMessage, setShowValidationMessage] = useState({
@@ -69,7 +71,7 @@ const TextInput = ({
   const inputStyle = {
     padding: '10px',
     fontSize: '16px',
-    border: `2px solid ${isFocused || isHovered ? theme.highlight : theme.secondary}`, // Cambiado a theme.highlight
+    border: `2px solid ${(isFocused || isHovered) && !isFocusedDefault? theme.highlight : theme.secondary}`, // Cambiado a theme.highlight
     borderRadius: '15px',
     transition: 'all 0.3s ease 0s',
     width: '100%',
@@ -84,7 +86,7 @@ const TextInput = ({
     transform: 'translateY(-50%)',
     backgroundColor: theme.primary,
     padding: '5px',
-    color: isFocused ? theme.highlight : (value ? theme.secondaryText : theme.secondary),
+    color: isFocused && !isFocusedDefault ? theme.highlight : (value ? theme.secondaryText : theme.secondary),
     transition: 'all 0.3s ease',
     pointerEvents: 'none',
     fontSize: isFocused || value ? '12px' : '16px',
@@ -106,6 +108,7 @@ const TextInput = ({
         <input
           type="text"
           required={isRequired}
+          disabled={isDisabled}
           pattern={pattern}
           autoComplete="off"
           onFocus={handleFocus}
@@ -137,6 +140,7 @@ TextInput.propTypes = {
   fullWidth: PropTypes.bool,
   isRequired: PropTypes.bool,
   validationMessage: PropTypes.string,
+  defaultValue: PropTypes.string,
 };
 
 export default TextInput;
