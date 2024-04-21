@@ -32,6 +32,7 @@ const Reservas = () => {
           padding="10px"
           borderColor="blue"
           borderRadius="15px"
+          block
         >
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
               <StyledText boldText style={{ textAlign: 'center' }}>Mis Reservas</StyledText>
