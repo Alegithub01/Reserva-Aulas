@@ -67,8 +67,7 @@ const RegistroMasivoBoton = () => {
               campos = campos.slice(0, 8);
             }
             campos[7] = campos[7] ? campos[7].split(',') : []; 
-            campos[7] = campos[7].map((hora) => hora.replace(/^\"|\"$/g, '')); // Eliminar comillas dobles alrededor de cada hora
-            campos[7] = campos[7].map((hora) => hora.replace(/\\\"/g, '"')); // Eliminar escapes adicionales
+            campos[7] = campos[7].map((hora) => hora.replace(/^\"|\"\r$/g, '')); 
             return {
               nombre: campos[0],
               capacidad: parseInt(campos[1]),
@@ -80,9 +79,24 @@ const RegistroMasivoBoton = () => {
               horas: campos[7],
             };
           });
+  
+          console.log(registros);
+          localStorage.setItem('registros', JSON.stringify(registros));
+  
+          
+          enviarDatosAlBackend({ registros });
+  
+          setDatosJson(registros);
+          setDetallesArchivo((detalles) => ({ ...detalles, registros: registros.length }));
+  
+          cambiarMostrarMensaje(false);
+        } else {
+          cambiarMostrarMensaje(true);
         }
       };
       leerArchivo.readAsText(documento);
+    } else {
+      cambiarMostrarMensaje(true);
     }
   };
   
