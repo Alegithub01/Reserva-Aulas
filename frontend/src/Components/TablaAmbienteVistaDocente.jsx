@@ -29,7 +29,7 @@ export default function TablaAmbienteVista({informacion}) {
     {
       field: 'nombre',
       headerName: 'Nombre',
-      width: 110,
+      width: 100,
       align: 'center',
       headerAlign: 'center',
     },
@@ -44,7 +44,7 @@ export default function TablaAmbienteVista({informacion}) {
     {
       field: 'tipo',
       headerName: 'Tipo Ambiente',
-      width: 140,
+      width: 100,
       align: 'center',
       headerAlign: 'center',
     },
@@ -55,8 +55,22 @@ export default function TablaAmbienteVista({informacion}) {
       align: 'center',
       headerAlign: 'center',
     },
-    { field: 'ubicacion', headerName: 'Ubicación', width: 190, headerAlign: 'center', align: 'center',},
-    { field: 'servicios', headerName: 'Servicios', width: 190, headerAlign: 'center', align: 'center',},
+    {
+      field: 'fecha',
+      headerName: 'Fecha',
+      width: 100,
+      align: 'center',
+      headerAlign: 'center',
+    },
+    {
+      field: 'horario',
+      headerName: 'Horario',
+      width: 110,
+      align: 'center',
+      headerAlign: 'center',
+    },
+    { field: 'ubicacion', headerName: 'Ubicación', width: 110, headerAlign: 'center', align: 'center',},
+    { field: 'servicios', headerName: 'Servicios', width: 110, headerAlign: 'center', align: 'center',},
   ];
   const {theme} = useTheme();
   return (
