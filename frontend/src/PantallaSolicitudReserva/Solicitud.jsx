@@ -9,17 +9,18 @@ import RowPercentage from "../Responsive/RowPercentage";
 import MensajeExito from "../Utils/MensajeExito";
 import EntradaFecha from "../Utils/EntradaFecha";
 import Button from "../Utils/Button";
-
+import CalendarioStore from "../Contexts/CalendarioStore"
 
 const SolicitudMultiple = () => {
   const { theme } = useTheme();
+  const { aula, dia, horario } = CalendarioStore();
   const [materia, setMateria] = useState('');
   const [nroDocentes, setNroDocentes] = useState("1");
   const [nombreDocente, setNombreDocente] = useState('Tatiana Aparicio Yuja'); //nombre del docente loggeado
   const [grupoDocente, setGrupoDocente] = useState(''); //grupo del docente loggeado
   const [docentes, setDocentes] = useState([]);
-  const [ambiente, setAmbiente] = useState('');
-  const [fecha, setFecha] = useState("");
+  const [ambiente, setAmbiente] = useState([]);
+  const [fecha, setFecha] = useState('');
   const [hora, setHora] = useState('');
   const [serviciosSolicitados, setServiciosSolicitados] = useState('');
   const [detalles, setDetalles] = useState('');
@@ -32,6 +33,16 @@ const SolicitudMultiple = () => {
     fecha: '',
     hora: '',
   });
+
+  function obtenerValorHora(horaBuscada, listaHoras) {
+    for (const slot of listaHoras) {
+      const inicioRango = slot.label.split('-')[0].trim();
+      if (inicioRango === horaBuscada) {
+        return slot.value;
+      }
+    }
+    return null;
+  }
   /*datos de prueba para los dropdowns */
   const cargarBDMateria = [
     { value: 1, label: "Progr. Funcional" },
@@ -213,6 +224,10 @@ const SolicitudMultiple = () => {
       minHeight: '450px',
     },
   };
+
+  const valorDeHora = obtenerValorHora(horario, horas);
+  const horaInicial = valorDeHora ? [valorDeHora] : null;
+  const aulaInicial = aula ? [aula] : null;
   return (
     <div style={defaultStyle.outerContainer}>
       <div style={defaultStyle.container}>
@@ -335,6 +350,8 @@ const SolicitudMultiple = () => {
                   llenado={validarSeleccionAmbiente}
                   esRequerido={true}
                   mensajeValidacion={mensajeError.ambiente}
+                  valorSeleccionado={ambiente}
+                  valorInicial={aulaInicial}
                 />
               </div>
             </RowPercentage>
@@ -345,6 +362,7 @@ const SolicitudMultiple = () => {
                   enCambio={setFecha}
                   onBlur={validarFecha}
                   mensajeValidacion={fecha === "" ? mensajeError.fecha : ""}
+                  valorInicial={dia}
                 />
               </div>
               <div>
@@ -355,6 +373,7 @@ const SolicitudMultiple = () => {
                   llenado={validarSeleccionHora}
                   esRequerido={true}
                   mensajeValidacion={mensajeError.hora}
+                  valorInicial={horaInicial}
                 />
               </div>
             </RowPercentage>

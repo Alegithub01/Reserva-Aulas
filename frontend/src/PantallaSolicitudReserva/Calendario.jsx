@@ -21,7 +21,7 @@ function useAmbientes() {
         
       const data = [
         {
-          nombre: "690C",
+          nombre: "691A",
           capacidad: 23,
           tipo: "Aula",
           planta: 0,
@@ -31,7 +31,7 @@ function useAmbientes() {
           periodos: ["11:15-12:45"]
         },
         {
-          nombre: "691C",
+          nombre: "691B",
           capacidad: 50,
           tipo: "Aula",
           planta: 1,
@@ -41,7 +41,7 @@ function useAmbientes() {
           periodos: ["11:15-12:45", "17:15-18:45"]
         },
         {
-          nombre: "692A",
+          nombre: "691C",
           capacidad: 100,
           tipo: "Aula",
           planta: 2,
@@ -62,7 +62,7 @@ function useAmbientes() {
         },
         
         {
-          nombre: "692A",
+          nombre: "692B",
           capacidad: 100,
           tipo: "Aula",
           planta: 2,
@@ -72,9 +72,9 @@ function useAmbientes() {
           periodos: ["12:45-14-15", "17:15-18:45"]
         },
         {
-          nombre: "693D",
+          nombre: "693C",
           capacidad: 300,
-          tipo: "Auditorio",
+          tipo: "Aula",
           planta: 3,
           ubicacion: "Edif. Nuevo",
           servicios: ["2 Data display"],
@@ -82,7 +82,7 @@ function useAmbientes() {
           periodos: ["06:45-08:15", "08:15-09:45"]
         },
         {
-          nombre: "690A",
+          nombre: "693A",
           capacidad: 50,
           tipo: "Aula",
           planta: 0,
@@ -92,9 +92,9 @@ function useAmbientes() {
           periodos: ["11:15-12:45", "18:45-20:15"]
         },
         {
-          nombre: "617C",
+          nombre: "Audit01",
           capacidad: 100,
-          tipo: "Aula",
+          tipo: "Auditorio",
           planta: 0,
           ubicacion: "Dpto. Fisica",
           servicios: [],
@@ -102,24 +102,14 @@ function useAmbientes() {
           periodos: ["17:15-18:45"]
         },
         {
-          nombre: "617B",
+          nombre: "Audit02",
           capacidad: 100,
-          tipo: "Aula",
+          tipo: "Auditorio",
           planta: 0,
           ubicacion: "Dpto. Fisica",
           servicios: [],
           dia: "Jueves",
           periodos: ["11:15-12:45"]
-        },
-        {
-          nombre: "652",
-          capacidad: 50,
-          tipo: "Aula",
-          planta: 0,
-          ubicacion: "",
-          servicios: [],
-          dia: "Viernes",
-          periodos: ["12:45-14:15"]
         },
         {
           nombre: "LAB01",
@@ -130,16 +120,6 @@ function useAmbientes() {
           servicios: ["Computadoras"],
           dia: "Lunes",
           periodos: ["11:15-12:45", "18:45-20:15"]
-        },
-        {
-          nombre: "LAB03",
-          capacidad: 50,
-          tipo: "Laboratorio",
-          planta: 0,
-          ubicacion: "Dpto. Inf Sis",
-          servicios: ["Routers"],
-          dia: "Lunes",
-          periodos: ["11:15-12:45"]
         },
       ];
       const aulasFiltradas = data.filter(amb => amb.tipo === 'Aula');
@@ -248,7 +228,7 @@ const testSchedule = {
                 cambio={handleAulaEspecificaChange}
               />
             </RowPercentage>
-            <CalendarioComp schedule={testSchedule} />
+            <CalendarioComp schedule={testSchedule} aula={aulaEspecifica}/>
           </div>
         </Card>
       </div>
