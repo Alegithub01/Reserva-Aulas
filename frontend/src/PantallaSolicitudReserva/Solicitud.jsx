@@ -183,7 +183,9 @@ const SolicitudMultiple = () => {
 
   useEffect(() => {
     const initialDocentes = [];  
-    // initialDocentes.push({nombre: "Nombreauto completado", grupo:"", errorNombre:false, errorGrupo: true}); //aca se pasara info del docente loggeado
+    if(nroDocentes > 15){
+      setNroDocentes(15);
+    }
     for (let i = 0; i < nroDocentes-1; i++) {
       initialDocentes.push({ nombre: "", grupo: "", errorNombre: true, errorGrupo: true });
     }
