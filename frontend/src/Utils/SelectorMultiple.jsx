@@ -105,6 +105,12 @@ function SelectorMultiple({ etiqueta, opciones, cambio, valorInicial = [], llena
           },
           '& .MuiMenuItem-root:hover': {
             backgroundColor: theme.highlight,
+          },
+          '& .MuiMenuItem-root.Mui-selected': {
+            backgroundColor: 'red', 
+          },
+          '& .MuiMenuItem-root.Mui-selected:hover': {
+            backgroundColor: 'red',  
           }
         }}
       >
