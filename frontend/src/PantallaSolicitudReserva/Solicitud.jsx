@@ -1,14 +1,7 @@
 import Card from "../Utils/Card";
 import StyledText from "../StyledText";
 import { useTheme } from '../Contexts/ThemeContext';
-import { useEffect, useState } from "react";
-import TextInput from "../Utils/TextInput";
-import Dropdown from "../Utils/Dropdown";
-import SelectorMultiple from '../Utils/SelectorMultiple';
-import RowPercentage from "../Responsive/RowPercentage";
-import MensajeExito from "../Utils/MensajeExito";
-import EntradaFecha from "../Utils/EntradaFecha";
-import Button from "../Utils/Button";
+import {useState } from "react";
 import CalendarioStore from "../Contexts/CalendarioStore"
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';

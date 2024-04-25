@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TextInput from "../Utils/TextInput";
 import Dropdown from "../Utils/Dropdown";
 import SelectorMultiple from '../Utils/SelectorMultiple';
@@ -32,9 +32,9 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
 
   /*datos de prueba para los dropdowns */
   const cargarBDGruposIndividual = [
-    { value: "1", label: "1" },
-    { value: "2", label: "2" },
-    { value: "3", label: "3" },
+    { value: "1", label: "1", inscritos: 40 },
+    { value: "2", label: "2", inscritos: 30},
+    { value: "3", label: "3", inscritos: 25},
   ];
   const cargarBDMateria = [
     { value: 1, label: "Progr. Funcional" },
@@ -144,6 +144,14 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
     }
   }
 
+  useEffect(() => {
+    let capacidadTotal = 0;
+    const lengthRecorrer = grupoDocente.length;
+    for (let i = 0; i < lengthRecorrer; i++) {
+      capacidadTotal += cargarBDGruposIndividual.filter(grupo => grupo.value === grupoDocente[i])[0].inscritos;
+    }
+    setCapacidad(capacidadTotal);
+  },[grupoDocente]);
   return (
     <>
       <RowPercentage firstChildPercentage={35} gap="10px">
