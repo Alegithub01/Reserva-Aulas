@@ -50,15 +50,15 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
   ];
 
   const cargarBDDocentes = [
-    { value: "1", label: "Leticia Coca" },
-    { value: "2", label: "Corina Flores" },
-    { value: "3", label: "Vladimir Costas" },
-    { value: "4", label: "Patricia Romero" },
-    { value: "5", label: "Carla Salazar" },
-    { value: "6", label: "Henry Villaroel" },
-    { value: "7", label: "Leticia Coca" },
-    { value: "8", label: "Vladimir Costas" },
-    { value: "9", label: "Leticia Coca" },
+    { id: "1", nombre: "Leticia Coca", inscritos: 60 },
+    { id: "2", nombre: "Corina Flores", inscritos: 60},
+    { id: "3", nombre: "Vladimir Costas", inscritos: 50},
+    { id: "4", nombre: "Patricia Romero", inscritos: 50},
+    { id: "5", nombre: "Carla Salazar", inscritos: 50},
+    { id: "6", nombre: "Henry Villaroel", inscritos: 30 },
+    { id: "7", nombre: "Leticia Coca", inscritos: 40},
+    { id: "8", nombre: "Vladimir Costas", inscritos: 40},
+    { id: "9", nombre: "Leticia Coca", inscritos: 40},
   ];
   //convertir info de docentes en este diccionario (importa el id creo)
 
@@ -88,9 +88,9 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
 
   const validarGruposDocentes = () => {
     if (gruposDocentes.length === 0) {
-      setMensajeError(previo => ({ ...previo, grupoDocente: 'Seleccione grupos' }));
+      setMensajeError(previo => ({ ...previo, gruposDocentes: 'Seleccione grupos' }));
     } else {
-      setMensajeError(previo => ({ ...previo, grupoDocente: '' }));
+      setMensajeError(previo => ({ ...previo, gruposDocentes: '' }));
 
     }
   }
@@ -159,19 +159,21 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
 
   useEffect(() => {
     const lengthToFill = gruposDocentes.length;
+    let capacidadTotal = 0;
     const corresponder = (grupo) => {
-      return cargarBDDocentes.filter(docente => docente.value === grupo)[0].label;
+      return cargarBDDocentes.filter(docente => docente.id === grupo)[0].nombre;
     }
     const initialDocentes = [];
     for (let i = 0; i < lengthToFill; i++) {
+      capacidadTotal = capacidadTotal+ cargarBDDocentes.filter(docente => docente.id === gruposDocentes[i])[0].inscritos;
       const nuevoNombre = corresponder(gruposDocentes[i]);
       if (initialDocentes.some(docente => docente.nombre === nuevoNombre)) {
         initialDocentes.map(docente => docente.nombre === nuevoNombre ? docente.grupo += `, ${gruposDocentes[i]}` : docente);
       } else {
         initialDocentes.push({ nombre: corresponder(gruposDocentes[i]), grupo: gruposDocentes[i] });
       }
-
     }
+    setCapacidad(capacidadTotal);
     setDocentes(initialDocentes);
   }, [gruposDocentes]);
 
