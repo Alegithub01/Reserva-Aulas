@@ -1,4 +1,3 @@
-import { useTheme } from '../Contexts/ThemeContext';
 import { useEffect, useState } from "react";
 import TextInput from "../Utils/TextInput";
 import Dropdown from "../Utils/Dropdown";
@@ -10,7 +9,6 @@ import Button from "../Utils/Button";
 import CalendarioStore from "../Contexts/CalendarioStore"
 
 const FormularioGrupal = ({aulaInicial, horaInicial}) => {
-  const { theme } = useTheme();
   const { aula, dia, horario } = CalendarioStore();
   const [materia, setMateria] = useState('');
   const [gruposDocentes, setGruposDocentes] = useState([]); // modo grupal
