@@ -1,5 +1,4 @@
-import { useTheme } from '../Contexts/ThemeContext';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import TextInput from "../Utils/TextInput";
 import Dropdown from "../Utils/Dropdown";
 import SelectorMultiple from '../Utils/SelectorMultiple';
@@ -10,7 +9,6 @@ import Button from "../Utils/Button";
 import CalendarioStore from "../Contexts/CalendarioStore"
 
 const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
-  const { theme } = useTheme();
   const { aula, dia, horario } = CalendarioStore();
   const [materia, setMateria] = useState('');
   const [nombreDocente, setNombreDocente] = useState('Tatiana Aparicio Yuja'); //nombre del docente loggeado
