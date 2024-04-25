@@ -12,6 +12,8 @@ import Button from "../Utils/Button";
 import CalendarioStore from "../Contexts/CalendarioStore"
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import FormularioIndividual from "./FormularioIndividual";
+import FormularioGrupal from "./FormularioGrupal";
 
 const SolicitudMultiple = () => {
   const { theme } = useTheme();
@@ -312,7 +314,18 @@ const SolicitudMultiple = () => {
               <ToggleButton value="individual" sx={{ width: '50%', fontWeight: 'bold', border: `2px solid`, color: theme.secondary }}>Individual</ToggleButton>
               <ToggleButton value="grupal" sx={{ width: '50%', fontWeight: 'bold', border: `2px solid`, color: theme.secondary }}>Grupal</ToggleButton>
             </ToggleButtonGroup>
-            
+            {modo === 'individual' ? 
+            (
+              <FormularioIndividual 
+                aulaInicial={aulaInicial}
+                horaInicial={horaInicial}
+                />
+            ):(
+              <FormularioGrupal 
+                aulaInicial={aulaInicial}
+                horaInicial={horaInicial}
+                />
+            )}
             <div
               style={{
                 height: "0%",

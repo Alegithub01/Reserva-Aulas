@@ -9,15 +9,13 @@ import EntradaFecha from "../Utils/EntradaFecha";
 import Button from "../Utils/Button";
 import CalendarioStore from "../Contexts/CalendarioStore"
 
-const FormularioGrupal = () => {
+const FormularioGrupal = ({aulaInicial, horaInicial}) => {
   const { theme } = useTheme();
   const { aula, dia, horario } = CalendarioStore();
   const [materia, setMateria] = useState('');
-  const [nroDocentes, setNroDocentes] = useState("1");
-  const [nombreDocente, setNombreDocente] = useState('Tatiana Aparicio Yuja'); //nombre del docente loggeado
-  const [grupoDocente, setGrupoDocente] = useState(''); //grupo del docente loggeado
   const [gruposDocentes, setGruposDocentes] = useState([]); // modo grupal
   const [docentes, setDocentes] = useState([]);
+  const [capacidad, setCapacidad] = useState(0);
   const [ambiente, setAmbiente] = useState([]);
   const [fecha, setFecha] = useState('');
   const [hora, setHora] = useState('');
@@ -33,23 +31,14 @@ const FormularioGrupal = () => {
     fecha: '',
     hora: '',
   });
-  const [modo, setModo] = useState('individual');
 
-  function obtenerValorHora(horaBuscada, listaHoras) {
-    for (const slot of listaHoras) {
-      const inicioRango = slot.label.split('-')[0].trim();
-      if (inicioRango === horaBuscada) {
-        return slot.value;
-      }
-    }
-    return null;
-  }
   /*datos de prueba para los dropdowns */
-  const cargarBDGruposIndividual = [
-    { value: "1", label: "1" },
-    { value: "2", label: "2" },
-    { value: "3", label: "3" },
+  const cargarBDMateria = [
+    { value: 1, label: "Progr. Funcional" },
+    { value: 2, label: "Base de datos 2" },
+    { value: 3, label: "Taller de Base de Datos" },
   ];
+
   const cargarBDGruposGrupal = [
     { value: "1", label: "1" },
     { value: "2", label: "2" },
@@ -73,11 +62,7 @@ const FormularioGrupal = () => {
     { value: "8", label: "Vladimir Costas" },
     { value: "9", label: "Leticia Coca" },
   ];
-  const cargarBDMateria = [
-    { value: 1, label: "Progr. Funcional" },
-    { value: 2, label: "Base de datos 2" },
-    { value: 3, label: "Taller de Base de Datos" },
-  ];   //convertir info de materias en este diccionario (solo nombres de materias no importa el valor)
+  //convertir info de docentes en este diccionario (importa el id creo)
 
   const cargarBDAmbiente = [
     { value: "691A", label: "691A", },
@@ -102,52 +87,16 @@ const FormularioGrupal = () => {
     { value: "100", label: "20:30-21:45" },
   ];
 
-  const cambiarModo = (event, newModo) => {
-    setModo(newModo);
-  }
-  const cambiarNombreDocente = (event, pattern) => {
-    const valor = event.target.value;
-    if (pattern && RegExp(pattern).test(valor)) {
-      setNombreDocente(valor);
-      setMensajeError(previo => ({ ...previo, nombreDocente: '' }));
-    }
-  }
 
-  const cambiarGrupoDocente = (event, pattern) => {
-    const valor = event.target.value;
-    if (pattern && RegExp(pattern).test(valor)) {
-      setGrupoDocente(valor);
-      setMensajeError(previo => ({ ...previo, grupoDocente: '' }));
-    }
-  }
-  const validarGrupoDocente = () => {
-    if (grupoDocente.length === 0) {
-      setMensajeError(previo => ({ ...previo, grupoDocente: 'Seleccione un ambiente' }));
+  const validarGruposDocentes = () => {
+    if (gruposDocentes.length === 0) {
+      setMensajeError(previo => ({ ...previo, grupoDocente: 'Seleccione grupos' }));
     } else {
       setMensajeError(previo => ({ ...previo, grupoDocente: '' }));
 
     }
   }
-  const validarNombresDocentes = (index) => {
-    docentes[index].errorNombre = docentes[index].nombre.trim() === '';
-  }
 
-  const validarGruposDocentes = (index) => {
-    docentes[index].errorGrupo = docentes[index].grupo.trim() === '';
-  }
-
-  const manejarCambioNroDocentes = (event, pattern) => {
-    const valor = event.target.value;
-    if (pattern && RegExp(pattern).test(valor)) {
-      setNroDocentes(valor);
-      setMensajeError({ ...mensajeError, nroDocentes: '' });
-    }
-  }
-  const validarVacioNroDocentes = () => {
-    if (nroDocentes.trim() === '') {
-      setMensajeError(previo => ({ ...previo, nroDocentes: "Ingrese cantidad de docentes" }));
-    }
-  }
   const validarSeleccionMateria = () => {
     if (materia === '') {
       setMensajeError(previo => ({ ...previo, materia: 'Seleccione una materia' }));
@@ -198,10 +147,10 @@ const FormularioGrupal = () => {
 
   const validarTodo = () => {
     validarSeleccionMateria();
-    validarGrupoDocente();
+    validarGruposDocentes();
     validarFecha();
     validarSeleccionHora();
-    if (materia !== '' && fecha !== '' && hora.length !== 0 && ambiente !== '' && nroDocentes.trim() !== '' && docentes.every(docente => docente.nombre.trim() !== '' && docente.grupo.trim() !== '')) {
+    if (materia !== '' && fecha !== '' && hora.length !== 0 && ambiente !== '') {
       console.log("Solicitud enviada");
       cambiarAbrirDialogo(true);
     } else {
@@ -221,30 +170,13 @@ const FormularioGrupal = () => {
       if (initialDocentes.some(docente => docente.nombre === nuevoNombre)) {
         initialDocentes.map(docente => docente.nombre === nuevoNombre ? docente.grupo += `, ${gruposDocentes[i]}` : docente);
       } else {
-        initialDocentes.push({ nombre: corresponder(gruposDocentes[i]), grupo: gruposDocentes[i], errorNombre: true, errorGrupo: true });
+        initialDocentes.push({ nombre: corresponder(gruposDocentes[i]), grupo: gruposDocentes[i] });
       }
 
     }
     setDocentes(initialDocentes);
   }, [gruposDocentes]);
 
-  const manejarCambioNombre = (index, event, pattern) => {
-    const newDocentes = [...docentes];
-    newDocentes[index].nombre = event.target.value;
-    if (pattern && RegExp(pattern).test(newDocentes[index].nombre)) {
-      newDocentes[index].errorNombre = false;
-      setDocentes(newDocentes);
-    }
-  };
-
-  const manejarCambioGrupo = (index, event, pattern) => {
-    const newDocentes = [...docentes];
-    newDocentes[index].grupo = event.target.value;
-    if (pattern && RegExp(pattern).test(newDocentes[index].grupo)) {
-      newDocentes[index].errorGrupo = false;
-      setDocentes(newDocentes);
-    }
-  }
   return (<>
     <RowPercentage firstChildPercentage={35} gap="10px">
       <div>
@@ -258,68 +190,15 @@ const FormularioGrupal = () => {
         />
       </div>
       <div>
-        {/* <TextInput
-                  label="Grupo"
-                  fullWidth={true}
-                  value={grupoDocente}
-                  onChange={(event) => cambiarGrupoDocente(event, "^[0-9]{0,2}$")}
-                  onBlur={validarGrupoDocente}
-                  validationMessage={mensajeError.grupoDocente}
-                  pattern="^[0-9]{0,2}$"
-                  isRequired={true}
-                /> */}
-        {modo === 'individual' ? (
-          <SelectorMultiple
-            etiqueta="Grupo/grupos"
-            opciones={cargarBDGruposIndividual}
-            cambio={setGrupoDocente}
-            llenado={validarGrupoDocente}
-            esRequerido={true}
-            mensajeValidacion={mensajeError.grupoDocente}
-          />) :
-          (<SelectorMultiple
-            etiqueta="Grupos"
-            opciones={cargarBDGruposGrupal}
-            cambio={setGruposDocentes}
-            llenado={validarGruposDocentes}
-            esRequerido={true}
-            mensajeValidacion={mensajeError.gruposDocentes} />)}
+        <SelectorMultiple
+          etiqueta="Grupos"
+          opciones={cargarBDGruposGrupal}
+          cambio={setGruposDocentes}
+          llenado={validarGruposDocentes}
+          esRequerido={true}
+          mensajeValidacion={mensajeError.gruposDocentes} />
       </div>
-      {/* <div>
-                <TextInput
-                  label="Nro docentes"
-                  fullWidth={true}
-                  value={nroDocentes}
-                  onChange={(event) => manejarCambioNroDocentes(event, "^[0-9]{0,2}$", { min: 1, max: 15 })}
-                  onBlur={validarVacioNroDocentes}
-                  validationMessage={mensajeError.nroDocentes}
-                  pattern="^[0-9]{1,2}$"
-                  isRequired={true}
-                  rango={{ min: 1, max: 15 }}
-                  isFocusedDefault={true}
-                />
-              </div> */}
     </RowPercentage>
-    {
-      modo === 'individual' ?
-        (
-          <RowPercentage firstChildPercentage={25} gap="10px">
-            <div>
-              <TextInput
-                label="Nombre del docente"
-                fullWidth={true}
-                value={nombreDocente}
-                onChange={event => cambiarNombreDocente(event, "^[a-zA-Z ]*$")}
-                pattern="^[a-zA-Z ]*$"
-                isRequired={true}
-                validationMessage={mensajeError.nombreDocente}
-                isFocusedDefault={true}
-                isDisabled={true}
-              />
-            </div>
-          </RowPercentage>
-        ) : (<div></div>)
-    }
     {
       docentes.map((docente, index) => (
         <RowPercentage key={index} firstChildPercentage={25} gap="10px">
@@ -328,11 +207,10 @@ const FormularioGrupal = () => {
               label="Nombre del docente"
               fullWidth={true}
               value={docente.nombre}
-              onChange={event => manejarCambioNombre(index, event, "^[a-zA-Z ]*$")}
-              onBlur={() => validarNombresDocentes(index)}
-              pattern="^[a-zA-Z ]*$"
+              onChange={() => {}}
+              onBlur={() => {}}
               isRequired={true}
-              validationMessage={docente.errorNombre ? "Ingrese nombre de docente" : ""}
+              validationMessage=""
               isFocusedDefault={true}
               isDisabled={true}
             />
@@ -342,10 +220,9 @@ const FormularioGrupal = () => {
               label="Grupo"
               fullWidth={true}
               value={docente.grupo}
-              onChange={(event) => manejarCambioGrupo(index, event, "^[0-9]{0,2}$")}
-              onBlur={() => validarGruposDocentes(index)}
-              validationMessage={docente.errorGrupo ? "Ingrese grupo" : ""}
-              pattern="^[0-9]{0,2}$"
+              onChange={() =>{}}
+              onBlur={() => {}}
+              validationMessage=""
               isRequired={true}
               isFocusedDefault={true}
               isDisabled={true}
@@ -359,9 +236,9 @@ const FormularioGrupal = () => {
         <TextInput
           label="Capacidad"
           fullWidth={true}
-          value={nroDocentes}
-          onChange={(event) => manejarCambioNroDocentes(event, "^[0-9]{0,2}$", { min: 1, max: 15 })}
-          onBlur={validarVacioNroDocentes}
+          value={capacidad}
+          onChange={() => {}}
+          onBlur={()=>{}}
           validationMessage={mensajeError.nroDocentes}
           pattern="^[0-9]{1,2}$"
           isRequired={true}

@@ -9,7 +9,7 @@ import EntradaFecha from "../Utils/EntradaFecha";
 import Button from "../Utils/Button";
 import CalendarioStore from "../Contexts/CalendarioStore"
 
-const FormularioIndividual = ({aulaInicial, horaBuscada, listaHoras, horaInicial}) => {
+const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   const { theme } = useTheme();
   const { aula, dia, horario } = CalendarioStore();
   const [materia, setMateria] = useState('');
@@ -32,15 +32,6 @@ const FormularioIndividual = ({aulaInicial, horaBuscada, listaHoras, horaInicial
     hora: '',
   });
 
-  function obtenerValorHora(horaBuscada, listaHoras) {
-    for (const slot of listaHoras) {
-      const inicioRango = slot.label.split('-')[0].trim();
-      if (inicioRango === horaBuscada) {
-        return slot.value;
-      }
-    }
-    return null;
-  }
   /*datos de prueba para los dropdowns */
   const cargarBDGruposIndividual = [
     { value: "1", label: "1" },
@@ -86,7 +77,7 @@ const FormularioIndividual = ({aulaInicial, horaBuscada, listaHoras, horaInicial
 
   const validarGrupoDocente = () => {
     if (grupoDocente.length === 0) {
-      setMensajeError(previo => ({ ...previo, grupoDocente: 'Seleccione un ambiente' }));
+      setMensajeError(previo => ({ ...previo, grupoDocente: 'Seleccione un grupo' }));
     } else {
       setMensajeError(previo => ({ ...previo, grupoDocente: '' }));
 
@@ -169,47 +160,15 @@ const FormularioIndividual = ({aulaInicial, horaBuscada, listaHoras, horaInicial
           />
         </div>
         <div>
-          {/* <TextInput
-                  label="Grupo"
-                  fullWidth={true}
-                  value={grupoDocente}
-                  onChange={(event) => cambiarGrupoDocente(event, "^[0-9]{0,2}$")}
-                  onBlur={validarGrupoDocente}
-                  validationMessage={mensajeError.grupoDocente}
-                  pattern="^[0-9]{0,2}$"
-                  isRequired={true}
-                /> */}
-          {modo === 'individual' ? (
-            <SelectorMultiple
-              etiqueta="Grupo/grupos"
-              opciones={cargarBDGruposIndividual}
-              cambio={setGrupoDocente}
-              llenado={validarGrupoDocente}
-              esRequerido={true}
-              mensajeValidacion={mensajeError.grupoDocente}
-            />) :
-            (<SelectorMultiple
-              etiqueta="Grupos"
-              opciones={cargarBDGruposGrupal}
-              cambio={setGruposDocentes}
-              llenado={validarGruposDocentes}
-              esRequerido={true}
-              mensajeValidacion={mensajeError.gruposDocentes} />)}
+          <SelectorMultiple
+            etiqueta="Grupo/grupos"
+            opciones={cargarBDGruposIndividual}
+            cambio={setGrupoDocente}
+            llenado={validarGrupoDocente}
+            esRequerido={true}
+            mensajeValidacion={mensajeError.grupoDocente}
+          />
         </div>
-        {/* <div>
-                <TextInput
-                  label="Nro docentes"
-                  fullWidth={true}
-                  value={nroDocentes}
-                  onChange={(event) => manejarCambioNroDocentes(event, "^[0-9]{0,2}$", { min: 1, max: 15 })}
-                  onBlur={validarVacioNroDocentes}
-                  validationMessage={mensajeError.nroDocentes}
-                  pattern="^[0-9]{1,2}$"
-                  isRequired={true}
-                  rango={{ min: 1, max: 15 }}
-                  isFocusedDefault={true}
-                />
-              </div> */}
       </RowPercentage>
       <RowPercentage firstChildPercentage={25} gap="10px">
         <div>
@@ -232,8 +191,8 @@ const FormularioIndividual = ({aulaInicial, horaBuscada, listaHoras, horaInicial
             label="Capacidad"
             fullWidth={true}
             value={capacidad}
-            onChange={()=>{}}
-            onBlur={()=>{}}
+            onChange={() => { }}
+            onBlur={() => { }}
             validationMessage={mensajeError.nroDocentes}
             pattern="^[0-9]{1,2}$"
             isRequired={true}
