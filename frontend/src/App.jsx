@@ -19,8 +19,9 @@ import PanelSolicitudReservas from "./PantallaModulos/PanelSolicitudReservas";
 import Solicitud from "./PantallaSolicitudReserva/Solicitud";
 import Calendario from "./PantallaSolicitudReserva/Calendario";
 import Reservas from "./PantallaSolicitudReserva/Reservas";
-import BuscarAmbiente from "./PantallaSolicitudReserva/BuscarAmbiente";
+import BuscarAmbiente from "./PantallaGestionReserva/BuscarAmbiente";
 import PantallaReglas from "./PantallaAmbientes/PantallaReglas";
+import PanelGestionReservas from "./PantallaModulos/PanelGestionReservas";
 
 function App() {
   return (
@@ -94,6 +95,22 @@ function App() {
                   }}
                 >
                   <PanelGestionUsuarios />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/Panel-Gestion-Reservas"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100vh",
+                    overflow: "auto",
+                  }}
+                >
+                  <PanelGestionReservas />
                 </div>
               </Layout>
             }

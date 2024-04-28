@@ -510,7 +510,7 @@ class MateriaSeeder extends Seeder
         Materia::create(["nivel" => "H", "nombre" => "SEGURIDAD DE SISTEMAS", "tipo" => "Regular",  "electiva" => false, "carrera_id" => 3,]);      //105
         Materia::create(["nivel" => "H", "nombre" => "INFORMATICA FORENSE", "tipo" => "Regular", "electiva" => true,  "carrera_id" => 3,]);      //106
         Materia::create(["nivel" => "H", "nombre" => "GESTION ESTRATEGICA DE EMPRESAS", "tipo" => "Regular",  "electiva" => false, "carrera_id" => 3,]);
-        Materia::create(["nivel" => "I", "nombre" => "PROYECTO FINAL", "tipo" => "TALLER DE TITULACION",  "carrera_id" => 3,]);      //108
+        Materia::create(["nivel" => "I", "nombre" => "PROYECTO FINAL", "tipo" => "TALLER DE TITULACION", "electiva" => false, "carrera_id" => 3,]);      //108
         Materia::create(["nivel" => "I", "nombre" => "PRACTICA EMPRESARIAL", "tipo" => "Regular",  "electiva" => false, "carrera_id" => 3,]);      //109
         Materia::create(["nivel" => "I", "nombre" => "ENTORNOS VIRTUALES DE APRENDIZAJE", "tipo" => "Regular", "electiva" => true,  "carrera_id" => 3,]);      //110
         Materia::create(["nivel" => "I", "nombre" => "SERVICIOS TELEMATICOS", "tipo" => "Regular", "electiva" => true,  "carrera_id" => 3,]);      //111
@@ -571,10 +571,121 @@ class MateriaSeeder extends Seeder
         Materia::create(["nivel" => "I", "nombre" => "DISEÑO DE SISTEMAS DIGITALES II", "tipo" => "Regular",  "electiva" => false, "carrera_id" => 5]);
         Materia::create(["nivel" => "I", "nombre" => "TALLER DE CONTROL Y AUTOMATISMO", "tipo" => "Regular",  "electiva" => false, "carrera_id" => 5]);
         Materia::create(["nivel" => "J", "nombre" => "REDES DE COMPUTADORAS", "tipo" => "Regular",  "electiva" => false, "carrera_id" => 5]);
-        Materia::create(["nivel" => "J", "nombre" => "PROYECTO TERMINAL II", "tipo" => "Taller de Titulacion", "carrera_id" => 5]);
+        Materia::create(["nivel" => "J", "nombre" => "PROYECTO TERMINAL II", "tipo" => "Taller de Titulacion", "electiva" => false, "carrera_id" => 5]);
         Materia::create(["nivel" => "J", "nombre" => "TOPICOS ELECTRONICOS (TELEFONIA BASICA)", "tipo" => "Regular",  "electiva" => false, "carrera_id" => 5]);
         Materia::create(["nivel" => "J", "nombre" => "TOPICOS ELECTRONICOS (AVIONICA)", "tipo" => "Regular",  "electiva" => false, "carrera_id" => 5]);
         Materia::create(["nivel" => "J", "nombre" => "COMUNICACION DE DATOS", "tipo" => "Regular",  "electiva" => false, "carrera_id" => 5]);
         Materia::create(["nivel" => "J", "nombre" => "PREPARACION Y EVALUACION DE PROYECTOS", "tipo" => "Regular",  "electiva" => false, "carrera_id" => 5]);
+        ###################################matematicas########################################################################################
+        Materia::create(['nivel' => 'A', 'nombre' => 'INGLES I', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'A', 'nombre' => 'ALGEBRA I', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'A', 'nombre' => 'CALCULO I', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'A', 'nombre' => 'GEOMETRIA', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'A', 'nombre' => 'COMPUTACION I', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'B', 'nombre' => 'INGLES II', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'B', 'nombre' => 'ALGEBRA LINEAL', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'B', 'nombre' => 'CALCULO II', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'B', 'nombre' => 'ESTRUCTURAS DISCRETAS', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'B', 'nombre' => 'MATEMATICA COMPUTACIONAL II', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'C', 'nombre' => 'FISICA I', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'C', 'nombre' => 'PROBABILIDAD Y ESTADISTICA I', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'C', 'nombre' => 'TEORIA AXIOMATICA DE CONJUNTOS', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'C', 'nombre' => 'GEOMETRIA I', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'C', 'nombre' => 'ANALISIS I', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'D', 'nombre' => 'FISICA II', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'D', 'nombre' => 'PROBABILIDAD Y ESTADISTICA II', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'E', 'nombre' => 'ALGEBRA ABSTRACTA I', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'E', 'nombre' => 'GEOMETRIA III', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'E', 'nombre' => 'ANALISIS III', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'E', 'nombre' => 'ANALISIS NUMERICO I', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'G', 'nombre' => 'ANALISIS FUNCIONAL', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'G', 'nombre' => 'SISTEMAS DINAMICOS', 'tipo' => 'REGULAR', 'electiva' => true, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'G', 'nombre' => 'FRACTALES', 'tipo' => 'REGULAR', 'electiva' => true, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'G', 'nombre' => 'INVESTIGACION OPERATIVA', 'tipo' => 'REGULAR', 'electiva' => true, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'G', 'nombre' => 'ANALISIS NUMERICO III', 'tipo' => 'REGULAR', 'electiva' => true, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'H', 'nombre' => 'TRANSFORMADAS DE FOURIER', 'tipo' => 'REGULAR', 'electiva' => true, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'H', 'nombre' => 'TENSORES Y FORMAS', 'tipo' => 'REGULAR', 'electiva' => true, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'I', 'nombre' => 'SEMINARIO DE GRADO', 'tipo' => 'REGULAR', 'electiva' => false, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'I', 'nombre' => 'TEORIA DE CONTROL', 'tipo' => 'REGULAR', 'electiva' => true, 'carrera_id' => 9]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'TRABAJO DE GRADO', 'tipo' => 'TALLER DE TITULACION', 'electiva' => false, 'carrera_id' => 9]);
+        ###############################civil############################################################################################
+        Materia::create(['nivel' => 'A', 'nombre' => 'QUIMICA GENERAL', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'A', 'nombre' => 'FISICA I', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'A', 'nombre' => 'ALGEBRA I', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'A', 'nombre' => 'CALCULO I', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'A', 'nombre' => 'DIBUJO TECNICO', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'B', 'nombre' => 'FISICA II', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'B', 'nombre' => 'GEOMETRIA DESCRIPTIVA', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'B', 'nombre' => 'ALGEBRA II', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'B', 'nombre' => 'CALCULO II', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'B', 'nombre' => 'GEOLOGIA GENERAL', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'C', 'nombre' => 'ANALISIS VECTORIAL Y TENSORIAL', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'C', 'nombre' => 'PROBABILIDAD Y ESTADISTICA', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'C', 'nombre' => 'CALCULO III', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'C', 'nombre' => 'GEOG. Y DEF. DE LOS RECURSOS NATURALES', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'C', 'nombre' => 'ELECTROTECNIA', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'D', 'nombre' => 'COMPUTACION PARA INGENIERIA', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'D', 'nombre' => 'ESTRUCTURAS ISOSTATICAS', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'D', 'nombre' => 'METODOS GEODESICOS', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'D', 'nombre' => 'ECONOMIA POLITICA', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'D', 'nombre' => 'ANALISIS NUMERICO', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'E', 'nombre' => 'HIDRAULICA I', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'E', 'nombre' => 'HIDROLOGIA', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'E', 'nombre' => 'GEOMATICA', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'E', 'nombre' => 'TECNOLOGIA DE LOS MATERIALES DE CONSTRUCCION', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'E', 'nombre' => 'RESISTENCIA DE MATERIALES I', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'E', 'nombre' => 'HIDRAULICA I', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'E', 'nombre' => 'HIDROLOGIA', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'E', 'nombre' => 'GEOMATICA', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'E', 'nombre' => 'TECNOLOGIA DE LOS MATERIALES DE CONSTRUCCION', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'E', 'nombre' => 'RESISTENCIA DE MATERIALES I', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'F', 'nombre' => 'HIDRAULICA II', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'F', 'nombre' => 'RESISTENCIA DE MATERIALES II', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'F', 'nombre' => 'MECANICA DE SUELOS I', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'F', 'nombre' => 'SISTEMAS DE INGENIERIA', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'F', 'nombre' => 'INGENIERIA ECONOMICA', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'G', 'nombre' => 'TRANSPORTES Y COMUNICACIONES', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'G', 'nombre' => 'INGENIERIA SANITARIA I', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'G', 'nombre' => 'ESTRUCTURAS HIPERESTATICAS', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'G', 'nombre' => 'MECANICA DE SUELOS II', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'G', 'nombre' => 'HORMIGON ARMADO I', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'G', 'nombre' => 'INGENIERIA AMBIENTAL', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'H', 'nombre' => 'INGENIERIA SANITARIA II', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'H', 'nombre' => 'MAQUINARIA Y EQUIPO DE CONSTRUCCION', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'H', 'nombre' => 'MECANICA DE SUELOS APLICADA', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'H', 'nombre' => 'HORMIGON ARMADO II', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'H', 'nombre' => 'MECANICA DEL MEDIO CONTINUO', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'H', 'nombre' => 'ESTRUCTURAS DE MADERA Y METALICAS', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'I', 'nombre' => 'CARRETERAS I', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'I', 'nombre' => 'OBRAS HIDRAULICAS I', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'I', 'nombre' => 'CONSTRUCCION DE EDIFICIOS', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'I', 'nombre' => 'DIRECCION DE OBRAS Y VALUACIONES', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'I', 'nombre' => 'FUNDACIONES I', 'tipo' => 'REGULAR', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'I', 'nombre' => 'TALLER DE MODALIDADES DE GRADUACION I', 'tipo' => 'TALLER DE TITULACION', "electiva" => false, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'I', 'nombre' => 'ELEMENTOS FINITOS', 'tipo' => 'REGULAR', "electiva" => true, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'PUENTES', 'tipo' => 'REGULAR', "electiva" => true, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'HORMIGON PREESFORZADO', 'tipo' => 'REGULAR', "electiva" => true, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'INGENIERIA ANTISISMICA', 'tipo' => 'REGULAR', "electiva" => true, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'ESTRUCTURAS ESPECIALES', 'tipo' => 'REGULAR', "electiva" => true, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'FUNDACIONES II', 'tipo' => 'REGULAR', "electiva" => true, 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'CARRETERAS II', 'tipo' => 'REGULAR', 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'AEROPUERTOS', 'tipo' => 'REGULAR', 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'INGENIERIA DE TRAFICO', 'tipo' => 'REGULAR', 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'VIAS FERREAS', 'tipo' => 'REGULAR', 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'MODELOS HIDRAULICOS', 'tipo' => 'REGULAR', 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'PUERTOS Y VIAS NAVEGABLES', 'tipo' => 'REGULAR', 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'HIDRAULICA DE RIOS', 'tipo' => 'REGULAR', 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'OBRAS HIDRAULICAS II', 'tipo' => 'REGULAR', 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'TALLER DE MODALIDADES DE GRADUACION II', 'tipo' => 'TALLER DE TITULACION', 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'PLANTAS DE PURIFICACION DE AGUA POTABLE', 'tipo' => 'REGULAR', 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'LABORATORIO DE INGENIERIA SANITARIA', 'tipo' => 'REGULAR', 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'INSTALACIONES DOM. CONST. DE OBRAS SANITARIAS', 'tipo' => 'REGULAR', 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'PLANTA DE TRATAMIENTO DE AGUAS RESIDUALES', 'tipo' => 'REGULAR', 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'TEMAS ESPECIALES EN INGENIERIA GEOTECNIA', 'tipo' => 'REGULAR', 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'METODOS CONSTRUCTIVOS EN GEOTECNIA', 'tipo' => 'REGULAR', 'carrera_id' => 1]);
+        Materia::create(['nivel' => 'J', 'nombre' => 'TEMAS ESPECIALES EN HIDRAULICA', 'tipo' => 'REGULAR', 'carrera_id' => 1]);
+
+        #########################################################################################
+
     }
 }

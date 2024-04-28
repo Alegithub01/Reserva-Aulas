@@ -7,12 +7,23 @@ import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import FormularioIndividual from "./FormularioIndividual";
 import FormularioGrupal from "./FormularioGrupal";
+import { Tooltip, IconButton } from "@mui/material";
+import RuleIcon from '@mui/icons-material/Rule';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import Button from '@mui/material/Button';
 
 const SolicitudMultiple = () => {
   const { theme } = useTheme();
   const { aula, dia, horario } = CalendarioStore();
   const [modo, setModo] = useState('individual');
+  const [dialogoAbierto, setDialogoAbierto] = useState(false);
   
+  /*---------------------***********************- Para Base de datos con lo de las reglas**********************************/
+  const infoDeLaBDReglas = "Reglas para solicitud de reserva de ambientes:\n" +"Mantener la limpieza y orden del ambiente. En caso de ser un laboratorio, registrar cada estudiante con la computadora asignada en la libreta."
+
   const horas = [
     { value: "10", label: "06:45-08:15" },
     { value: "20", label: "08:15-09:45" },
@@ -25,6 +36,7 @@ const SolicitudMultiple = () => {
     { value: "90", label: "18:45-20:15" },
     { value: "100", label: "20:30-21:45" },
   ];
+
   function obtenerValorHora(horaBuscada, listaHoras) {
     for (const slot of listaHoras) {
       const inicioRango = slot.label.split('-')[0].trim();
@@ -54,6 +66,11 @@ const SolicitudMultiple = () => {
       minWidth: '600px',
       minHeight: '450px',
     },
+    reglitas: {
+      position: 'absolute',
+      bottom: '80px',
+      left: '80px',
+    }
   };
 
   const valorDeHora = obtenerValorHora(horario, horas);
@@ -113,6 +130,21 @@ const SolicitudMultiple = () => {
                 horaInicial={horaInicial}
                 />
             )}
+            <Dialog
+              open={dialogoAbierto}
+              onClose={()=>{setDialogoAbierto(false)}}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  {infoDeLaBDReglas}
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={()=>{setDialogoAbierto(false)}}>Entendido</Button>
+              </DialogActions>
+            </Dialog>
             <div
               style={{
                 height: "0%",
@@ -123,6 +155,13 @@ const SolicitudMultiple = () => {
             ></div>
           </div>
         </Card>
+      </div>
+      <div style={defaultStyle.reglitas}>
+        <Tooltip title="Reglas para solicitud">
+          <IconButton style={{ color: 'white', border: '2px solid white' }} size="large" onClick={()=>{setDialogoAbierto(true)}}>
+            <RuleIcon />
+          </IconButton>
+        </Tooltip>
       </div>
     </div>
   );
