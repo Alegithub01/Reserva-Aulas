@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Card from "../Utils/Card";
 import StyledText from "../StyledText";
 import { useTheme } from '../Contexts/ThemeContext';
@@ -140,9 +140,11 @@ const Calendario = () => {
   const [tipoAmbiente, setTipoAmbiente] = useState('');
   const [aulaEspecifica, setAulaEspecifica] = useState('');
   const [ambientesDropdown, setAmbientesDropdown] = useState([]);
-  
+  const errorRef = useRef('');
+
   const handleAulaEspecificaChange = (value) => {
     setAulaEspecifica(value);
+    errorRef.current = '';
   };
 
   const handleTipoAmbienteChange = useCallback((value) => {   
@@ -150,6 +152,13 @@ const Calendario = () => {
     setAmbientesDropdown(getDropdownOptions(value));
     setAulaEspecifica('');
   }, [aulas, auditorios, laboratorios]);
+
+  const handleError = (message) => {
+    errorRef.current = message;
+    forceUpdate();
+  };
+
+  const forceUpdate = React.useReducer(bool => !bool)[1];
 
   const getDropdownOptions = (tipo) => {
     const mapTipoToState = {
@@ -228,7 +237,8 @@ const testSchedule = {
                 cambio={handleAulaEspecificaChange}
               />
             </RowPercentage>
-            <CalendarioComp schedule={testSchedule} aula={aulaEspecifica}/>
+            {errorRef.current && <div style={{color:'red', fontSize:13}}>{errorRef.current}</div>}
+            <CalendarioComp schedule={testSchedule} aula={aulaEspecifica} handleError={handleError}/>
           </div>
         </Card>
       </div>

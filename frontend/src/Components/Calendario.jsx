@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { startOfWeek, addDays, addMonths, format, isSameDay } from 'date-fns';
-import styled from 'styled-components';
+import { startOfWeek, addDays, addMonths, format, isSameDay, isBefore, isToday } from 'date-fns';
+  import styled from 'styled-components';
 import Tooltip from '@mui/material/Tooltip';
 import useCalendarStore from '../Contexts/CalendarioStore';
 
@@ -56,7 +56,7 @@ const MonthIndicatorStyles = styled.div`
   margin: 10px 0;
 `;
 
-const Calendar = ({ schedule, aula }) => {
+const Calendar = ({ schedule, aula, handleError }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const currentWeekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
   const navigate = useNavigate();
@@ -86,11 +86,18 @@ const Calendar = ({ schedule, aula }) => {
   };
 
   const onCellClick = (date, hour, isReserved) => {
-    if (!isReserved) {
+    const dayStart = new Date();
+    dayStart.setHours(0, 0, 0, 0);
+    if (isBefore(date, dayStart)) {
+      handleError('No se puede seleccionar un día anterior al actual.');
+    } else if (!aula) {
+      handleError('Por favor, seleccione un ambiente antes de proceder.');
+    } else if (!isReserved) {
       setAula(aula);
       setDia(format(date, 'yyyy-MM-dd'));
       setHora(hour);
       navigate('/solicitud');
+      handleError('');
     }
   };
 
