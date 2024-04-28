@@ -1,13 +1,10 @@
 import SplitScreenLayout from "../Components/SplitScreenLayout";
 import StyledText from "../StyledText";
 import Card from "./Modulo";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import HistoryIcon from '@mui/icons-material/History';
-import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';    
 
-const PanelSolicitudReservas = () => {
+const PanelGestionReservas = () => {
     const navegar = useNavigate();
     const contenidoIzq = (
         <div
@@ -43,23 +40,15 @@ const PanelSolicitudReservas = () => {
                     height: "10%",
                 }}
             >
-                <StyledText boldText>Solicitudes de Reservas</StyledText>
+                <StyledText boldText>Gestión de Reservas</StyledText>
             </div>
+            
             <Card 
-                text="Solicitar Reserva" 
-                Icon={AddCircleOutlineIcon}
-                onClick={() => navegar('/Solicitud')}
+                text="Buscar Ambientes" 
+                Icon={SearchIcon}
+                onClick={() => navegar('/Buscar-Ambiente')}
             />
-            <Card 
-                text="Ver Disponibilidad" 
-                Icon={EventAvailableIcon}
-                onClick={() => navegar('/Calendario')}
-            />
-            <Card 
-                text="Mis Solicitudes" 
-                Icon={HistoryIcon}
-                onClick={() => navegar('/Reservas')}
-            />
+            
             <div
                 style={{
                     display: "flex",
@@ -84,4 +73,4 @@ const PanelSolicitudReservas = () => {
     );
 };
 
-export default PanelSolicitudReservas;
+export default PanelGestionReservas;
