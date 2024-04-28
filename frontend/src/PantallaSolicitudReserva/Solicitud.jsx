@@ -23,6 +23,7 @@ const SolicitudMultiple = () => {
   
   /*---------------------***********************- Para Base de datos con lo de las reglas**********************************/
   const infoDeLaBDReglas = "Reglas para solicitud de reserva de ambientes:\n" +"Mantener la limpieza y orden del ambiente. En caso de ser un laboratorio, registrar cada estudiante con la computadora asignada en la libreta."
+
   const horas = [
     { value: "10", label: "06:45-08:15" },
     { value: "20", label: "08:15-09:45" },
