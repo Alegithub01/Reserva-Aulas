@@ -7,7 +7,11 @@
     <title>Sigan Viendo</title>
 </head>
 <body>
-    <h3>¡Hola! Papu</h3>
+    <h3>Buenos dias!</h3>
     <p>{{ $data['body'] }}</p>
+
+    <p>Saludos</p>
+    <h4>Eureka Solutions</h4>
+    <h4>S.R.L</h4>
 </body>
 </html>
