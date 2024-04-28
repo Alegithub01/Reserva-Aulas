@@ -185,7 +185,7 @@ const RegistroMasivoBoton = () => {
           Procesar
         </Button>
       </div>
-      {mostrarMensaje && <div style={mensajeValidacionEstilo}>Seleccione un archivo con un tamaño menor para registrar</div>}
+      {mostrarMensaje && <div style={mensajeValidacionEstilo}>Por favor, seleccione un archivo para ser procesado</div>}
       <Snackbar open={snackbarOpenSuccess} autoHideDuration={6000} onClose={handleCloseSnackbarSuccess}>
         <Alert onClose={handleCloseSnackbarSuccess} severity="success">
           {mostrarMensajeExito}

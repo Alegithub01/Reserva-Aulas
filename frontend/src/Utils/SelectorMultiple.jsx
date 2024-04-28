@@ -105,11 +105,18 @@ function SelectorMultiple({ etiqueta, opciones, cambio, valorInicial = [], llena
           },
           '& .MuiMenuItem-root:hover': {
             backgroundColor: theme.highlight,
-          }
+          },
         }}
       >
         {opciones.map((opcion) => (
-          <MenuItem key={opcion} value={opcion.value} style={obtenerEstilos(opcion, valorSeleccionado, theme)}>
+          <MenuItem
+            key={opcion.value}
+            value={opcion.value}
+            style={{
+              backgroundColor: valorSeleccionado.includes(opcion.value) ? '#677FCE' : 'transparent',
+              color: valorSeleccionado.includes(opcion.value) ? 'white' : 'black',
+            }}
+          >
             {opcion.label}
           </MenuItem>
         ))}

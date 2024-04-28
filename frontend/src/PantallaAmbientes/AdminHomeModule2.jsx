@@ -217,11 +217,11 @@ const AdminHomeModule2 = () => {
                 <TextInput
                   label="Nombre"
                   fullWidth={true}
-                  onChange={(event) => manejarCambioNombre(event, "^[0-9(A-Z)+]*$")}
+                  onChange={(event) => manejarCambioNombre(event, "^[0-9A-Z]*$")}
                   onBlur={validarVacioNombre}
                   isRequired={true}
                   validationMessage={mensajeError.nombre}
-                  pattern="^[0-9(A-Z)+]{0,8}$"
+                  pattern="^[0-9A-Z]{0,8}$"
                 />
               </div>
               <div>
