@@ -44,3 +44,4 @@ Route::delete('/ambientes/{ambiente}', [AmbienteController::class, 'destroy'])->
 Route::post('/importar-ambientes', [AmbienteController::class, 'importar']);
 Route::get('/enviar-correo', [CorreoController::class, 'index']);
 Route::get('/enviar-correo-notificacion', [CorreoController::class, 'notificarCambioReglas']);
+Route::get('/agregar-regla', [AmbienteController::class, 'addRule']);
