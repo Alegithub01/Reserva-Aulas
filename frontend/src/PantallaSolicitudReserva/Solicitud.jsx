@@ -2,18 +2,19 @@ import Card from "../Utils/Card";
 import StyledText from "../StyledText";
 import { useTheme } from '../Contexts/ThemeContext';
 import { useEffect, useState } from "react";
-import TextInput from "../Utils/TextInput";
-import Dropdown from "../Utils/Dropdown";
-import SelectorMultiple from '../Utils/SelectorMultiple';
-import RowPercentage from "../Responsive/RowPercentage";
-import MensajeExito from "../Utils/MensajeExito";
-import EntradaFecha from "../Utils/EntradaFecha";
 import Button from "../Utils/Button";
 import CalendarioStore from "../Contexts/CalendarioStore"
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import FormularioIndividual from "./FormularioIndividual";
 import FormularioGrupal from "./FormularioGrupal";
+import { Tooltip, IconButton } from "@mui/material";
+import RuleIcon from '@mui/icons-material/Rule';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+
 
 const SolicitudMultiple = () => {
   const { theme } = useTheme();
@@ -40,7 +41,7 @@ const SolicitudMultiple = () => {
     hora: '',
   });
   const [modo, setModo] = useState('individual');
-
+  const [dialogoAbierto, setDialogoAbierto] = useState(false);
   function obtenerValorHora(horaBuscada, listaHoras) {
     for (const slot of listaHoras) {
       const inicioRango = slot.label.split('-')[0].trim();
@@ -50,6 +51,9 @@ const SolicitudMultiple = () => {
     }
     return null;
   }
+
+  /*---------------------***********************- Para Base de datos con lo de las reglas**********************************/
+  const infoDeLaBDReglas = "Reglas para solicitud de reserva de ambientes:\n" +"Mantener la limpieza y orden del ambiente. En caso de ser un laboratorio, registrar cada estudiante con la computadora asignada en la libreta."
   /*datos de prueba para los dropdowns */
   const cargarBDGruposIndividual = [
     { value: "1", label: "1" },
@@ -111,27 +115,13 @@ const SolicitudMultiple = () => {
   const cambiarModo = (event, newModo) => {
     setModo(newModo);
   }
-  const cambiarNombreDocente = (event, pattern) => {
-    const valor = event.target.value;
-    if (pattern && RegExp(pattern).test(valor)) {
-      setNombreDocente(valor);
-      setMensajeError(previo => ({ ...previo, nombreDocente: '' }));
-    }
-  }
 
-  const cambiarGrupoDocente = (event, pattern) => {
-    const valor = event.target.value;
-    if (pattern && RegExp(pattern).test(valor)) {
-      setGrupoDocente(valor);
-      setMensajeError(previo => ({ ...previo, grupoDocente: '' }));
-    }
-  }
   const validarGrupoDocente = () => {
     if (grupoDocente.length === 0) {
       setMensajeError(previo => ({ ...previo, grupoDocente: 'Seleccione un ambiente' }));
-    } else{
+    } else {
       setMensajeError(previo => ({ ...previo, grupoDocente: '' }));
-    
+
     }
   }
   const validarNombresDocentes = (index) => {
@@ -267,6 +257,11 @@ const SolicitudMultiple = () => {
       minWidth: '600px',
       minHeight: '450px',
     },
+    reglitas: {
+      position: 'absolute',
+      bottom: '80px',
+      left: '80px',
+    }
   };
 
   const valorDeHora = obtenerValorHora(horario, horas);
@@ -314,18 +309,33 @@ const SolicitudMultiple = () => {
               <ToggleButton value="individual" sx={{ width: '50%', fontWeight: 'bold', border: `2px solid`, color: theme.secondary }}>Individual</ToggleButton>
               <ToggleButton value="grupal" sx={{ width: '50%', fontWeight: 'bold', border: `2px solid`, color: theme.secondary }}>Grupal</ToggleButton>
             </ToggleButtonGroup>
-            {modo === 'individual' ? 
-            (
-              <FormularioIndividual 
-                aulaInicial={aulaInicial}
-                horaInicial={horaInicial}
+            {modo === 'individual' ?
+              (
+                <FormularioIndividual
+                  aulaInicial={aulaInicial}
+                  horaInicial={horaInicial}
                 />
-            ):(
-              <FormularioGrupal 
-                aulaInicial={aulaInicial}
-                horaInicial={horaInicial}
+              ) : (
+                <FormularioGrupal
+                  aulaInicial={aulaInicial}
+                  horaInicial={horaInicial}
                 />
-            )}
+              )}
+            <Dialog
+              open={dialogoAbierto}
+              onClose={()=>{setDialogoAbierto(false)}}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  {infoDeLaBDReglas}
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={()=>{setDialogoAbierto(false)}}>Entendido</Button>
+              </DialogActions>
+            </Dialog>
             <div
               style={{
                 height: "0%",
@@ -334,8 +344,16 @@ const SolicitudMultiple = () => {
                 alignItems: "center",
               }}
             ></div>
+            
           </div>
         </Card>
+      </div>
+      <div style={defaultStyle.reglitas}>
+        <Tooltip title="Reglas para solicitud">
+          <IconButton style={{ color: 'white', border: '2px solid white' }} size="large" onClick={()=>{setDialogoAbierto(true)}}>
+            <RuleIcon />
+          </IconButton>
+        </Tooltip>
       </div>
     </div>
   );
