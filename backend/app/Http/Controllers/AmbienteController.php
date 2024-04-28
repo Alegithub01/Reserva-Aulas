@@ -116,4 +116,14 @@ class AmbienteController extends Controller
     }
 
 
+    public function getRules()
+    {
+        // Obtener todas las reglas de la base de datos
+        $reglas = Regla::all();
+
+        // Devolver las reglas en formato JSON
+        return response()->json($reglas);
+    }
+
+
 }
