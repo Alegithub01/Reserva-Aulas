@@ -15,6 +15,10 @@ class DocenteSeeder extends Seeder
     public function run()
     {
         Docente::create([
+            "user_id"=> 1,
+        ]);
+
+        Docente::create([
             "user_id"=> 2,
         ]);
 
@@ -36,6 +40,18 @@ class DocenteSeeder extends Seeder
 
         Docente::create([
             "user_id"=> 7,
+        ]);
+
+        Docente::create([
+            "user_id"=> 8,
+        ]);
+
+        Docente::create([
+            "user_id"=> 9,
+        ]);
+
+        Docente::create([
+            "user_id"=> 10,
         ]);
     }
 }
