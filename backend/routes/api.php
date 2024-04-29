@@ -41,3 +41,4 @@ Route::get('/ambientes/{ambiente}', [AmbienteController::class, 'show'])->name('
 Route::put('/ambientes/{ambiente}', [AmbienteController::class, 'update'])->name('ambientes.update');
 Route::delete('/ambientes/{ambiente}', [AmbienteController::class, 'destroy'])->name('ambientes.destroy');
 Route::post('/importar-ambientes', [AmbienteController::class, 'importar']);
+Route::post('/ambientes-filtrar', [AmbienteController::class, 'filtrar']);

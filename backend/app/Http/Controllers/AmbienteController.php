@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Ambiente;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+
 
 class AmbienteController extends Controller
 {
@@ -92,4 +94,46 @@ class AmbienteController extends Controller
 
         return response()->json(['message' => 'Los ambientes se importaron correctamente'], 200);
     }
+
+    #filtros 
+    public function filtrar(Request $request)
+    {
+        Log::debug('Datos recibidos en la solicitud: ' . json_encode($request->all()));
+
+        $query = Ambiente::query();
+
+        // Verificar si se ha proporcionado el filtro por capacidad y si no es nulo
+        if ($request->filled('capacidad')) {
+            $capacidad = (int)$request->capacidad;
+            $query->where('capacidad', '>=', $capacidad);
+        }
+
+        // Verificar si se ha proporcionado el filtro por tipo
+        if ($request->has('tipo')) {
+            $query->where('tipo', $request->tipo);
+        }
+
+        if ($request->has('servicios')) {
+        $servicios = $request->servicios;
+        $query->where(function($q) use ($servicios) {
+            $q->whereIn('servicios', explode(',', $servicios));
+        });
+    }
+
+        // Verificar si se ha proporcionado el filtro por día
+        if ($request->has('dia')) {
+            $query->where('dia', $request->dia);
+        }
+
+        //Verificar si se ha proporcionado el filtro por hora 
+        if ($request->has('horas')) {
+            $horas = $request->horas;
+            $query->whereRaw("jsonb_exists_any(horas::jsonb, ARRAY['$horas'])");
+        }
+
+        $resultados = $query->get();
+        Log::debug('Resultado de la consulta: ' . $resultados->toJson());
+        return response()->json($resultados);
+    }
+
 }

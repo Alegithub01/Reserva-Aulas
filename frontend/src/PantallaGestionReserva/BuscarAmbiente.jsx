@@ -20,8 +20,6 @@ const informacion = [
   { id: 6, nombre: "693C", capacidad: 125, tipo: "Auditorio", planta: "3", servicios: 'Data display', fecha: "2024-04-19", horario: "12:45-14:15"},
   { id: 7, nombre: "693A", capacidad: 125, tipo: "Auditorio", planta: "3", servicios: 'compu' ,fecha: "2024-04-19", horario: "12:45-14:15"},
 ];
-//PARA BACKEND -----------------*********************************-----------------------------------------
-//acá cambiar informacion por datos cargados reales de los ambientes, no importa si tienen más atributos
 
 const tipos =[
   {value: "10", label: "Aula"},
