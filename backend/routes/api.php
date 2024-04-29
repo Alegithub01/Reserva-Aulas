@@ -46,3 +46,4 @@ Route::get('/enviar-correo', [CorreoController::class, 'index']);
 Route::get('/enviar-correo-notificacion', [CorreoController::class, 'notificarCambioReglas']);
 Route::post('/agregar-regla', [AmbienteController::class, 'addRule']);
 Route::get('/reglas', [AmbienteController::class, 'getRules']);
+Route::post('/ambientes-filtrar', [AmbienteController::class, 'filtrar']);

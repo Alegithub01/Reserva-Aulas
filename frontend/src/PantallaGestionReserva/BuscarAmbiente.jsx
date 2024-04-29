@@ -11,18 +11,6 @@ import { IconButton } from "@mui/material";
 import axios from 'axios';
 import EntradaFecha from "../Utils/EntradaFecha";
 
-const informacion = [
-  { id: 1, nombre: "691A", capacidad: 100, tipo: "Aula", planta: "1", servicios: 'Data display', fecha: "2024-10-10", horario: "06:45-08:15" },
-  { id: 2, nombre: "691B", capacidad: 110, tipo: "Aula", planta: "1", servicios: 'Data display', fecha: "2024-10-12", horario: "09:45-11:15" },
-  { id: 3, nombre: "691C", capacidad: 90, tipo: "Aula", planta: "1", servicios: 'Data display',  fecha: "2024-04-19", horario: "12:45-14:15" },
-  { id: 4, nombre: "692A", capacidad: 120, tipo: "Aula", planta: "2", servicios: 'Data display', fecha: "2024-04-19", horario: "12:45-14:15"},
-  { id: 5, nombre: "692B", capacidad: 125, tipo: "Aula", planta: "2", servicios: 'Data display', fecha: "2024-04-19", horario: "12:45-14:15"},
-  { id: 6, nombre: "693C", capacidad: 125, tipo: "Auditorio", planta: "3", servicios: 'Data display', fecha: "2024-04-19", horario: "12:45-14:15"},
-  { id: 7, nombre: "693A", capacidad: 125, tipo: "Auditorio", planta: "3", servicios: 'compu' ,fecha: "2024-04-19", horario: "12:45-14:15"},
-];
-//PARA BACKEND -----------------*********************************-----------------------------------------
-//acá cambiar informacion por datos cargados reales de los ambientes, no importa si tienen más atributos
-
 const tipos =[
   {value: "10", label: "Aula"},
   {value: "20", label: "Auditorio"},
@@ -51,42 +39,49 @@ const BusquedaAmbiente = () => {
   const [mensajeError, cambiarMensajeError] = useState({ capacidad: "" });
   const { theme } = useTheme();
   const [informacionFinal, setInformacionFinal] = useState([]);
-  let informacionAuxi = informacion;
-  let tipoFinal = "";
-  let horarioLabel = "";
+  const [loading, setLoading] = useState(true); // Nuevo estado para indicar si se están cargando los datos
 
-  const funciona = () => {
-    if (filtroFecha === "" && filtroHorario.trim() ==""
-    &&    filtroCapacidad.trim() === "" && filtroTipo.trim() === "" && filtroServicios.trim() === "") {
-      return;
-    }else{
-      console.log(filtroHorario, "llegamos");
-      tipoFinal = tipos.filter((tipo => tipo.value === filtroTipo));
-      horarioLabel = opcionesHorario.filter((horario => horario.value === filtroHorario));
+  const funciona = async () => {
+    try {
+      setLoading(true); // Indica que se está realizando la búsqueda
+      const response = await axios.post('http://localhost:8000/api/ambientes-filtrar');
+      const data = response.data;
 
-      if(filtroFecha.trim() !== ""){
-        informacionAuxi = (informacionAuxi.filter((ambiente) => ambiente.fecha === filtroFecha));
+      // Filtrar los datos obtenidos según los criterios de búsqueda
+      let informacionAuxi = [...data];
+      let tipoFinal = "";
+      let horarioLabel = "";
+
+      if (filtroFecha.trim() !== "") {
+        informacionAuxi = informacionAuxi.filter((ambiente) => ambiente.fecha === filtroFecha);
       }
 
-      if(filtroHorario.trim() !== ""){
-        informacionAuxi = (informacionAuxi.filter((ambiente) => ambiente.horario === horarioLabel[0].label));
+      if (filtroHorario.trim() !== "") {
+        horarioLabel = opcionesHorario.filter((horario) => horario.value === filtroHorario);
+        informacionAuxi = informacionAuxi.filter((ambiente) => ambiente.horario === horarioLabel[0].label);
       }
+
       if (filtroCapacidad.trim() !== "") {
-        informacionAuxi = (informacionAuxi.filter((ambiente) => ambiente.capacidad >= filtroCapacidad));
-      }
-      
-      if(filtroTipo.trim() !== ""){
-        informacionAuxi = (informacionAuxi.filter((ambiente) => ambiente.tipo === tipoFinal[0].label));
+        informacionAuxi = informacionAuxi.filter((ambiente) => ambiente.capacidad >= filtroCapacidad);
       }
 
-      if(filtroServicios.trim() !== ""){
-        informacionAuxi = (informacionAuxi.filter((ambiente) => ambiente.servicios.includes(filtroServicios)));
+      if (filtroTipo.trim() !== "") {
+        tipoFinal = tipos.filter((tipo) => tipo.value === filtroTipo);
+        informacionAuxi = informacionAuxi.filter((ambiente) => ambiente.tipo === tipoFinal[0].label);
+      }
+
+      if (filtroServicios.trim() !== "") {
+        informacionAuxi = informacionAuxi.filter((ambiente) => ambiente.servicios.includes(filtroServicios));
       }
 
       setInformacionFinal(informacionAuxi);
+      setLoading(false); // Indica que la búsqueda ha finalizado
+    } catch (error) {
+      console.error('Error al obtener y filtrar ambientes:', error);
+      setLoading(false); // Indica que la búsqueda ha finalizado incluso si ocurrió un error
     }
-  }
-
+  };
+  
   const manejarCambioCapacidad = (event, pattern) => {
     const valor = event.target.value;
     if (pattern && RegExp(pattern).test(valor)) {

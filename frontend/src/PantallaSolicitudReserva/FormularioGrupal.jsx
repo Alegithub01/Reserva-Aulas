@@ -249,11 +249,11 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
       </div>
       <div>
         <SelectorMultiple
-          etiqueta="Ambiente posible"
+          etiqueta="Ambiente"
           opciones={cargarBDAmbiente}
           cambio={setAmbiente}
           llenado={validarSeleccionAmbiente}
-          mensajeValidacion={mensajeError.ambiente}
+          mensajeValidacion=""
           valorSeleccionado={ambiente}
           valorInicial={aulaInicial}
         />
