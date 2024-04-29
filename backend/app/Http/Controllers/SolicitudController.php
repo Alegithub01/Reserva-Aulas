@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Solicitud;
+use App\Models\User;
+
+
 
 class SolicitudController extends Controller
 {
@@ -15,18 +18,27 @@ class SolicitudController extends Controller
 
     public function store(Request $request)
     {
-        $solicitud = new Solicitud();
-        $solicitud->user_id = $request->user_id;
-        $solicitud->grupo = json_encode($request->grupo);
-        $solicitud->ambiente_id = $request->ambiente_id;
-        $solicitud->materia = $request->materia;
-        $solicitud->horas = json_encode($request->horas);
-        $solicitud->servicios = $request->servicios;
-        $solicitud->detalle = $request->detalle;
-        $solicitud->fecha = $request->fecha;
-        $solicitud->save();
+        // Buscar el usuario por su nombre
+        $usuario = User::where('nombres', $request->nombre_usuario)->first();
+        
 
-        return response()->json($solicitud, 201);
+        // Verificar si el usuario existe
+        if ($usuario) {
+            $solicitud = new Solicitud();
+            $solicitud->user_id = $usuario->id; // Asignar el ID del usuario encontrado
+            $solicitud->grupo = $request->servicios;
+            $solicitud->ambiente = json_encode($request->ambiente);
+            $solicitud->materia = $request->materia;
+            $solicitud->horas = json_encode($request->horas);
+            $solicitud->servicios = $request->servicios;
+            $solicitud->detalle = $request->detalle;
+            $solicitud->fecha = $request->fecha;
+            $solicitud->save();
+
+            return response()->json($solicitud, 201);
+        } else {
+            return response()->json(['error' => 'Usuario no encontrado'], 404);
+        }
     }
 
     public function show($id)
@@ -39,8 +51,8 @@ class SolicitudController extends Controller
     {
         $solicitud = Solicitud::findOrFail($id);
         $solicitud->user_id = $request->user_id;
-        $solicitud->grupo = json_encode($request->grupo);
-        $solicitud->ambiente_id = $request->ambiente_id;
+        $solicitud->grupo = $request->grupo;
+        $solicitud->ambiente = json_encode($request->ambiente);
         $solicitud->materia = $request->materia;
         $solicitud->horas = json_encode($request->horas);
         $solicitud->servicios = $request->servicios;

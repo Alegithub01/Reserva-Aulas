@@ -11,7 +11,7 @@ class Solicitud extends Model
     protected $fillable = [
         'user_id', 
         'grupo', 
-        'ambiente_id', 
+        'ambiente', 
         'materia', 
         'horas', 
         'servicios', 

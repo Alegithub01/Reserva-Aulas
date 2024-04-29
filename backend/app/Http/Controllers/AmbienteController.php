@@ -92,4 +92,21 @@ class AmbienteController extends Controller
 
         return response()->json(['message' => 'Los ambientes se importaron correctamente'], 200);
     }
+
+    public function obtenerIdPorNombre(Request $request)
+    {
+        $nombreAmbiente = $request->input('nombre');
+
+        
+        $ambiente = Ambiente::where('nombre', $nombreAmbiente)->first();
+
+        if ($ambiente) {
+            
+            return response()->json(['id' => $ambiente->id], 200);
+        } else {
+            
+            return response()->json(['error' => 'Ambiente no encontrado'], 404);
+        }
+    }
+
 }

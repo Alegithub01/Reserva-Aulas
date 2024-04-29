@@ -16,8 +16,8 @@ class CreateSolicitud extends Migration
         Schema::create('solicitud', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->json('grupo');
-            $table->unsignedBigInteger('ambiente_id');
+            $table->string('grupo');
+            $table->json('ambiente');
             $table->string('materia');
             $table->json('horas');
             $table->string('servicios')->nullable();
@@ -27,8 +27,8 @@ class CreateSolicitud extends Migration
     
             // Definición de las claves foráneas
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('ambiente_id')->references('id')->on('ambientes');
-            //$table->foreign('materia_id')->references('id')->on('materia');
+            
+            
        
         });
     }

@@ -6,17 +6,18 @@ import RowPercentage from "../Responsive/RowPercentage";
 import MensajeExito from "../Utils/MensajeExito";
 import EntradaFecha from "../Utils/EntradaFecha";
 import Button from "../Utils/Button";
-import CalendarioStore from "../Contexts/CalendarioStore"
+import CalendarioStore from "../Contexts/CalendarioStore";
+import axios from 'axios';
 
 const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   const { aula, dia, horario } = CalendarioStore();
   const [materia, setMateria] = useState('');
-  const [nombreDocente, setNombreDocente] = useState('Tatiana Aparicio Yuja'); //nombre del docente loggeado
+  const [nombreDocente, setNombreDocente] = useState('user'); //nombre del docente loggeado
   const [grupoDocente, setGrupoDocente] = useState(''); //grupo del docente loggeado
   const [capacidad, setCapacidad] = useState(0); //capacidad del aula
   const [ambiente, setAmbiente] = useState([]);
   const [fecha, setFecha] = useState('');
-  const [hora, setHora] = useState('');
+  const [hora, setHora] = useState([]);
   const [serviciosSolicitados, setServiciosSolicitados] = useState('');
   const [detalles, setDetalles] = useState('');
   const [abrirDialogo, cambiarAbrirDialogo] = useState(false);
@@ -130,20 +131,40 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
     }
   };
 
-  const validarTodo = () => {
+  const validarTodo = async () => {
     validarSeleccionMateria();
     validarGrupoDocente();
     validarFecha();
     validarSeleccionHora();
     if (materia !== '' && fecha !== '' && hora.length !== 0 && ambiente !== '' && grupoDocente !== '') {
       console.log("Solicitud enviada");
+      
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/api/solicitudes', {
+          nombre_usuario: nombreDocente,
+          grupo: grupoDocente, 
+          nombre_ambiente: ambiente,
+          materia: materia, 
+          horas: hora,
+          servicios: serviciosSolicitados, 
+          detalle: detalles,
+          fecha: fecha,
+        });
+        console.log(response.data);
+        cambiarAbrirDialogo(true);
+      } catch (error) {
+        console.error('Error al registrar ambiente:', error);
+      }
+  
       cambiarAbrirDialogo(true);
     } else {
       cambiarAbrirDialogo(false);
       console.log("Error en la solicitud");
     }
   }
+  
 
+  
   useEffect(() => {
     let capacidadTotal = 0;
     const lengthRecorrer = grupoDocente.length;

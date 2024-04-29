@@ -45,6 +45,9 @@ Route::put('/ambientes/{ambiente}', [AmbienteController::class, 'update'])->name
 Route::delete('/ambientes/{ambiente}', [AmbienteController::class, 'destroy'])->name('ambientes.destroy');
 Route::post('/importar-ambientes', [AmbienteController::class, 'importar']);
 
+Route::post('/ambientes/obtener-id-por-nombre', [AmbienteController::class, 'obtenerIdPorNombre'])->name('ambientes.obtenerIdPorNombre');
+
+
 //Rutas de las solicitudes
 
 Route::get('/solicitudes', [SolicitudController::class, 'index'])->name('solicitudes.index');
