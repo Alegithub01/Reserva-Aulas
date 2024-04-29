@@ -15,7 +15,7 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   const [nombreDocente, setNombreDocente] = useState('user'); //nombre del docente loggeado
   const [grupoDocente, setGrupoDocente] = useState(''); //grupo del docente loggeado
   const [capacidad, setCapacidad] = useState(0); //capacidad del aula
-  const [ambiente, setAmbiente] = useState([]);
+  const [ambiente, setAmbiente] = useState('');
   const [fecha, setFecha] = useState('');
   const [hora, setHora] = useState([]);
   const [serviciosSolicitados, setServiciosSolicitados] = useState('');
