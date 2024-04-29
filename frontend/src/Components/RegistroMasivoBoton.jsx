@@ -54,51 +54,52 @@ const RegistroMasivoBoton = () => {
   }
 
   const manejoDocumentoSubido = () => {
-  if (documento) {
-    const leerArchivo = new FileReader();
-    leerArchivo.onload = (e) => {
-      const texto = e.target.result;
-      if (texto.includes('horas', 'dia', 'servicios', 'ubicacion', 'planta', 'tipo', 'capacidad', 'nombre')) {
-        const lineas = texto.split('\n').slice(1);
-        const registros = lineas.map((linea) => {
-          let campos = linea.split(',');
-          if (campos.length > 8) {
-            campos[7] = campos.slice(7).join(',');
-            campos = campos.slice(0, 8);
-          }
-          campos[7] = campos[7] ? campos[7].split(',') : []; 
-          campos[7] = campos[7].map((hora) => hora.replace(/^\"|\"\r$/g, '')); 
-          return {
-            nombre: campos[0],
-            capacidad: parseInt(campos[1]),
-            tipo: campos[2],
-            planta: campos[3],
-            ubicacion: campos[4],
-            servicios: campos[5],
-            dia: campos[6],
-            horas: campos[7],
-          };
-        });
-
-        console.log(registros);
-        localStorage.setItem('registros', JSON.stringify(registros));
-
-        
-        enviarDatosAlBackend({ registros });
-
-        setDatosJson(registros);
-        setDetallesArchivo((detalles) => ({ ...detalles, registros: registros.length }));
-
-        cambiarMostrarMensaje(false);
-      } else {
-        cambiarMostrarMensaje(true);
-      }
-    };
-    leerArchivo.readAsText(documento);
-  } else {
-    cambiarMostrarMensaje(true);
-  }
-};
+    if (documento) {
+      const leerArchivo = new FileReader();
+      leerArchivo.onload = (e) => {
+        const texto = e.target.result;
+        if (texto.includes('horas', 'dia', 'servicios', 'ubicacion', 'planta', 'tipo', 'capacidad', 'nombre')) {
+          const lineas = texto.split('\n').slice(1);
+          const registros = lineas.map((linea) => {
+            let campos = linea.split(',');
+            if (campos.length > 8) {
+              campos[7] = campos.slice(7).join(',');
+              campos = campos.slice(0, 8);
+            }
+            campos[7] = campos[7] ? campos[7].split(',') : []; 
+            campos[7] = campos[7].map((hora) => hora.replace(/^\"|\"\r$/g, '')); 
+            return {
+              nombre: campos[0],
+              capacidad: parseInt(campos[1]),
+              tipo: campos[2],
+              planta: campos[3],
+              ubicacion: campos[4],
+              servicios: campos[5],
+              dia: campos[6],
+              horas: campos[7],
+            };
+          });
+  
+          console.log(registros);
+          localStorage.setItem('registros', JSON.stringify(registros));
+  
+          
+          enviarDatosAlBackend({ registros });
+  
+          setDatosJson(registros);
+          setDetallesArchivo((detalles) => ({ ...detalles, registros: registros.length }));
+  
+          cambiarMostrarMensaje(false);
+        } else {
+          cambiarMostrarMensaje(true);
+        }
+      };
+      leerArchivo.readAsText(documento);
+    } else {
+      cambiarMostrarMensaje(true);
+    }
+  };
+  
   
 
   const manejoCancelacion = () => {
