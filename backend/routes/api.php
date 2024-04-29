@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HelloController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AmbienteController;
+use App\Http\Controllers\CorreoController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -41,4 +42,8 @@ Route::get('/ambientes/{ambiente}', [AmbienteController::class, 'show'])->name('
 Route::put('/ambientes/{ambiente}', [AmbienteController::class, 'update'])->name('ambientes.update');
 Route::delete('/ambientes/{ambiente}', [AmbienteController::class, 'destroy'])->name('ambientes.destroy');
 Route::post('/importar-ambientes', [AmbienteController::class, 'importar']);
+Route::get('/enviar-correo', [CorreoController::class, 'index']);
+Route::get('/enviar-correo-notificacion', [CorreoController::class, 'notificarCambioReglas']);
+Route::post('/agregar-regla', [AmbienteController::class, 'addRule']);
+Route::get('/reglas', [AmbienteController::class, 'getRules']);
 Route::post('/ambientes-filtrar', [AmbienteController::class, 'filtrar']);
