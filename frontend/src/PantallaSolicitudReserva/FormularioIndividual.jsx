@@ -12,7 +12,7 @@ import axios from 'axios';
 const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   const { aula, dia, horario } = CalendarioStore();
   const [materia, setMateria] = useState('');
-  const [nombreDocente, setNombreDocente] = useState('user'); //nombre del docente loggeado
+  const [nombreDocente, setNombreDocente] = useState('prueba'); //nombre del docente loggeado
   const [grupoDocente, setGrupoDocente] = useState(''); //grupo del docente loggeado
   const [capacidad, setCapacidad] = useState(0); //capacidad del aula
   const [ambiente, setAmbiente] = useState([]);
@@ -63,7 +63,7 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
     { value: "70", label: "15:45-17:15" },
     { value: "80", label: "17:15-18:45" },
     { value: "90", label: "18:45-20:15" },
-    { value: "100", label: "20:30-21:45" },
+    { value: "20:30-21:45", label: "20:30-21:45" },
   ];
 
   const cambiarNombreDocente = (event, pattern) => {
@@ -132,6 +132,7 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   };
 
   const validarTodo = async () => {
+    console.log("materia",materia,"grupo", grupoDocente, "ambiente",ambiente, "fecha",fecha, "hora",hora, "services",serviciosSolicitados,"detalles", detalles);
     validarSeleccionMateria();
     validarGrupoDocente();
     validarFecha();
@@ -143,7 +144,7 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
         const response = await axios.post('http://127.0.0.1:8000/api/solicitudes', {
           nombre_usuario: nombreDocente,
           grupo: grupoDocente, 
-          nombre_ambiente: ambiente,
+          ambiente: ambiente,
           materia: materia, 
           horas: hora,
           servicios: serviciosSolicitados, 

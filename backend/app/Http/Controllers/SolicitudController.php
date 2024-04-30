@@ -26,7 +26,7 @@ class SolicitudController extends Controller
         if ($usuario) {
             $solicitud = new Solicitud();
             $solicitud->user_id = $usuario->id; // Asignar el ID del usuario encontrado
-            $solicitud->grupo = $request->servicios;
+            $solicitud->grupo = $request->grupo;
             $solicitud->ambiente = json_encode($request->ambiente);
             $solicitud->materia = $request->materia;
             $solicitud->horas = json_encode($request->horas);
