@@ -73,7 +73,7 @@ const AdminHomeModule2 = () => {
     { value: "70", label: "15:45-17:15" },
     { value: "80", label: "17:15-18:45" },
     { value: "90", label: "18:45-20:15" },
-    { value: "100", label: "20:30-21:45" },
+    { value: "100", label: "20:15-21:45" },
   ];
 
   const dias = [
