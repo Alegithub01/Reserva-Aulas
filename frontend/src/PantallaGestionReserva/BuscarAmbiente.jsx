@@ -18,24 +18,24 @@ const tipos =[
 ];
 
 const opcionesHorario = [
-  { value: "10", label: "06:45-08:15" },
-  { value: "20", label: "08:15-09:45" },
-  { value: "30", label: "09:45-11:15" },
-  { value: "40", label: "11:15-12:45" },
-  { value: "50", label: "12:45-14:15" },
-  { value: "60", label: "14:15-15:45" },
-  { value: "70", label: "15:45-17:15" },
-  { value: "80", label: "17:15-18:45" },
-  { value: "90", label: "18:45-20:15" },
-  { value: "100", label: "20:30-21:45" },
+  { value: "06:45-08:15", label: "06:45-08:15" },
+  { value: "08:15-09:45", label: "08:15-09:45" },
+  { value: "09:45-11:15", label: "09:45-11:15" },
+  { value: "11:15-12:45", label: "11:15-12:45" },
+  { value: "12:45-14:15", label: "12:45-14:15" },
+  { value: "14:15-15:45", label: "14:15-15:45" },
+  { value: "15:45-17:15", label: "15:45-17:15" },
+  { value: "17:15-18:45", label: "17:15-18:45" },
+  { value: "18:45-20:15", label: "18:45-20:15" },
+  { value: "20:30-21:45", label: "20:30-21:45" },
 ];
 
 const BusquedaAmbiente = () => {
   const [filtroFecha, setFiltroFecha] = useState("");
-  const [filtroHorario, setFiltroHorario] = useState('');
-  const [filtroCapacidad, setFiltroCapacidad] = useState('');
-  const [filtroTipo, setFiltroTipo] = useState('');
-  const [filtroServicios, setFiltroServicios] = useState('');
+  const [filtroHorario, setFiltroHorario] = useState("");
+  const [filtroCapacidad, setFiltroCapacidad] = useState("");
+  const [filtroTipo, setFiltroTipo] = useState("");
+  const [filtroServicios, setFiltroServicios] = useState("");
   const [mensajeError, cambiarMensajeError] = useState({ capacidad: "" });
   const { theme } = useTheme();
   const [informacionFinal, setInformacionFinal] = useState([]);
@@ -44,41 +44,62 @@ const BusquedaAmbiente = () => {
   const funciona = async () => {
     try {
       setLoading(true); // Indica que se está realizando la búsqueda
-      const response = await axios.post('http://localhost:8000/api/ambientes-filtrar');
-      const data = response.data;
-
-      // Filtrar los datos obtenidos según los criterios de búsqueda
-      let informacionAuxi = [...data];
-      let tipoFinal = "";
-      let horarioLabel = "";
+      // Construir el objeto de filtro
+      const filtro = {};
+  
+      // Verificar y añadir capacidad al filtro
+      if (filtroCapacidad.trim() !== "") {
+        filtro.capacidad = filtroCapacidad;
+      }
+  
+      // Verificar y añadir tipo al filtro
+      if (filtroTipo.trim() !== "") {
+        filtro.tipo = filtroTipo;
+      }
+  
+      // Verificar y añadir horas al filtro
+      if (filtroHorario.trim() !== "") {
+        filtro.horas = filtroHorario;
+      }
+  
+      // Verificar y añadir servicios al filtro
+      if (filtroServicios.trim() !== "") {
+        filtro.servicios = filtroServicios;
+      }
 
       if (filtroFecha.trim() !== "") {
-        informacionAuxi = informacionAuxi.filter((ambiente) => ambiente.fecha === filtroFecha);
+        const diaSemana = obtenerDiaSemana(filtroFecha);
+        filtro.dia = diaSemana;
       }
-
-      if (filtroHorario.trim() !== "") {
-        horarioLabel = opcionesHorario.filter((horario) => horario.value === filtroHorario);
-        informacionAuxi = informacionAuxi.filter((ambiente) => ambiente.horario === horarioLabel[0].label);
+  
+      // Verificar si no se ha ingresado ningún filtro
+      if (Object.keys(filtro).length === 0) {
+        // Mostrar un mensaje de error o simplemente retornar sin hacer nada
+        console.error("Debe ingresar al menos un filtro");
+        setLoading(false); // Indicar que la búsqueda ha finalizado
+        return;
       }
+  
+      console.log("Datos enviados a la solicitud:", filtro);
+  
+      // Realizar la solicitud al backend con el filtro
+      const response = await axios.post('http://localhost:8000/api/ambientes-filtrar', filtro);
+      const data = response.data;
+      
+      // Agregar la fecha y la hora a los datos obtenidos
+      const dataConFechaHora = data.map(ambiente => ({
+        ...ambiente,
+        horario: filtroHorario,
+        fecha: filtroFecha,
+        
+      }));
 
-      if (filtroCapacidad.trim() !== "") {
-        informacionAuxi = informacionAuxi.filter((ambiente) => ambiente.capacidad >= filtroCapacidad);
-      }
-
-      if (filtroTipo.trim() !== "") {
-        tipoFinal = tipos.filter((tipo) => tipo.value === filtroTipo);
-        informacionAuxi = informacionAuxi.filter((ambiente) => ambiente.tipo === tipoFinal[0].label);
-      }
-
-      if (filtroServicios.trim() !== "") {
-        informacionAuxi = informacionAuxi.filter((ambiente) => ambiente.servicios.includes(filtroServicios));
-      }
-
-      setInformacionFinal(informacionAuxi);
-      setLoading(false); // Indica que la búsqueda ha finalizado
+      // Actualizar el estado con los datos obtenidos
+      setInformacionFinal(dataConFechaHora);
+      setLoading(false); // Indicar que la búsqueda ha finalizado
     } catch (error) {
       console.error('Error al obtener y filtrar ambientes:', error);
-      setLoading(false); // Indica que la búsqueda ha finalizado incluso si ocurrió un error
+      setLoading(false); // Indicar que la búsqueda ha finalizado incluso si ocurrió un error
     }
   };
   
@@ -100,9 +121,9 @@ const BusquedaAmbiente = () => {
   }
 
   const ambientes = [
-    { value: "10", label: "Aula" },
-    { value: "20", label: "Auditorio" },
-    { value: "30", label: "Laboratorio" },
+    { value: "Aula", label: "Aula" },
+    { value: "Auditorio", label: "Auditorio" },
+    { value: "Laboratorio", label: "Laboratorio" },
   ];
   const defaultStyle = {
     outerContainer: {
@@ -125,6 +146,14 @@ const BusquedaAmbiente = () => {
       alignItems: 'center',
     }
   };
+
+  const obtenerDiaSemana = (fecha) => {
+    const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const fechaObj = new Date(fecha);
+    const diaSemana = fechaObj.getDay();
+    return diasSemana[diaSemana];
+  };
+
   return (
     <div style={defaultStyle.outerContainer}>
       <div style={defaultStyle.container}>
