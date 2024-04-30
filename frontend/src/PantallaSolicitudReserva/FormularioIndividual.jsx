@@ -265,12 +265,12 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
       </RowPercentage>
       <TextInput
         label="Detalles de Solicitud"
-        pattern='^[A-Za-z0-9, ]{0,50}$'
+        pattern='^.{0,200}$'
         onChange={(event) => setDetalles(event.target.value)}
       />
       <TextInput
         label="Servicios solicitados"
-        pattern='^[A-Za-z0-9, ]{0,50}$'
+        pattern='^.{0,50}$'
         onChange={(event) => setServiciosSolicitados(event.target.value)}
       />
       <MensajeExito
