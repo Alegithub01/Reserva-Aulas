@@ -67,10 +67,19 @@ const BusquedaAmbiente = () => {
         filtro.servicios = filtroServicios;
       }
 
+      let diaSemana;
+      let fechaAux;
       if (filtroFecha.trim() !== "") {
-        const diaSemana = obtenerDiaSemana(filtroFecha);
-        filtro.dia = diaSemana;
+        diaSemana = obtenerDiaSemana(filtroFecha);
+        fechaAux = filtroFecha;
+      } else {
+        const fechaActual = new Date();
+        const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        const diaActual = fechaActual.getDay();
+        diaSemana = diasSemana[diaActual];
+        fechaAux = fechaActual.toISOString().split('T')[0];
       }
+      filtro.dia = diaSemana;
   
       // Verificar si no se ha ingresado ningún filtro
       if (Object.keys(filtro).length === 0) {
@@ -90,7 +99,7 @@ const BusquedaAmbiente = () => {
       const dataConFechaHora = data.map(ambiente => ({
         ...ambiente,
         horario: filtroHorario,
-        fecha: filtroFecha,
+        fecha: fechaAux,
         
       }));
 
