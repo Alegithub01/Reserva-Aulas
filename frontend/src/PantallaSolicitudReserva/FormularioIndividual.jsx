@@ -54,16 +54,16 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   ];    //convertir info de ambientes en este diccionario (solo nombres de ambientes)
   /* */
   const horas = [
-    { value: "10", label: "06:45-08:15" },
-    { value: "20", label: "08:15-09:45" },
-    { value: "30", label: "09:45-11:15" },
-    { value: "40", label: "11:15-12:45" },
-    { value: "50", label: "12:45-14:15" },
-    { value: "60", label: "14:15-15:45" },
-    { value: "70", label: "15:45-17:15" },
-    { value: "80", label: "17:15-18:45" },
-    { value: "90", label: "18:45-20:15" },
-    { value: "20:30-21:45", label: "20:30-21:45" },
+    { value: "06:45-08:15", label: "06:45-08:15" },
+    { value: "08:15-09:45", label: "08:15-09:45" },
+    { value: "09:45-11:15", label: "09:45-11:15" },
+    { value: "11:15-12:45", label: "11:15-12:45" },
+    { value: "12:45-14:15", label: "12:45-14:15" },
+    { value: "14:15-15:45", label: "14:15-15:45" },
+    { value: "15:45-17:15", label: "15:45-17:15" },
+    { value: "17:15-18:45", label: "17:15-18:45" },
+    { value: "18:45-20:15", label: "18:45-20:15" },
+    { value: "20:15-21:45", label: "20:15-21:45" },
   ];
 
   const cambiarNombreDocente = (event, pattern) => {
@@ -101,9 +101,9 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
     } else {
       const horaOrdenada = hora.sort();
       for (let i = 1; i < horaOrdenada.length; i++) {
-        const before = parseInt(horaOrdenada[i - 1]);
-        const current = parseInt(horaOrdenada[i]);
-        if (before !== current - 10) {
+        const before = horaOrdenada[i - 1];
+        const current = horaOrdenada[i];
+        if (before.slice(6,11) !== current.slice(0,5)) {
           setMensajeError(previo => ({ ...previo, hora: 'Seleccione periodos de hora consecutivos' }));
           break;
         } else {
@@ -284,3 +284,5 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
 }
 
 export default FormularioIndividual;
+
+//"{"nombre_usuario":"prueba","grupo":["2"],"ambiente":[],"materia":1,"horas":["20"],"servicios":"","detalle":"","fecha":"2024-05-10"}"
