@@ -257,7 +257,7 @@ export default function GridTablaCrud() {
       headerName: 'Horas',
       width: 280,
       editable: true,
-      valueOptions: ["06:45-08:15", "08:30-09:45", "10:00-11:15", "11:30-12:45", "13:00-14:15", "14:30-15:45", "16:00-17:15", "17:30-18:45", "19:00-20:15", "20:30-21:45"],
+      valueOptions: ["06:45-08:15", "08:30-09:45", "10:00-11:15", "11:30-12:45", "13:00-14:15", "14:30-15:45", "16:00-17:15", "17:30-18:45", "19:00-20:15", "20:15-21:45"],
       valueFormatter: (params) => {
         // Verificar si 'params.value' es un array
         if (Array.isArray(params.value)) {
