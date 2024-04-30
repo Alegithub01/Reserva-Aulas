@@ -26,8 +26,8 @@ class SolicitudController extends Controller
         if ($usuario) {
             $solicitud = new Solicitud();
             $solicitud->user_id = $usuario->id; // Asignar el ID del usuario encontrado
-            $solicitud->grupo = $request->servicios;
-            $solicitud->ambiente = json_encode($request->ambiente);
+            $solicitud->grupo = json_encode($request->grupo);
+            $solicitud->nombre_ambiente = json_encode($request->nombre_ambiente);
             $solicitud->materia = $request->materia;
             $solicitud->horas = json_encode($request->horas);
             $solicitud->servicios = $request->servicios;
@@ -51,8 +51,8 @@ class SolicitudController extends Controller
     {
         $solicitud = Solicitud::findOrFail($id);
         $solicitud->user_id = $request->user_id;
-        $solicitud->grupo = $request->grupo;
-        $solicitud->ambiente = json_encode($request->ambiente);
+        $solicitud->grupo = json_encode($request->grupo);
+        $solicitud->nombre_ambiente = json_encode($request->nombre_ambiente);
         $solicitud->materia = $request->materia;
         $solicitud->horas = json_encode($request->horas);
         $solicitud->servicios = $request->servicios;

@@ -16,8 +16,8 @@ class CreateSolicitud extends Migration
         Schema::create('solicitud', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('grupo');
-            $table->json('ambiente');
+            $table->json('grupo');
+            $table->json('nombre_ambiente');
             $table->string('materia');
             $table->json('horas');
             $table->string('servicios')->nullable();

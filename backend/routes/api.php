@@ -7,6 +7,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AmbienteController;
 use App\Http\Controllers\CorreoController;
 use App\Http\Controllers\SolicitudController;
+use App\Http\Controllers\MateriaDocenteController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +40,10 @@ Route::group ([
     Route::get('dummyy', [AuthController::class, 'dummyGet']);
 });
 
+
+
+Route::get('users/{nombre}/id', [UserController::class, 'obtenerIdPorNombre']);
+
 //Rutas de los ambientes
 Route::get('/ambientes', [AmbienteController::class, 'index'])->name('ambientes.index');
 Route::post('/ambientes', [AmbienteController::class, 'store'])->name('ambientes.store');
@@ -62,3 +68,8 @@ Route::post('/solicitudes', [SolicitudController::class, 'store'])->name('solici
 Route::get('/solicitudes/{id}', [SolicitudController::class, 'show'])->name('solicitudes.show');
 Route::put('/solicitudes/{id}', [SolicitudController::class, 'update'])->name('solicitudes.update');
 Route::delete('/solicitudes/{id}', [SolicitudController::class, 'destroy'])->name('solicitudes.destroy');
+
+
+
+
+Route::get('/docentes/{idDocente}/materias', [MateriaDocenteController::class, 'obtenerMateriasPorIdDocente']);

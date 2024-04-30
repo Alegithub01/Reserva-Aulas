@@ -37,11 +37,15 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
     { value: "2", label: "2", inscritos: 30},
     { value: "3", label: "3", inscritos: 25},
   ];
+
+  /*
   const cargarBDMateria = [
     { value: 1, label: "Progr. Funcional" },
     { value: 2, label: "Base de datos 2" },
     { value: 3, label: "Taller de Base de Datos" },
   ];   //convertir info de materias en este diccionario (solo nombres de materias no importa el valor)
+  */
+  const [cargarBDMateria, setCargarBDMateria] = useState([]); 
 
   const cargarBDAmbiente = [
     { value: "691A", label: "691A", },
@@ -161,11 +165,45 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
       cambiarAbrirDialogo(false);
       console.log("Error en la solicitud");
     }
-  }
+  };
   
+  const obtenerMateriasDesdeBackend = async (docenteId) => {
+    try {
+      const response = await axios.get(`http://localhost:8000/api/docentes/${docenteId}/materias`); 
+      const materiasFormateadas = response.data.materias.map(materia => ({
+        value: materia,
+        label: materia
+      }));
+      setCargarBDMateria(materiasFormateadas); 
+    } catch (error) {
+      console.error('Error al obtener las materias desde el backend:', error);
+    }
+  };
+  
+  const obtenerDocenteId = async (nombreDocente) => {
+    try {
+      const response = await axios.get(`http://localhost:8000/api/users/${nombreDocente}/id`);
+      return response.data.id;
+    } catch (error) {
+      console.error('Error al obtener el ID del docente desde el backend:', error);
+      return null; // o cualquier valor que indique que ha ocurrido un error
+    }
+  };
 
-  
+  const obtenerMaterias = async () => {
+    const docenteId = await obtenerDocenteId(nombreDocente);
+    console.log(docenteId)
+    if (docenteId) {
+      obtenerMateriasDesdeBackend(docenteId);
+    } else {
+      console.log('No se pudo obtener el ID del docente');
+    }
+  };
+
   useEffect(() => {
+
+    obtenerMaterias();
+
     let capacidadTotal = 0;
     const lengthRecorrer = grupoDocente.length;
     for (let i = 0; i < lengthRecorrer; i++) {
