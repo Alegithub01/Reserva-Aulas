@@ -137,7 +137,7 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
     validarGrupoDocente();
     validarFecha();
     validarSeleccionHora();
-    if (materia !== '' && fecha !== '' && hora.length !== 0 && ambiente !== '' && grupoDocente !== '') {
+    if (materia !== '' && fecha !== '' && hora.length !== 0 && ambiente !== '' && grupoDocente.length !== 0 && mensajeError.hora ==="") {
       console.log("Solicitud enviada");
       
       try {
