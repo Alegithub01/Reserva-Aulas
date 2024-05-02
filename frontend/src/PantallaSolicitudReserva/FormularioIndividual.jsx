@@ -48,14 +48,10 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   const [cargarBDMateria, setCargarBDMateria] = useState([]); 
 
   const cargarBDAmbiente = [
-    { value: "691A", label: "691A", },
-    { value: "691B", label: "691B", },
-    { value: "691C", label: "691C", },
-    { value: "692A", label: "692A", },
-    { value: "692B", label: "692B", },
-    { value: "693C", label: "693C", },
-    { value: "693A", label: "693A", },
-  ];    //convertir info de ambientes en este diccionario (solo nombres de ambientes)
+    { value: "Aula", label: "Aula", },
+    { value: "Auditorio", label: "Auditorio", },
+    { value: "Laboratorio", label: "Laboratorio", },
+  ];   
   /* */
   const horas = [
     { value: "10", label: "06:45-08:15" },
@@ -267,14 +263,12 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
           />
         </div>
         <div>
-          <SelectorMultiple
-            etiqueta="Ambiente"
+          <Dropdown
+            etiqueta="Tipo de Ambiente"
             opciones={cargarBDAmbiente}
             cambio={setAmbiente}
-            llenado={validarSeleccionAmbiente}
+            onBlur={()=>{}}
             mensajeValidacion=""
-            valorSeleccionado={ambiente}
-            valorInicial={aulaInicial}
           />
         </div>
       </RowPercentage>
