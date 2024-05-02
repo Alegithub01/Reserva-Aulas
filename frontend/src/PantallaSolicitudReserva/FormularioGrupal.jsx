@@ -37,6 +37,15 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
     { value: 3, label: "Taller de Base de Datos" },
   ];
 
+  const motivos = [
+    { value: "Examen parcial", label: "Examen parcial" },
+    { value: "Examen final", label: "Examen final" },
+    { value: "Examen de mesa", label: "Examen de mesa" },
+    { value: "Práctica", label: "Práctica" },
+    { value: "Reemplazo ambiente", label: "Reemplazo ambiente" },
+    { value: "Taller", label: "Taller" },
+    { value: "Otro", label: "Otro" },
+  ];
   const cargarBDGruposGrupal = [
     { value: "1", label: "1" },
     { value: "2", label: "2" },
@@ -63,14 +72,10 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
   //convertir info de docentes en este diccionario (importa el id creo)
 
   const cargarBDAmbiente = [
-    { value: "691A", label: "691A", },
-    { value: "691B", label: "691B", },
-    { value: "691C", label: "691C", },
-    { value: "692A", label: "692A", },
-    { value: "692B", label: "692B", },
-    { value: "693C", label: "693C", },
-    { value: "693A", label: "693A", },
-  ];    //convertir info de ambientes en este diccionario (solo nombres de ambientes)
+    { value: "Aula", label: "Aula", },
+    { value: "Auditorio", label: "Auditorio", },
+    { value: "Laboratorio", label: "Laboratorio", },
+  ];   //convertir info de ambientes en este diccionario (solo nombres de ambientes)
   /* */
   const horas = [
     { value: "10", label: "06:45-08:15" },
@@ -125,6 +130,13 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
     }
   }
 
+  const validarSeleccionDetalles = () => {
+    if (detalles === '') {
+      setMensajeError(previo => ({ ...previo, detalles: 'Seleccione un motivo' }));
+    } else {
+      setMensajeError(previo => ({ ...previo, detalles: '' }));
+    }
+  };
   const validarSeleccionAmbiente = () => {
     if (ambiente.length === 0) {
       setMensajeError(previo => ({ ...previo, ambiente: 'Seleccione un ambiente' }));
@@ -148,7 +160,8 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
     validarGruposDocentes();
     validarFecha();
     validarSeleccionHora();
-    if (materia !== '' && fecha !== '' && hora.length !== 0 && ambiente !== '') {
+    validarSeleccionDetalles();
+    if (materia !== '' && fecha !== '' && hora.length !== 0 && detalles !== '') {
       console.log("Solicitud enviada");
       cambiarAbrirDialogo(true);
     } else {
@@ -248,14 +261,12 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
         />
       </div>
       <div>
-        <SelectorMultiple
-          etiqueta="Ambiente"
+        <Dropdown
+          etiqueta="Tipo de Ambiente"
           opciones={cargarBDAmbiente}
           cambio={setAmbiente}
-          llenado={validarSeleccionAmbiente}
+          onBlur={()=>{}}
           mensajeValidacion=""
-          valorSeleccionado={ambiente}
-          valorInicial={aulaInicial}
         />
       </div>
     </RowPercentage>
@@ -281,10 +292,13 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
         />
       </div>
     </RowPercentage>
-    <TextInput
-      label="Detalles de Solicitud"
-      pattern='^.{0,200}$'
-      onChange={(event) => setDetalles(event.target.value)}
+    <Dropdown
+      etiqueta="Motivo de Solicitud"
+      opciones={motivos}
+      cambio={setDetalles}
+      onBlur={validarSeleccionDetalles}
+      esRequerido={true}
+      mensajeValidacion={mensajeError.detalles}
     />
     <TextInput
       label="Servicios solicitados"
