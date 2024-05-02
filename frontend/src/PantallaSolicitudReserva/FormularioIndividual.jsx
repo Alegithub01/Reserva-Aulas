@@ -34,9 +34,19 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   /*datos de prueba para los dropdowns */
   const cargarBDGruposIndividual = [
     { value: "1", label: "1", inscritos: 40 },
-    { value: "2", label: "2", inscritos: 30},
-    { value: "3", label: "3", inscritos: 25},
+    { value: "2", label: "2", inscritos: 30 },
+    { value: "3", label: "3", inscritos: 25 },
   ];
+
+  const motivos = [
+    { value: "Examen parcial", label: "Examen parcial" },
+    { value: "Examen final", label: "Examen final" },
+    { value: "Examen de mesa", label: "Examen de mesa" },
+    { value: "Práctica", label: "Práctica" },
+    { value: "Reemplazo ambiente", label: "Reemplazo ambiente" },
+    { value: "Taller", label: "Taller" },
+    { value: "Otro", label: "Otro" },
+  ]
 
   /*
   const cargarBDMateria = [
@@ -45,13 +55,13 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
     { value: 3, label: "Taller de Base de Datos" },
   ];   //convertir info de materias en este diccionario (solo nombres de materias no importa el valor)
   */
-  const [cargarBDMateria, setCargarBDMateria] = useState([]); 
+  const [cargarBDMateria, setCargarBDMateria] = useState([]);
 
   const cargarBDAmbiente = [
     { value: "Aula", label: "Aula", },
     { value: "Auditorio", label: "Auditorio", },
     { value: "Laboratorio", label: "Laboratorio", },
-  ];   
+  ];
   /* */
   const horas = [
     { value: "10", label: "06:45-08:15" },
@@ -113,6 +123,13 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
     }
   }
 
+  const validarSeleccionDetalles = () => {
+    if (detalles === '') {
+      setMensajeError(previo => ({ ...previo, detalles: 'Seleccione un motivo' }));
+    } else {
+      setMensajeError(previo => ({ ...previo, detalles: '' }));
+    }
+  }
   const validarSeleccionAmbiente = () => {
     if (ambiente.length === 0) {
       setMensajeError(previo => ({ ...previo, ambiente: 'Seleccione un ambiente' }));
@@ -136,17 +153,18 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
     validarGrupoDocente();
     validarFecha();
     validarSeleccionHora();
-    if (materia !== '' && fecha !== '' && hora.length !== 0 && ambiente !== '' && grupoDocente !== '') {
+    validarSeleccionDetalles();
+    if (materia !== '' && fecha !== '' && hora.length !== 0 && detalles !== '' && grupoDocente !== '') {
       console.log("Solicitud enviada");
-      
+
       try {
         const response = await axios.post('http://127.0.0.1:8000/api/solicitudes', {
           nombre_usuario: nombreDocente,
-          grupo: grupoDocente, 
+          grupo: grupoDocente,
           nombre_ambiente: ambiente,
-          materia: materia, 
+          materia: materia,
           horas: hora,
-          servicios: serviciosSolicitados, 
+          servicios: serviciosSolicitados,
           detalle: detalles,
           fecha: fecha,
         });
@@ -155,27 +173,27 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
       } catch (error) {
         console.error('Error al registrar ambiente:', error);
       }
-  
+
       cambiarAbrirDialogo(true);
     } else {
       cambiarAbrirDialogo(false);
       console.log("Error en la solicitud");
     }
   };
-  
+
   const obtenerMateriasDesdeBackend = async (docenteId) => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/docentes/${docenteId}/materias`); 
+      const response = await axios.get(`http://localhost:8000/api/docentes/${docenteId}/materias`);
       const materiasFormateadas = response.data.materias.map(materia => ({
         value: materia,
         label: materia
       }));
-      setCargarBDMateria(materiasFormateadas); 
+      setCargarBDMateria(materiasFormateadas);
     } catch (error) {
       console.error('Error al obtener las materias desde el backend:', error);
     }
   };
-  
+
   const obtenerDocenteId = async (nombreDocente) => {
     try {
       const response = await axios.get(`http://localhost:8000/api/users/${nombreDocente}/id`);
@@ -206,7 +224,7 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
       capacidadTotal += cargarBDGruposIndividual.filter(grupo => grupo.value === grupoDocente[i])[0].inscritos;
     }
     setCapacidad(capacidadTotal);
-  },[grupoDocente]);
+  }, [grupoDocente]);
   return (
     <>
       <RowPercentage firstChildPercentage={35} gap="10px">
@@ -267,7 +285,7 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
             etiqueta="Tipo de Ambiente"
             opciones={cargarBDAmbiente}
             cambio={setAmbiente}
-            onBlur={()=>{}}
+            onBlur={() => { }}
             mensajeValidacion=""
           />
         </div>
@@ -294,10 +312,13 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
           />
         </div>
       </RowPercentage>
-      <TextInput
-        label="Detalles de Solicitud"
-        pattern='^.{0,200}$'
-        onChange={(event) => setDetalles(event.target.value)}
+      <Dropdown
+        etiqueta="Motivo de Solicitud"
+        opciones={motivos}
+        cambio={setDetalles}
+        onBlur={validarSeleccionDetalles}
+        esRequerido={true}
+        mensajeValidacion={mensajeError.detalles}
       />
       <TextInput
         label="Servicios solicitados"
