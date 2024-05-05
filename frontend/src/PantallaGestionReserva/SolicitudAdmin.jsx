@@ -15,13 +15,18 @@ import TextInput from "../Utils/TextInput";
 import SearchIcon from '@mui/icons-material/Search';
 import { IconButton } from "@mui/material";
 import Button from "../Utils/Button";
-
+import { Dialog, DialogContent, DialogContentText, DialogActions } from "@mui/material";
+import { useState } from "react";
 
 const SolicitudAdmin = () => {
   const { theme } = useTheme();
   const navigate = useNavigate();
-  const [tipo, setTipo] = ["laboratorio"];
-  const [ambienteSeleccionado, setAmbienteSeleccionado] = [];
+  const [tipo, setTipo] = useState("laboratorio");
+  const [ambienteSeleccionado, setAmbienteSeleccionado] = useState([]);
+  const [dialogoAbierto, setDialogoAbierto] = useState({
+    aceptar: false,
+    rechazar: false,
+});
 
   const defaultStyle = {
     outerContainer: {
@@ -77,6 +82,27 @@ const SolicitudAdmin = () => {
     console.log("navegarPreload");
     navigate('/Buscar-Ambiente');
   }
+
+  const manejoConfirmarAceptar =() => {
+    console.log("se confirma");
+    setDialogoAbierto({...dialogoAbierto, aceptar: false});
+    //backend acaa
+  }
+
+  const manejoCancelarAceptar =() => {
+    setDialogoAbierto({...dialogoAbierto, aceptar: false})
+  }
+
+  const manejoConfirmarRechazar =() => {
+    console.log("se rechaza");
+    setDialogoAbierto({...dialogoAbierto, rechazar: false});
+    //backend acaa
+  }
+
+  const manejoCancelarRechazar =() => {
+    setDialogoAbierto({...dialogoAbierto, rechazar: false})
+  }
+
   return (
     <div style={defaultStyle.outerContainer}>
       <div style={defaultStyle.container}>
@@ -231,11 +257,49 @@ const SolicitudAdmin = () => {
             </div>
 
             <div style={defaultStyle.buttonsContainer}>
-              <Button onClick={() => { }}>Aceptar</Button>
-              <Button onClick={() => { }}>Rechazar</Button>
-              <Button onClick={() => { }}>Cancelar</Button>
+              <Button onClick={() => { setDialogoAbierto({...dialogoAbierto, aceptar: true})}}>Aceptar</Button>
+              <Button onClick={() => { setDialogoAbierto({...dialogoAbierto, rechazar: true})}}>Rechazar</Button>
+              <Button onClick={() => { navigate('/Panel-Gestion-Reservas')}}>Cancelar</Button>
             </div>
+            <Dialog
+              open={dialogoAbierto.aceptar}
+              onClose={manejoCancelarAceptar}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  ¿Estás seguro de que deseas aceptar esta solicitud?
+                  Se enviará un correo a los solicitantes.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={manejoCancelarAceptar}>Cancelar</Button>
+                <Button onClick={manejoConfirmarAceptar} autoFocus>
+                  Aceptar
+                </Button>
+              </DialogActions>
+            </Dialog>
 
+            <Dialog
+              open={dialogoAbierto.rechazar}
+              onClose={manejoCancelarRechazar}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  ¿Estás seguro de que deseas rechazar esta solicitud?
+                  Se enviará un correo a los solicitantes.
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={manejoCancelarRechazar}>Cancelar</Button>
+                <Button onClick={manejoConfirmarRechazar} autoFocus>
+                  Aceptar
+                </Button>
+              </DialogActions>
+            </Dialog>
             <div
               style={{
                 height: "0%",
