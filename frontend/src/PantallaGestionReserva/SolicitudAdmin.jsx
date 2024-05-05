@@ -6,6 +6,7 @@ import aula from '../assets/imgs/aula.jpg';
 import auditorio from '../assets/imgs/auditorio.jpg';
 import laboratorio from '../assets/imgs/laboratorio.jpg';
 
+import { useNavigate } from 'react-router-dom';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -18,6 +19,7 @@ import Button from "../Utils/Button";
 
 const SolicitudAdmin = () => {
   const { theme } = useTheme();
+  const navigate = useNavigate();
   const [tipo, setTipo] = ["laboratorio"];
   const [ambienteSeleccionado, setAmbienteSeleccionado] = [];
 
@@ -46,6 +48,7 @@ const SolicitudAdmin = () => {
     titles: {
       color: theme.text,
       fontWeight: 'bold',
+      marginRight: '15px',
     },
     iconContainer: {
       display: 'flex',
@@ -58,13 +61,22 @@ const SolicitudAdmin = () => {
       flexWrap: 'wrap',
       alignItems: 'center'
     },
-    imagee:{
+    imagee: {
       width: '280px',
       height: '180px',
       clipPath: 'inset(0% 0% 0% 0% round 5%)',
       objectFit: 'cover',
+    },
+    textSubtitle: {
+      display: 'flex',
+      justifyContent: 'flex-end',
     }
   };
+
+  const navegarPreload = () => {
+    console.log("navegarPreload");
+    navigate('/Buscar-Ambiente');
+  }
   return (
     <div style={defaultStyle.outerContainer}>
       <div style={defaultStyle.container}>
@@ -100,9 +112,9 @@ const SolicitudAdmin = () => {
             </div>
 
             <div className="infoCompleta" style={defaultStyle.infoCompleta}>
-              <div className="Info" style={{ width:  '60%' }}>
-                <RowPercentage firstChildPercentage={50} gap={10}>
-                  <div>
+              <div className="Info" style={{ width: '60%' }}>
+                <RowPercentage firstChildPercentage={50} >
+                  <div style={defaultStyle.textSubtitle}>
                     <StyledText style={defaultStyle.titles}>Mensaje Solicitud:</StyledText>
                   </div>
                   <div>
@@ -110,8 +122,8 @@ const SolicitudAdmin = () => {
                   </div>
                 </RowPercentage>
 
-                <RowPercentage firstChildPercentage={50} gap={10}>
-                  <div>
+                <RowPercentage firstChildPercentage={50} >
+                  <div style={defaultStyle.textSubtitle}>
                     <StyledText style={defaultStyle.titles}>Fecha:</StyledText>
                   </div>
                   <div>
@@ -119,8 +131,8 @@ const SolicitudAdmin = () => {
                   </div>
                 </RowPercentage>
 
-                <RowPercentage firstChildPercentage={50} gap={10}>
-                  <div>
+                <RowPercentage firstChildPercentage={50} >
+                  <div style={defaultStyle.textSubtitle}>
                     <StyledText style={defaultStyle.titles}>Horario:</StyledText>
                   </div>
                   <div>
@@ -128,12 +140,12 @@ const SolicitudAdmin = () => {
                   </div>
                 </RowPercentage>
 
-                <RowPercentage firstChildPercentage={50} gap={10}>
-                  <div>
+                <RowPercentage firstChildPercentage={50} >
+                  <div style={defaultStyle.textSubtitle}>
                     <StyledText style={defaultStyle.titles}>Solicitantes:</StyledText>
                   </div>
                   <div>
-                    <RowPercentage firstChildPercentage={50} gap={10}>
+                    <RowPercentage firstChildPercentage={50} >
                       <div>
                         <StyledText >Leticia Blanco</StyledText>
                       </div>
@@ -141,7 +153,7 @@ const SolicitudAdmin = () => {
                         <StyledText >1, 2</StyledText>
                       </div>
                     </RowPercentage>
-                    <RowPercentage firstChildPercentage={50} gap={10}>
+                    <RowPercentage firstChildPercentage={50} >
                       <div>
                         <StyledText >Vladimir Costas</StyledText>
                       </div>
@@ -149,7 +161,7 @@ const SolicitudAdmin = () => {
                         <StyledText >10</StyledText>
                       </div>
                     </RowPercentage>
-                    <RowPercentage firstChildPercentage={50} gap={10}>
+                    <RowPercentage firstChildPercentage={50} >
                       <div>
                         <StyledText >Corina Flores</StyledText>
                       </div>
@@ -160,8 +172,8 @@ const SolicitudAdmin = () => {
                   </div>
                 </RowPercentage>
 
-                <RowPercentage firstChildPercentage={50} gap={10}>
-                  <div>
+                <RowPercentage firstChildPercentage={50}  >
+                  <div style={defaultStyle.textSubtitle}>
                     <StyledText style={defaultStyle.titles}>Servicios:</StyledText>
                   </div>
                   <div>
@@ -209,7 +221,7 @@ const SolicitudAdmin = () => {
                       />
                     </div>
                     <div style={defaultStyle.iconContainer} onClick={() => { }}>
-                      <IconButton onClick={() => { }} style={{ color: "black" }}>
+                      <IconButton onClick={navegarPreload} style={{ color: "black" }}>
                         <SearchIcon style={{ fontSize: 30, color: theme.highlight }} />
                       </IconButton>
                     </div>
