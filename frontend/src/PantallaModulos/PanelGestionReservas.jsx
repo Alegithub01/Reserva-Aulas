@@ -48,7 +48,6 @@ const PanelGestionReservas = () => {
                 Icon={SearchIcon}
                 onClick={() => navegar('/Buscar-Ambiente')}
             />
-            
             <div
                 style={{
                     display: "flex",
