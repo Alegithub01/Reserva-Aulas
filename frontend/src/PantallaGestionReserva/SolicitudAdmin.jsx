@@ -17,11 +17,15 @@ import { IconButton } from "@mui/material";
 import Button from "../Utils/Button";
 import { Dialog, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import { useState } from "react";
+import { useLocation } from 'react-router-dom';
 
 const SolicitudAdmin = () => {
   const { theme } = useTheme();
   const navigate = useNavigate();
-  const [tipo, setTipo] = useState("laboratorio");
+  const location = useLocation();
+  const { dataRow } = location.state || {};
+  const [nombreDocente, setNombreDocente] = useState('user'); //nombre del docente loggeado
+  const [tipo, setTipo] = useState(dataRow.tipo_ambiente || "aula");
   const [ambienteSeleccionado, setAmbienteSeleccionado] = useState([]);
   const [dialogoAbierto, setDialogoAbierto] = useState({
     aceptar: false,
@@ -103,6 +107,10 @@ const SolicitudAdmin = () => {
     setDialogoAbierto({...dialogoAbierto, rechazar: false})
   }
 
+  const navegarBuscar = () => {
+    //aca colocar los datos para autocompletarse
+    navigate('/Panel-Gestion-Reservas');
+  }
   return (
     <div style={defaultStyle.outerContainer}>
       <div style={defaultStyle.container}>
@@ -134,7 +142,7 @@ const SolicitudAdmin = () => {
               }}
             >
               <StyledText boldText>Solicitud</StyledText>
-              <StyledText boldText>Introducción a la programación, 120</StyledText>
+              <StyledText boldText>{dataRow.materia}, {dataRow.capacidad}</StyledText>
             </div>
 
             <div className="infoCompleta" style={defaultStyle.infoCompleta}>
@@ -144,7 +152,7 @@ const SolicitudAdmin = () => {
                     <StyledText style={defaultStyle.titles}>Mensaje Solicitud:</StyledText>
                   </div>
                   <div>
-                    <StyledText >Examen final</StyledText>
+                    <StyledText >{dataRow.motivo}</StyledText>
                   </div>
                 </RowPercentage>
 
@@ -153,7 +161,7 @@ const SolicitudAdmin = () => {
                     <StyledText style={defaultStyle.titles}>Fecha:</StyledText>
                   </div>
                   <div>
-                    <StyledText >15/05/2024</StyledText>
+                    <StyledText >{dataRow.fecha}</StyledText>
                   </div>
                 </RowPercentage>
 
@@ -162,7 +170,10 @@ const SolicitudAdmin = () => {
                     <StyledText style={defaultStyle.titles}>Horario:</StyledText>
                   </div>
                   <div>
-                    <StyledText >09:45-11:15, 11:15-12:45</StyledText>
+                    {dataRow.horas.map((horario, index) => (
+                      <StyledText key={index}>{horario}</StyledText>
+                    ))
+                    }
                   </div>
                 </RowPercentage>
 
@@ -171,7 +182,7 @@ const SolicitudAdmin = () => {
                     <StyledText style={defaultStyle.titles}>Solicitantes:</StyledText>
                   </div>
                   <div>
-                    <RowPercentage firstChildPercentage={50} >
+                    {/* <RowPercentage firstChildPercentage={50} >
                       <div>
                         <StyledText >Leticia Blanco</StyledText>
                       </div>
@@ -194,6 +205,14 @@ const SolicitudAdmin = () => {
                       <div>
                         <StyledText >4</StyledText>
                       </div>
+                    </RowPercentage> */}
+                    <RowPercentage firstChildPercentage={50} >
+                      <div>
+                        <StyledText >{nombreDocente}</StyledText>
+                      </div>
+                      <div>
+                        <StyledText >{dataRow.grupo.join(', ')}</StyledText>
+                      </div>
                     </RowPercentage>
                   </div>
                 </RowPercentage>
@@ -203,17 +222,17 @@ const SolicitudAdmin = () => {
                     <StyledText style={defaultStyle.titles}>Servicios:</StyledText>
                   </div>
                   <div>
-                    <StyledText ></StyledText>
+                    <StyledText >{dataRow.servicios}</StyledText>
                   </div>
                 </RowPercentage>
               </div>
 
               <div className="tipo" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                {tipo === "aula" ? (
+                {tipo.toLowerCase() === "aula" ? (
                   <img src={aula} alt="aula" style={defaultStyle.imagee} />
-                ) : tipo === "auditorio" ? (
+                ) : tipo.toLowerCase() === "auditorio" ? (
                   <img src={auditorio} alt="auditorio" style={defaultStyle.imagee} />
-                ) : tipo === "laboratorio" ? (
+                ) : tipo.toLowerCase() === "laboratorio" ? (
                   <img src={laboratorio} alt="laboratorio" style={defaultStyle.imagee} />
                 ) : null
                 }
@@ -259,7 +278,7 @@ const SolicitudAdmin = () => {
             <div style={defaultStyle.buttonsContainer}>
               <Button onClick={() => { setDialogoAbierto({...dialogoAbierto, aceptar: true})}}>Aceptar</Button>
               <Button onClick={() => { setDialogoAbierto({...dialogoAbierto, rechazar: true})}}>Rechazar</Button>
-              <Button onClick={() => { navigate('/Panel-Gestion-Reservas')}}>Cancelar</Button>
+              <Button onClick={() => { navegarBuscar}}>Cancelar</Button>
             </div>
             <Dialog
               open={dialogoAbierto.aceptar}
