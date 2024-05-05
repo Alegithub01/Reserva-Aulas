@@ -22,6 +22,7 @@ import Reservas from "./PantallaSolicitudReserva/Reservas";
 import BuscarAmbiente from "./PantallaGestionReserva/BuscarAmbiente";
 import PantallaReglas from "./PantallaAmbientes/PantallaReglas";
 import PanelGestionReservas from "./PantallaModulos/PanelGestionReservas";
+import AdministrarSolicitudes from "./PantallaGestionReserva/AdministrarSolicitudes"
 
 function App() {
   return (
@@ -270,6 +271,22 @@ function App() {
                   }}
                 >
                   <GestionReservas />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/Solicitudes"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100vh",
+                    overflow: "auto",
+                  }}
+                >
+                  <AdministrarSolicitudes />
                 </div>
               </Layout>
             }
