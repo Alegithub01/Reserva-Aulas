@@ -3,6 +3,7 @@ import StyledText from "../StyledText";
 import Card from "./Modulo";
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';    
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const PanelGestionReservas = () => {
     const navegar = useNavigate();
@@ -47,6 +48,11 @@ const PanelGestionReservas = () => {
                 text="Buscar Ambientes" 
                 Icon={SearchIcon}
                 onClick={() => navegar('/Buscar-Ambiente')}
+            />
+            <Card 
+                text="Administrar Solicitudes" 
+                Icon={SettingsIcon}
+                onClick={() => navegar('/Solicitudes')}
             />
             
             <div
