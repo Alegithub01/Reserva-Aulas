@@ -11,6 +11,15 @@ import { IconButton } from "@mui/material";
 import axios from 'axios';
 import EntradaFecha from "../Utils/EntradaFecha";
 
+//const informacion = [
+//  { id: 1, nombre: "691A", capacidad: 100, tipo: "Aula", planta: "Planta 1", ubicacion: 'ubi1', servicios: 'Data display', dia: "Lunes", periodos: "08:00-10:00, 15:45-17:15" },
+//  { id: 2, nombre: "691B", capacidad: 110, tipo: "Aula", planta: "Planta 1", ubicacion: 'ubi1', servicios: 'Data display', dia: "Martes", periodos: "08:00-10:00" },
+//  { id: 3, nombre: "691C", capacidad: 90, tipo: "Aula", planta: "Planta 1", ubicacion: 'ubi1', servicios: 'Data display', dia: "Miercoles", periodos: "08:00-10:00" },
+//  { id: 4, nombre: "692A", capacidad: 120, tipo: "Aula", planta: "Planta 2", ubicacion: 'ubi1', servicios: 'Data display', dia: "Jueves", periodos: "08:00-18:45" },
+//  { id: 5, nombre: "692B", capacidad: 125, tipo: "Aula", planta: "Planta 2", ubicacion: 'ubi1', servicios: 'Data display', dia: "Jueves", periodos: "18:00-20:00" },
+//];
+
+
 const tipos =[
   {value: "10", label: "Aula"},
   {value: "20", label: "Auditorio"},
@@ -76,10 +85,10 @@ const BusquedaAmbiente = () => {
         const fechaActual = new Date();
         const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
         const diaActual = fechaActual.getDay();
-        diaSemana = diasSemana[diaActual];
+        // diaSemana = diasSemana[diaActual];
         fechaAux = fechaActual.toISOString().split('T')[0];
       }
-      filtro.dia = diaSemana;
+      // filtro.dia = diaSemana;
   
       // Verificar si no se ha ingresado ningún filtro
       if (Object.keys(filtro).length === 0) {
@@ -94,6 +103,8 @@ const BusquedaAmbiente = () => {
       // Realizar la solicitud al backend con el filtro
       const response = await axios.post('http://localhost:8000/api/ambientes-filtrar', filtro);
       const data = response.data;
+      console.log("RESP:", data);
+  
       
       // Agregar la fecha y la hora a los datos obtenidos
       const dataConFechaHora = data.map(ambiente => ({
@@ -147,7 +158,7 @@ const BusquedaAmbiente = () => {
       display: 'flex',
       width: '50%',
       minWidth: '600px',
-      minHeight: '450px',
+      minHeight: '600px',
     },
     iconContainer: {
       display: 'flex',
