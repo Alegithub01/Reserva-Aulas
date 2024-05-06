@@ -10,6 +10,7 @@ import TablaAmbiente from "../Components/TablaAmbienteVistaDocente";
 import { IconButton } from "@mui/material";
 import axios from 'axios';
 import EntradaFecha from "../Utils/EntradaFecha";
+import { useLocation } from 'react-router-dom';
 
 //const informacion = [
 //  { id: 1, nombre: "691A", capacidad: 100, tipo: "Aula", planta: "Planta 1", ubicacion: 'ubi1', servicios: 'Data display', dia: "Lunes", periodos: "08:00-10:00, 15:45-17:15" },
@@ -40,6 +41,9 @@ const opcionesHorario = [
 ];
 
 const BusquedaAmbiente = () => {
+  const location = useLocation();
+  const seleccion = location.state?.seleccion || false;
+  console.log(seleccion)
   const [filtroFecha, setFiltroFecha] = useState("");
   const [filtroHorario, setFiltroHorario] = useState("");
   const [filtroCapacidad, setFiltroCapacidad] = useState("");
@@ -196,6 +200,23 @@ const BusquedaAmbiente = () => {
               justifyContent: "space-between",
             }}
           >
+
+{seleccion && (
+              <div
+                style={{
+                  height: "5%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  color: theme.highlight,
+                  fontSize: "1.2em"
+                }}
+              >
+                <strong>TRUE</strong>
+              </div>
+            )}
+
+
             <div
               style={{
                 height: "10%",

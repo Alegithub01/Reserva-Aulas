@@ -22,13 +22,27 @@ const StyledDataGrid = styled(DataGrid)`
 
 export default function TablaAmbienteVista({informacion}) {
   const [filas, setFilas] = useState(informacion);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const setAmbientesSeleccionados = useAmbienteStore(state => state.setAmbientesSeleccionados);
 
   useEffect(() => {
     setFilas(informacion);
   }, [informacion]);
 
-  const handleCheckboxClick = (row) => {
-    console.log(row);
+  useEffect(() => {
+    setAmbientesSeleccionados([...selectedRows]);
+  }, [selectedRows]);
+
+  const handleCheckboxClick = (row, isChecked) => {
+    setSelectedRows(prev => {
+      const existingRow = prev.find(r => r.id === row.id);
+      if (isChecked && !existingRow) {
+        return [...prev, row];
+      } else if (!isChecked && existingRow) {
+        return prev.filter(r => r.id !== row.id);
+      }
+      return prev;
+    });
   };
 
   const columnas = [
@@ -37,7 +51,8 @@ export default function TablaAmbienteVista({informacion}) {
       headerName: '',
       renderCell: (params) => (
         <Checkbox
-          onClick={() => handleCheckboxClick(params.row)}
+          checked={selectedRows.some(r => r.id === params.row.id)}
+          onChange={(event) => handleCheckboxClick(params.row, event.target.checked)}
           color="primary"
         />
       ),

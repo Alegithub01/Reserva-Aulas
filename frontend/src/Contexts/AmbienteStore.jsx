@@ -1,21 +1,17 @@
+// src/stores/AmbienteStore.js
 import create from 'zustand';
+import { subscribeWithSelector } from 'zustand/middleware';
 
-const AmbienteStore = create(set => ({
-  ambientes: [],
+const useAmbienteStore = create(subscribeWithSelector((set, get) => ({
+  ambientesSeleccionados: [],
+  setAmbientesSeleccionados: (ambientes) => set({ ambientesSeleccionados: ambientes }),
+})));
 
-  agregarAmbiente: (ambiente) => set(state => {
-    const nuevosAmbientes = [...state.ambientes, ambiente];
-    console.log("Ambiente agregado. Lista actualizada:", nuevosAmbientes);
-    return { ambientes: nuevosAmbientes };
-  }),
+useAmbienteStore.subscribe(
+  state => state.ambientesSeleccionados,
+  ambientesSeleccionados => {
+    console.log("Ambientes en el store:", ambientesSeleccionados);
+  }
+);
 
-  eliminarAmbiente: (id) => set(state => {
-    const ambientesActualizados = state.ambientes.filter(ambiente => ambiente.id !== id);
-    console.log("Ambiente eliminado. Lista actualizada:", ambientesActualizados);
-    return { ambientes: ambientesActualizados };
-  }),
-
-  esAmbienteSeleccionado: (id) => state => state.ambientes.some(ambiente => ambiente.id === id)
-}));
-
-export default AmbienteStore;
+export default useAmbienteStore;

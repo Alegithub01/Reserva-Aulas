@@ -83,8 +83,8 @@ const SolicitudAdmin = () => {
   };
 
   const navegarPreload = () => {
-    console.log("navegarPreload");
-    navigate('/Buscar-Ambiente');
+    console.log("contru");
+    navigate('/Buscar-Ambiente', { state: { seleccion: true } });
   }
 
   const manejoConfirmarAceptar =() => {
