@@ -118,12 +118,11 @@ const BusquedaAmbiente = () => {
         
       }));
 
-      // Actualizar el estado con los datos obtenidos
       setInformacionFinal(dataConFechaHora);
-      setLoading(false); // Indicar que la búsqueda ha finalizado
+      setLoading(false);
     } catch (error) {
       console.error('Error al obtener y filtrar ambientes:', error);
-      setLoading(false); // Indicar que la búsqueda ha finalizado incluso si ocurrió un error
+      setLoading(false);
     }
   };
   
@@ -155,19 +154,28 @@ const BusquedaAmbiente = () => {
       justifyContent: 'center',
       alignItems: 'center',
       height: '100%',
-      with: '100%',
+      width: '100%',
       background: theme.bgmain,
     },
     container: {
       display: 'flex',
-      width: '50%',
-      minWidth: '600px',
-      minHeight: '600px',
+      width: '60%',
+      gap: '20px',
     },
-    iconContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
+    cardStyle: {
+      minHeight: '600px',
+      padding: '30px 50px',
+      borderColor: 'blue',
+      borderRadius: '15px',
+      
+    },
+    smallCardStyle: {
+      flex: '1 1 40%', 
+      height: '100%',
+      padding: '20px',
+      borderColor: 'lightgray',
+      borderRadius: '105px',
+      backgroundColor: 'blue',
     }
   };
 
@@ -182,8 +190,9 @@ const BusquedaAmbiente = () => {
     <div style={defaultStyle.outerContainer}>
       <div style={defaultStyle.container}>
         <Card
+          style={defaultStyle.cardStyle}
           minWidth="100px"
-          minHeight="100px"
+          minHeight="600px"
           fullWidth
           alignCenter
           padding="30px 50px"
@@ -200,23 +209,6 @@ const BusquedaAmbiente = () => {
               justifyContent: "space-between",
             }}
           >
-
-{seleccion && (
-              <div
-                style={{
-                  height: "5%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  color: theme.highlight,
-                  fontSize: "1.2em"
-                }}
-              >
-                <strong>TRUE</strong>
-              </div>
-            )}
-
-
             <div
               style={{
                 height: "10%",
@@ -293,6 +285,49 @@ const BusquedaAmbiente = () => {
           </div>
         </Card>
       </div>
+      {seleccion && (
+        <Card
+            minHeight="600px"
+            minWidth="100px"
+            maxWidth="300px"
+            alignCenter
+            padding="30px 50px"
+        >
+          <div
+            style={{
+              width: "100%",
+              flex: 1,
+              flexDirection: "column",
+              height: "100%",
+              display: "flex",
+              gap: "15px",
+              justifyContent: "space-between",
+            }}
+          >
+            <div
+              style={{
+                height: "40%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: 'red',
+                textAlign: 'center',
+                padding: '20px 0'
+              }}
+            >
+              <StyledText boldText>Ambientes Seleccionados</StyledText>
+            </div>
+            <div
+              style={{
+                height: "0%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            ></div>
+          </div>
+        </Card>
+      )}
     </div>
   );
 };
