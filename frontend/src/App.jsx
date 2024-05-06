@@ -23,6 +23,7 @@ import BuscarAmbiente from "./PantallaGestionReserva/BuscarAmbiente";
 import PantallaReglas from "./PantallaAmbientes/PantallaReglas";
 import PanelGestionReservas from "./PantallaModulos/PanelGestionReservas";
 import AdministrarSolicitudes from "./PantallaGestionReserva/AdministrarSolicitudes"
+import SolicitudAdmin from "./PantallaGestionReserva/SolicitudAdmin";
 
 function App() {
   return (
@@ -73,16 +74,16 @@ function App() {
           <Route
             path="/"
             element={
-                <div
-                  style={{
-                    width: "100vw",
-                    height: "100vh",
-                    overflow: "auto",
-                  }}
-                >
-                  <PantallaPrincipal />
-                </div>
-              }
+              <div
+                style={{
+                  width: "100vw",
+                  height: "100vh",
+                  overflow: "auto",
+                }}
+              >
+                <PantallaPrincipal />
+              </div>
+            }
           />
           <Route
             path="/Panel-Gestion-Usuarios"
@@ -349,6 +350,21 @@ function App() {
                   }}
                 >
                   <BuscarAmbiente />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/SolicitudAdmin"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100%",
+                  }}
+                >
+                  <SolicitudAdmin />
                 </div>
               </Layout>
             }

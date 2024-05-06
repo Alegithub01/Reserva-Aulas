@@ -5,8 +5,11 @@ import { useTheme } from '../Contexts/ThemeContext';
 import { DataGrid } from '@mui/x-data-grid';
 import Dropdown from '../Utils/Dropdown';
 
+import { useNavigate } from 'react-router-dom';
+
 const GestionReservas = () => {
   const { theme } = useTheme();
+  const navegar = useNavigate();
   const [reservas, setReservas] = useState([]);
   const [orden, setOrden] = useState('');
 
@@ -115,7 +118,8 @@ const GestionReservas = () => {
 
 
   const handleRowClick = (params) => {
-    // redireccionar a pantalla Detalles-de-reserva
+    // redireccionar a pantalla Solicitud Admin 
+    navegar('/SolicitudAdmin', { state:  {dataRow: params.row} });
     console.log('Reserva seleccionada:', params.row);
   };
 
