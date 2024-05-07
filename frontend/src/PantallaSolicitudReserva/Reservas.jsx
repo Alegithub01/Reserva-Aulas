@@ -35,7 +35,7 @@ const Reservas = () => {
           block
         >
             <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-              <StyledText boldText style={{ textAlign: 'center' }}>Mis Reservas</StyledText>
+              <StyledText boldText style={{ textAlign: 'center' }}>Lista de Solicitudes de Reserva</StyledText>
               <TablaSolicitudes  />
 
             </div>

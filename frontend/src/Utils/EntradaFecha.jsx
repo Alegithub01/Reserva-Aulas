@@ -8,6 +8,7 @@ const EntradaFecha = ({etiqueta, enCambio, onBlur = null, mensajeValidacion, val
   const [valor, setValor] = useState(valorInicial || null);
   const { theme } = useTheme();
   let mostrarMensajeDeError = true;
+  const [errorFechaAnterior, setErrorFechaAnterior] = useState(false);
 
   useEffect(() => {
     setValor(valorInicial);
@@ -20,6 +21,10 @@ const EntradaFecha = ({etiqueta, enCambio, onBlur = null, mensajeValidacion, val
     }
     setValor(event.target.value);
     mostrarMensajeDeError = false;
+    const fechaActual = new Date().toISOString().split('T')[0];
+    const fechaSeleccionada = new Date(event.target.value).toISOString().split('T')[0];
+
+    setErrorFechaAnterior(fechaSeleccionada <= fechaActual);
   };
   
   const manejarPresionado = () => {
@@ -95,6 +100,19 @@ const EntradaFecha = ({etiqueta, enCambio, onBlur = null, mensajeValidacion, val
         }}>
           {mensajeValidacion}
         </div>
+      )}
+      {errorFechaAnterior && (
+        <div style={{
+          color: 'red',
+          fontSize: '12px',
+          transition: 'opacity 0.3s ease',
+          opacity: 1,
+          height: 'auto',
+          overflow: 'hidden'
+        }}>
+          Seleccione una fecha próxima a la actual
+        </div>
+      
       )}
     </FormControl>
   );
