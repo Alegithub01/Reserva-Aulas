@@ -15,6 +15,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import Button from '@mui/material/Button';
 import axios from 'axios';
+import { URL_API } from "../services/const";
 
 const SolicitudMultiple = () => {
   const { theme } = useTheme();
@@ -27,7 +28,7 @@ const SolicitudMultiple = () => {
   useEffect(() => {
     const obtenerReglas = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/reglas');
+        const response = await axios.get(`${URL_API}/reglas`);
         const ultimaRegla = response.data[response.data.length - 1];
         console.log(ultimaRegla);
         setInfoDeLaBDReglas(ultimaRegla.descripcion);

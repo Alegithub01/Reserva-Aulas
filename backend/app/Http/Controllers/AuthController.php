@@ -97,15 +97,20 @@ class AuthController extends Controller
             'apellidos'=> 'required',
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|min:6',
+            'rol_id' => 'required|exists:rols,id', // Asegúrate de que el rol exista en la tabla roles
         ]);
-        if($validator->fails()){
-            return response()->json($validator->errors()->toJson(),400);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $user = User::create(array_merge(
+        $userData = array_merge(
             $validator->validate(),
             ['password' => bcrypt($request->password)]
-        ));
+        );
+
+        // Crea el usuario con los datos proporcionados
+        $user = User::create($userData);
 
         return response()->json([
             'message' => '¡Usuario registrado exitosamente!',
@@ -113,24 +118,27 @@ class AuthController extends Controller
         ], 201);
     }
 
+
     public function registerMany(Request $request)
     {
         $users = $request->all();
         $response = [];
-        foreach ($users as $user) {
-            $validator = Validator::make($user, [
+        foreach ($users as $userData) {
+            $validator = Validator::make($userData, [
                 'nombres' => 'required',
                 'apellidos'=> 'required',
                 'email' => 'required|string|email|max:100|unique:users',
                 'password' => 'required|string|min:6',
+                'rol_id' => 'required|exists:rols,id', // Asegúrate de que el rol exista en la tabla roles
             ]);
-            if($validator->fails()){
-                return response()->json($validator->errors()->toJson(),400);
+            if ($validator->fails()) {
+                return response()->json($validator->errors()->toJson(), 400);
             }
 
+            // Crea el usuario con los datos proporcionados
             $user = User::create(array_merge(
                 $validator->validate(),
-                ['password' => bcrypt($user['password'])]
+                ['password' => bcrypt($userData['password'])]
             ));
 
             $response[] = $user;
@@ -141,6 +149,7 @@ class AuthController extends Controller
             'users' => $response
         ], 201);
     }
+
 
 }
 

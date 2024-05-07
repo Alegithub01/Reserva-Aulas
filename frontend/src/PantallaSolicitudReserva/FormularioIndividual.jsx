@@ -8,6 +8,7 @@ import EntradaFecha from "../Utils/EntradaFecha";
 import Button from "../Utils/Button";
 import CalendarioStore from "../Contexts/CalendarioStore";
 import axios from 'axios';
+import { URL_API } from "../services/const";
 
 const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   const { aula, dia, horario } = CalendarioStore();
@@ -158,7 +159,7 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
       console.log("Solicitud enviada");
 
       try {
-        const response = await axios.post('http://127.0.0.1:8000/api/solicitudes', {
+        const response = await axios.post(`${URL_API}/solicitudes`, {
           nombre_usuario: nombreDocente,
           grupo: grupoDocente,
           nombre_ambiente: ambiente,
@@ -183,7 +184,7 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
 
   const obtenerMateriasDesdeBackend = async (docenteId) => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/docentes/${docenteId}/materias`);
+      const response = await axios.get(`${URL_API}/docentes/${docenteId}/materias`);
       const materiasFormateadas = response.data.materias.map(materia => ({
         value: materia,
         label: materia
@@ -196,7 +197,7 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
 
   const obtenerDocenteId = async (nombreDocente) => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/users/${nombreDocente}/id`);
+      const response = await axios.get(`${URL_API}/users/${nombreDocente}/id`);
       return response.data.id;
     } catch (error) {
       console.error('Error al obtener el ID del docente desde el backend:', error);

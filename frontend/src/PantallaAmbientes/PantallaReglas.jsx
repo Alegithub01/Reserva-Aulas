@@ -6,6 +6,7 @@ import { useTheme } from '../Contexts/ThemeContext';
 import ButtonEstilizado from "../Utils/Button";
 import MensajeExito from "../Utils/MensajeExito";
 import axios from 'axios';
+import { URL_API } from "../services/const";
 
 const TextAreaP = ({ onChange, value }) => {
   const [valor, setValor] = useState(value);
@@ -64,7 +65,7 @@ const AdminHomeModule3 = () => {
         return;
       }
       try {
-        const response = await axios.post('http://127.0.0.1:8000/api/agregar-regla', {
+        const response = await axios.post(`${URL_API}/agregar-regla`, {
           newRule: reglas 
         });
         console.log(response);
@@ -83,7 +84,7 @@ const AdminHomeModule3 = () => {
       //PARA BACKEND --------------------------------------------*****************--------------------
       //aca actualizar el estado de publicado a true
       try {
-        const response = await axios.post('http://127.0.0.1:8000/api/enviar-correo-notificacion');
+        const response = await axios.post(`${URL_API}/enviar-correo-notificacion`);
         console.log(response);
         setPublicado(true);
       } catch (error) {

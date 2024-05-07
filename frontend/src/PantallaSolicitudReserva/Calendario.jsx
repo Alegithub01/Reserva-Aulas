@@ -8,6 +8,7 @@ import Dropdown from "../Utils/Dropdown";
 import { useCallback } from 'react';
 import { format, addDays, startOfWeek } from 'date-fns';
 import axios from 'axios';
+import { URL_API } from '../services/const';
 
 
 function useAmbientes() {
@@ -18,7 +19,7 @@ function useAmbientes() {
   useEffect(() => {
     const fetchData = async () => {
       try{
-      const response = await axios.get('http://localhost:8000/api/ambientes')  
+      const response = await axios.get(`${URL_API}/ambientes`)  
       console.log(response.data);
       const data = response.data;
       const aulasFiltradas = data.filter(amb => amb.tipo === 'Aula');

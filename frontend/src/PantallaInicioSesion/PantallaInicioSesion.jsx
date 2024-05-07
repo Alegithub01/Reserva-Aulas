@@ -8,6 +8,7 @@ import axios from "axios";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
+import { URL_API } from "../services/const";
 
 const PantallaInicioSesionProfesor = () => {
   const navegar = useNavigate();
@@ -57,7 +58,7 @@ const PantallaInicioSesionProfesor = () => {
     if (validarFormulario()) {
       setCargando(true);
       axios
-        .post("http://localhost:8000/api/auth/login", {
+        .post(`${URL_API}/auth/login`, {
           email: correoElectronico,
           password: contrasena,
         })

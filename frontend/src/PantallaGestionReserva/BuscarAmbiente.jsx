@@ -14,6 +14,7 @@ import EntradaFecha from "../Utils/EntradaFecha";
 import { useLocation } from 'react-router-dom';
 import useAmbienteStore from '../Contexts/AmbienteStore';
 import Button from '../Utils/Button';
+import { URL_API } from "../services/const";
 
 //const informacion = [
 //  { id: 1, nombre: "691A", capacidad: 100, tipo: "Aula", planta: "Planta 1", ubicacion: 'ubi1', servicios: 'Data display', dia: "Lunes", periodos: "08:00-10:00, 15:45-17:15" },
@@ -110,7 +111,7 @@ const BusquedaAmbiente = () => {
       console.log("Datos enviados a la solicitud:", filtro);
   
       // Realizar la solicitud al backend con el filtro
-      const response = await axios.post('http://localhost:8000/api/ambientes-filtrar', filtro);
+      const response = await axios.post(`${URL_API}/ambientes-filtrar`, filtro);
       const data = response.data;
       // console.log("RESP:", data);
   
