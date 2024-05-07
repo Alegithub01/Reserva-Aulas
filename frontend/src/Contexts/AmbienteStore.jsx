@@ -7,11 +7,11 @@ const useAmbienteStore = create(subscribeWithSelector((set, get) => ({
   setAmbientesSeleccionados: (ambientes) => set({ ambientesSeleccionados: ambientes }),
 })));
 
-useAmbienteStore.subscribe(
-  state => state.ambientesSeleccionados,
-  ambientesSeleccionados => {
-    console.log("Ambientes en el store:", ambientesSeleccionados);
-  }
-);
+// useAmbienteStore.subscribe(
+//   state => state.ambientesSeleccionados,
+//   ambientesSeleccionados => {
+//     console.log("Ambientes en el store:", ambientesSeleccionados);
+//   }
+// );
 
 export default useAmbienteStore;

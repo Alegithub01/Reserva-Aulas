@@ -39,6 +39,7 @@ const SolicitudAdmin = () => {
 
   useEffect(() => {
     setAmbienteSeleccionado(ambientesSeleccionados.map(amb => amb.nombre).join(', '));
+    console.log("Ambientes recibidos:", ambientesSeleccionados);
     setAmbientesSeleccionados([]);
   }, []);
 
@@ -93,7 +94,6 @@ const SolicitudAdmin = () => {
   };
 
   const navegarPreload = () => {
-    console.log("contru");
     navigate('/Buscar-Ambiente', { state: { seleccion: true } });
   }
 

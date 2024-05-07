@@ -47,7 +47,6 @@ const BusquedaAmbiente = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const seleccion = location.state?.seleccion || false;
-  console.log(seleccion)
   const [filtroFecha, setFiltroFecha] = useState("");
   const [filtroHorario, setFiltroHorario] = useState("");
   const [filtroCapacidad, setFiltroCapacidad] = useState("");
@@ -113,7 +112,7 @@ const BusquedaAmbiente = () => {
       // Realizar la solicitud al backend con el filtro
       const response = await axios.post('http://localhost:8000/api/ambientes-filtrar', filtro);
       const data = response.data;
-      console.log("RESP:", data);
+      // console.log("RESP:", data);
   
       
       // Agregar la fecha y la hora a los datos obtenidos
@@ -150,12 +149,11 @@ const BusquedaAmbiente = () => {
   }
 
   const handleConfirm = () => {
-    console.log("Confirmación de selección de ambientes");
+    // proximamente... validaciones
     navigate(-1);
   };
 
   const handleReturn = () => {
-    console.log("Regreso a la pantalla anterior");
     setAmbientesSeleccionados([]);
     navigate(-1);
   };
