@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import Card from "../Utils/Card";
 import StyledText from "../StyledText";
 import { useTheme } from '../Contexts/ThemeContext';
@@ -16,8 +17,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import { IconButton } from "@mui/material";
 import Button from "../Utils/Button";
 import { Dialog, DialogContent, DialogContentText, DialogActions } from "@mui/material";
-import { useState } from "react";
 import { useLocation } from 'react-router-dom';
+import useAmbienteStore from "../Contexts/AmbienteStore";
 
 const SolicitudAdmin = () => {
   const { theme } = useTheme();
@@ -26,11 +27,21 @@ const SolicitudAdmin = () => {
   const { dataRow } = location.state || {};
   const [nombreDocente, setNombreDocente] = useState('user'); //nombre del docente loggeado
   const [tipo, setTipo] = useState(dataRow.tipo_ambiente || "aula");
-  const [ambienteSeleccionado, setAmbienteSeleccionado] = useState([]);
+  const ambientesSeleccionados = useAmbienteStore(state => state.ambientesSeleccionados);
+  const setAmbientesSeleccionados = useAmbienteStore(state => state.setAmbientesSeleccionados);
+  const [ambienteSeleccionado, setAmbienteSeleccionado] = useState(
+    " " + ambientesSeleccionados.map(amb => amb.nombre).join(', ')
+  );
   const [dialogoAbierto, setDialogoAbierto] = useState({
     aceptar: false,
     rechazar: false,
-});
+  });
+
+  useEffect(() => {
+    setAmbienteSeleccionado(ambientesSeleccionados.map(amb => amb.nombre).join(', '));
+    console.log("Ambientes recibidos:", ambientesSeleccionados);
+    setAmbientesSeleccionados([]);
+  }, []);
 
   const defaultStyle = {
     outerContainer: {
@@ -83,8 +94,7 @@ const SolicitudAdmin = () => {
   };
 
   const navegarPreload = () => {
-    console.log("navegarPreload");
-    navigate('/Buscar-Ambiente');
+    navigate('/Buscar-Ambiente', { state: { seleccion: true } });
   }
 
   const manejoConfirmarAceptar =() => {
@@ -238,7 +248,6 @@ const SolicitudAdmin = () => {
                 }
                 <StyledText style={{ textTransform: 'uppercase' }} >{tipo}</StyledText>
               </div>
-
               <RowPercentage firstChildPercentage={40} gap={10}>
                 <div style={{ marginBlock: '40px' }}>
                   <FormControl component="fieldset">
@@ -259,10 +268,10 @@ const SolicitudAdmin = () => {
                         label="Ambiente"
                         fullWidth={true}
                         value={ambienteSeleccionado}
-                        onChange={() => { }}
-                        onBlur={() => { }}
-                        isRequired={true}
-                        validationMessage=""
+                        onChange={e => setAmbienteSeleccionado(e.target.value)}
+                        defaultValue=" "
+                        // isRequired={true}
+                        // validationMessage=""
                       />
                     </div>
                     <div style={defaultStyle.iconContainer} onClick={() => { }}>
