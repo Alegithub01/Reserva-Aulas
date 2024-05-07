@@ -9,6 +9,7 @@ import axios from 'axios';
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import CircularProgress from '@mui/material/CircularProgress';
+import { URL_API } from "../services/const";
 const AdminHomeModule3 = () => {
   const [documento, setDocumento] = useState(null);
   const [snackbarOpenSuccess, setSnackbarOpenSuccess] = useState(false);
@@ -79,7 +80,7 @@ const AdminHomeModule3 = () => {
 
     const formData = new FormData();
     formData.append("file", documento);
-    axios.post("http://localhost:8000/api/auth/registerMany", datosJson)
+    axios.post(`${URL_API}/auth/registerMany`, datosJson)
       .then(response => {
         console.log(response.data);
         setSnackbarOpenSuccess(true);

@@ -10,6 +10,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import RowPercentage from "../Responsive/RowPercentage";
 import axios from 'axios';
+import { URL_API } from "../services/const";
 
 
 const RegistroDocente = () => {
@@ -162,7 +163,7 @@ const RegistroDocente = () => {
     };
   
     // Realizar la solicitud HTTP POST al backend
-    axios.post('http://localhost:8000/api/auth/register', datos)
+    axios.post(`${URL_API}/auth/register`, datos)
       .then(response => {
         console.log('Datos registrados exitosamente', response.data);
         navegar('/inicioSesion');
