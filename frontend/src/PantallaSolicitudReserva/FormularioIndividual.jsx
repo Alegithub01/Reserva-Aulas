@@ -33,13 +33,8 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
     fecha: '',
     hora: '',
   });
-
+  const [docenteId, setDocenteId] = useState(null);
   /*datos de prueba para los dropdowns */
-  const cargarBDGruposIndividual = [
-    { value: "1", label: "1", inscritos: 40 },
-    { value: "2", label: "2", inscritos: 30 },
-    { value: "3", label: "3", inscritos: 25 },
-  ];
 
   const motivos = [
     { value: "Examen parcial", label: "Examen parcial" },
@@ -58,7 +53,9 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
     { value: 3, label: "Taller de Base de Datos" },
   ];   //convertir info de materias en este diccionario (solo nombres de materias no importa el valor)
   */
+
   const [cargarBDMateria, setCargarBDMateria] = useState([]);
+  const [cargarBDGruposIndividual, setCargarBDGruposIndividual] = useState([]);
 
   const cargarBDAmbiente = [
     { value: "Aula", label: "Aula", },
@@ -208,13 +205,32 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
     }
   };
 
+  const obtenerGrupoEInscritosPorIdDocenteYMateria = async (docenteId, materia) => {
+    try {
+      const response = await axios.get(`http://localhost:8000/api/docentes/${docenteId}/materias/${materia}/grupos-inscritos`);
+      const gruposEInscritos = response.data.resultados.map(resultado => ({
+        value: resultado.grupo,
+        label: resultado.grupo,
+        inscritos: resultado.inscritos
+      }));
+      setCargarBDGruposIndividual(gruposEInscritos);
+    } catch (error) {
+      console.error('Error al obtener los grupos e inscritos desde el backend:', error);
+    }
+  };
+
   const obtenerDocenteId = async (nombreDocente) => {
     try {
-      const response = await axios.get(`${URL_API}/users/${nombreDocente}/id`);
-      return response.data.id;
+      if (docenteId === null) {
+        const response = await axios.get(`http://localhost:8000/api/users/${nombreDocente}/id`);
+        setDocenteId(response.data.id); 
+        return response.data.id;
+      } else {
+        return docenteId; 
+      }
     } catch (error) {
       console.error('Error al obtener el ID del docente desde el backend:', error);
-      return null; // o cualquier valor que indique que ha ocurrido un error
+      return null; 
     }
   };
 
@@ -246,7 +262,16 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
           <Dropdown
             etiqueta="Materia"
             opciones={cargarBDMateria}
-            cambio={setMateria}
+            cambio={(materia) => {
+              setMateria(materia);
+              obtenerDocenteId(nombreDocente).then((docenteId) => {
+                if (docenteId) {
+                  obtenerGrupoEInscritosPorIdDocenteYMateria(docenteId, materia);
+                } else {
+                  console.log('No se pudo obtener el ID del docente');
+                }
+              });
+            }}
             onBlur={validarSeleccionMateria}
             esRequerido={true}
             mensajeValidacion={mensajeError.materia}
