@@ -14,16 +14,21 @@ const TextInput = ({
   cambio,
   isFocusedDefault = false,
   isDisabled = false,
+  defaultValue = '',
   ...otherProps
 }) => {
   const { theme } = useTheme();
   const [isFocused, setIsFocused] = useState(isFocusedDefault);
   const [isHovered, setIsHovered] = useState(false);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(defaultValue);
   const [showValidationMessage, setShowValidationMessage] = useState({
     noLlenado: false,
     rangoIncumplido: false
   });
+
+  useEffect(() => {
+    setValue(defaultValue);
+  }, [defaultValue]);
 
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import Card from "../Utils/Card";
 import StyledText from "../StyledText";
 import TextInput from "../Utils/TextInput";
@@ -11,6 +12,8 @@ import { IconButton } from "@mui/material";
 import axios from 'axios';
 import EntradaFecha from "../Utils/EntradaFecha";
 import { useLocation } from 'react-router-dom';
+import useAmbienteStore from '../Contexts/AmbienteStore';
+import Button from '../Utils/Button';
 
 //const informacion = [
 //  { id: 1, nombre: "691A", capacidad: 100, tipo: "Aula", planta: "Planta 1", ubicacion: 'ubi1', servicios: 'Data display', dia: "Lunes", periodos: "08:00-10:00, 15:45-17:15" },
@@ -41,6 +44,7 @@ const opcionesHorario = [
 ];
 
 const BusquedaAmbiente = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const seleccion = location.state?.seleccion || false;
   console.log(seleccion)
@@ -51,8 +55,10 @@ const BusquedaAmbiente = () => {
   const [filtroServicios, setFiltroServicios] = useState("");
   const [mensajeError, cambiarMensajeError] = useState({ capacidad: "" });
   const { theme } = useTheme();
+  const ambientesSeleccionados = useAmbienteStore(state => state.ambientesSeleccionados);
   const [informacionFinal, setInformacionFinal] = useState([]);
   const [loading, setLoading] = useState(true); // Nuevo estado para indicar si se están cargando los datos
+  const setAmbientesSeleccionados = useAmbienteStore(state => state.setAmbientesSeleccionados);
 
   const funciona = async () => {
     try {
@@ -143,6 +149,17 @@ const BusquedaAmbiente = () => {
     setFiltroServicios(event.target.value);
   }
 
+  const handleConfirm = () => {
+    console.log("Confirmación de selección de ambientes");
+    navigate(-1);
+  };
+
+  const handleReturn = () => {
+    console.log("Regreso a la pantalla anterior");
+    setAmbientesSeleccionados([]);
+    navigate(-1);
+  };
+
   const ambientes = [
     { value: "Aula", label: "Aula" },
     { value: "Auditorio", label: "Auditorio" },
@@ -176,6 +193,27 @@ const BusquedaAmbiente = () => {
       borderColor: 'lightgray',
       borderRadius: '105px',
       backgroundColor: 'blue',
+    },
+    infoContainer: {
+      overflowY: 'auto',
+      maxHeight: '350px',
+      padding: '10px',
+    },
+    infoItem: (multiple) => ({
+      margin: '20px 0 0 0',
+      fontSize: '16px',
+      color: theme.text,
+      lineHeight: multiple ? '1.3' : '2.1',
+    }),
+    infoTitle: {
+      fontWeight: 'bold', 
+    },
+    buttonContainer: {
+      flexDirection: 'column',
+      gap: '10px',
+      display: 'flex',
+      justifyContent: 'space-around',
+      marginTop: '20px',
     }
   };
 
@@ -289,7 +327,7 @@ const BusquedaAmbiente = () => {
         <Card
             minHeight="600px"
             minWidth="100px"
-            maxWidth="300px"
+            maxWidth="270px"
             alignCenter
             padding="30px 50px"
         >
@@ -306,25 +344,32 @@ const BusquedaAmbiente = () => {
           >
             <div
               style={{
-                height: "40%",
+                height: "30%",
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: 'red',
                 textAlign: 'center',
-                padding: '20px 0'
+                padding: '10px 0'
               }}
             >
-              <StyledText boldText>Ambientes Seleccionados</StyledText>
+              <StyledText boldText>Ambiente Seleccionado</StyledText>
             </div>
-            <div
-              style={{
-                height: "0%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            ></div>
+            <div style={defaultStyle.infoContainer}>
+              {ambientesSeleccionados.map((ambiente, index) => (
+                <div key={index} style={defaultStyle.infoItem(ambientesSeleccionados.length > 1)}>
+                  <span style={defaultStyle.infoTitle}>Tipo:</span> {ambiente.tipo}<br />
+                  <span style={defaultStyle.infoTitle}>Nombre:</span> {ambiente.nombre}<br />
+                  <span style={defaultStyle.infoTitle}>Capacidad:</span> {ambiente.capacidad}<br />
+                  <span style={defaultStyle.infoTitle}>Planta:</span> {ambiente.planta}<br />
+                  <span style={defaultStyle.infoTitle}>Ubicación:</span> {ambiente.ubicacion}<br />
+                  <span style={defaultStyle.infoTitle}>Servicios:</span> {ambiente.servicios}<br />
+                </div>
+              ))}
+            </div>
+            <div style={defaultStyle.buttonContainer}>
+              <Button onClick={handleConfirm}>Confirmar</Button>
+              <Button onClick={handleReturn}>Cancelar</Button>
+            </div>
           </div>
         </Card>
       )}
