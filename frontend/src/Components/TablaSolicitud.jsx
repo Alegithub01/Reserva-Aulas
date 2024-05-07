@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Box from '@mui/material/Box';
-import { DataGrid } from '@mui/x-data-grid';
+import { GridActionsCellItem, DataGrid } from '@mui/x-data-grid';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { useTheme } from '../Contexts/ThemeContext';
@@ -23,12 +23,19 @@ const StyledDataGrid = styled(DataGrid)`
     height: 100%; 
   }
 `;
-function TablaSolicitudes() {
-  const [filas, setFilas] = useState([]);
+const prueba = [
+  {id: 1, nombre: 'Juan Perez', materia: 'Matematicas', grupo: '1', fecha: '2021-10-10', horario: '8:00-10:00', servicios: 'Proyector', Motivo: 'Clase de repaso', estado: 'Pendiente', ambiente: 'Aula 1'},
+  {id: 2, nombre: 'Jose Perez', materia: 'Matematicas', grupo: '1', fecha: '2021-10-10', horario: '8:00-10:00', servicios: 'Proyector', Motivo: 'Clase de repaso', estado: 'Pendiente', ambiente: 'Aula 1'},
+  {id: 3, nombre: 'Maria Perez', materia: 'Matematicas', grupo: '1', fecha: '2021-10-10', horario: '8:00-10:00', servicios: 'Proyector', Motivo: 'Clase de repaso', estado: 'Pendiente', ambiente: 'Aula 1'},
+];
+
+const TablaSolicitudes= () =>{
+  const [filas, setFilas] = useState(prueba);
   const [filasModificadas, setFilasModificadas] = useState({});
   const [dialogoAbierto, setDialogoAbierto] = useState(false);
   const [idAEliminar, setIdAEliminar] = useState(null);
 
+  
   // useEffect(() => {
   //   setFilas(informacion);
   // }, [informacion]);
@@ -70,7 +77,7 @@ function TablaSolicitudes() {
       field: 'nombre',
       headerName: 'Nombre Docente',
       flex: 1,
-      minWidth: 190,
+      minWidth: 140,
       align: 'center',
       headerAlign: 'center',
     },
@@ -86,7 +93,7 @@ function TablaSolicitudes() {
       field: 'grupo',
       headerName: 'Grupo',
       flex: 1,
-      minWidth: 120,
+      minWidth: 100,
       align: 'center',
       headerAlign: 'center',
     },
@@ -107,8 +114,22 @@ function TablaSolicitudes() {
       headerAlign: 'center',
     },
     { field: 'servicios', headerName: 'Servicios solicitados',flex: 1, minWidth: 190, headerAlign: 'center', align: 'center', },
-    { field: 'detalles', headerName: 'Detalles de solicitud',flex: 1, minWidth: 190, headerAlign: 'center', align: 'center', },
+    { field: 'Motivo', headerName: 'Motivo de solicitud',flex: 1, minWidth: 140, headerAlign: 'center', align: 'center', },
     {
+      field: 'estado',
+      headerName: 'Estado',
+      flex: 1,
+      minWidth: 120,
+      align: 'center',
+      headerAlign: 'center',
+    },{
+      field: 'ambiente',
+      headerName: 'Ambiente',
+      flex: 1,
+      minWidth: 120,
+      align: 'center',
+      headerAlign: 'center',
+    },{
       field: 'acciones',
       type: 'actions',
       headerName: 'Acciones',
