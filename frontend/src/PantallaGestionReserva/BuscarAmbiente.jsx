@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import Card from "../Utils/Card";
 import StyledText from "../StyledText";
 import TextInput from "../Utils/TextInput";
-import Dropdown from "../Utils/Dropdown";
+import Dropdown from "../Utils/Dropdowncopy";
 import RowPercentage from "../Responsive/RowPercentage";
-import { useTheme } from '../Contexts/ThemeContext';
-import SearchIcon from '@mui/icons-material/Search';
+import { useTheme } from "../Contexts/ThemeContext";
+import SearchIcon from "@mui/icons-material/Search";
 import TablaAmbiente from "../Components/TablaAmbienteVistaDocente";
 import { IconButton } from "@mui/material";
-import axios from 'axios';
+import axios from "axios";
 import EntradaFecha from "../Utils/EntradaFecha";
-import { useLocation } from 'react-router-dom';
-import useAmbienteStore from '../Contexts/AmbienteStore';
-import Button from '../Utils/Button';
+import { useLocation } from "react-router-dom";
+import useAmbienteStore from "../Contexts/AmbienteStore";
+import Button from "../Utils/Button";
 import { URL_API } from "../services/const";
+import CircularProgress from "@mui/material/CircularProgress";
 
 //const informacion = [
 //  { id: 1, nombre: "691A", capacidad: 100, tipo: "Aula", planta: "Planta 1", ubicacion: 'ubi1', servicios: 'Data display', dia: "Lunes", periodos: "08:00-10:00, 15:45-17:15" },
@@ -24,12 +25,11 @@ import { URL_API } from "../services/const";
 //  { id: 5, nombre: "692B", capacidad: 125, tipo: "Aula", planta: "Planta 2", ubicacion: 'ubi1', servicios: 'Data display', dia: "Jueves", periodos: "18:00-20:00" },
 //];
 
-
-const tipos =[
-  {value: "10", label: "Aula"},
-  {value: "20", label: "Auditorio"},
-  {value: "30", label: "Laboratorio"},
-];
+// const tipos =[
+//   {value: "10", label: "Aula"},
+//   {value: "20", label: "Auditorio"},
+//   {value: "30", label: "Laboratorio"},
+// ];
 
 const opcionesHorario = [
   { value: "06:45-08:15", label: "06:45-08:15" },
@@ -47,7 +47,7 @@ const opcionesHorario = [
 const BusquedaAmbiente = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const seleccion = location.state?.seleccion || false;
+  const { seleccion, fecha, capacidad, horario, servicios, tipoAmbiente } = location.state || {};
   const [filtroFecha, setFiltroFecha] = useState("");
   const [filtroHorario, setFiltroHorario] = useState("");
   const [filtroCapacidad, setFiltroCapacidad] = useState("");
@@ -55,32 +55,49 @@ const BusquedaAmbiente = () => {
   const [filtroServicios, setFiltroServicios] = useState("");
   const [mensajeError, cambiarMensajeError] = useState({ capacidad: "" });
   const { theme } = useTheme();
-  const ambientesSeleccionados = useAmbienteStore(state => state.ambientesSeleccionados);
+  const ambientesSeleccionados = useAmbienteStore(
+    (state) => state.ambientesSeleccionados
+  );
   const [informacionFinal, setInformacionFinal] = useState([]);
-  const [loading, setLoading] = useState(true); // Nuevo estado para indicar si se están cargando los datos
-  const setAmbientesSeleccionados = useAmbienteStore(state => state.setAmbientesSeleccionados);
+  const [loading, setLoading] = useState(false);
+  const setAmbientesSeleccionados = useAmbienteStore(
+    (state) => state.setAmbientesSeleccionados
+  );
+
+  useEffect(() => {
+    if (tipoAmbiente) {
+      setFiltroTipo(tipoAmbiente);
+    }
+    if (capacidad) {
+      setFiltroCapacidad(capacidad.toString());
+    }
+    // console.log(tipoAmbiente)
+    // if (horas && horas.length > 0) {
+    //   setFiltroHorario(horas[0]);
+    // }
+  }, [tipoAmbiente]);
 
   const funciona = async () => {
     try {
       setLoading(true); // Indica que se está realizando la búsqueda
       // Construir el objeto de filtro
       const filtro = {};
-  
+
       // Verificar y añadir capacidad al filtro
       if (filtroCapacidad.trim() !== "") {
         filtro.capacidad = filtroCapacidad;
       }
-  
+
       // Verificar y añadir tipo al filtro
       if (filtroTipo.trim() !== "") {
         filtro.tipo = filtroTipo;
       }
-  
+
       // Verificar y añadir horas al filtro
       if (filtroHorario.trim() !== "") {
         filtro.horas = filtroHorario;
       }
-  
+
       // Verificar y añadir servicios al filtro
       if (filtroServicios.trim() !== "") {
         filtro.servicios = filtroServicios;
@@ -93,13 +110,21 @@ const BusquedaAmbiente = () => {
         fechaAux = filtroFecha;
       } else {
         const fechaActual = new Date();
-        const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        const diasSemana = [
+          "Domingo",
+          "Lunes",
+          "Martes",
+          "Miércoles",
+          "Jueves",
+          "Viernes",
+          "Sábado",
+        ];
         const diaActual = fechaActual.getDay();
         // diaSemana = diasSemana[diaActual];
-        fechaAux = fechaActual.toISOString().split('T')[0];
+        fechaAux = fechaActual.toISOString().split("T")[0];
       }
       // filtro.dia = diaSemana;
-  
+
       // Verificar si no se ha ingresado ningún filtro
       if (Object.keys(filtro).length === 0) {
         // Mostrar un mensaje de error o simplemente retornar sin hacer nada
@@ -107,31 +132,31 @@ const BusquedaAmbiente = () => {
         setLoading(false); // Indicar que la búsqueda ha finalizado
         return;
       }
-  
+
       console.log("Datos enviados a la solicitud:", filtro);
-  
+
       // Realizar la solicitud al backend con el filtro
+      console.log("filtro");
+      console.log(filtro);
       const response = await axios.post(`${URL_API}/ambientes-filtrar`, filtro);
       const data = response.data;
       // console.log("RESP:", data);
-  
-      
+
       // Agregar la fecha y la hora a los datos obtenidos
-      const dataConFechaHora = data.map(ambiente => ({
+      const dataConFechaHora = data.map((ambiente) => ({
         ...ambiente,
         horario: filtroHorario,
         fecha: fechaAux,
-        
       }));
 
       setInformacionFinal(dataConFechaHora);
       setLoading(false);
     } catch (error) {
-      console.error('Error al obtener y filtrar ambientes:', error);
+      console.error("Error al obtener y filtrar ambientes:", error);
       setLoading(false);
     }
   };
-  
+
   const manejarCambioCapacidad = (event, pattern) => {
     const valor = event.target.value;
     if (pattern && RegExp(pattern).test(valor)) {
@@ -141,13 +166,13 @@ const BusquedaAmbiente = () => {
 
   const validarVacioCapacidad = () => {
     if (filtroCapacidad.trim() === "") {
-      cambiarMensajeError(previo => ({ ...previo, capacidad: "" }));
+      cambiarMensajeError((previo) => ({ ...previo, capacidad: "" }));
     }
   };
 
   const manejarCambioServicios = (event) => {
     setFiltroServicios(event.target.value);
-  }
+  };
 
   const handleConfirm = () => {
     // proximamente... validaciones
@@ -164,77 +189,100 @@ const BusquedaAmbiente = () => {
     { value: "Auditorio", label: "Auditorio" },
     { value: "Laboratorio", label: "Laboratorio" },
   ];
+
   const defaultStyle = {
     outerContainer: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '100%',
-      width: '100%',
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100%",
+      width: "100%",
       background: theme.bgmain,
     },
     container: {
-      display: 'flex',
-      width: '60%',
-      gap: '20px',
+      display: "flex",
+      width: "60%",
+      gap: "20px",
     },
     cardStyle: {
-      minHeight: '600px',
-      padding: '30px 50px',
-      borderColor: 'blue',
-      borderRadius: '15px',
-      
+      minHeight: "600px",
+      padding: "30px 50px",
+      borderColor: "blue",
+      borderRadius: "15px",
     },
     smallCardStyle: {
-      flex: '1 1 40%', 
-      height: '100%',
-      padding: '20px',
-      borderColor: 'lightgray',
-      borderRadius: '105px',
-      backgroundColor: 'blue',
+      flex: "1 1 40%",
+      height: "100%",
+      padding: "20px",
+      borderColor: "lightgray",
+      borderRadius: "105px",
+      backgroundColor: "blue",
     },
     infoContainer: {
-      overflowY: 'auto',
-      maxHeight: '350px',
-      padding: '10px',
+      overflowY: "auto",
+      maxHeight: "350px",
+      padding: "10px",
     },
     infoItem: (multiple) => ({
-      margin: '20px 0 0 0',
-      fontSize: '16px',
+      margin: "20px 0 0 0",
+      fontSize: "16px",
       color: theme.text,
-      lineHeight: multiple ? '1.3' : '2.1',
+      lineHeight: multiple ? "1.3" : "2.1",
     }),
     infoTitle: {
-      fontWeight: 'bold', 
+      fontWeight: "bold",
     },
     buttonContainer: {
-      flexDirection: 'column',
-      gap: '10px',
-      display: 'flex',
-      justifyContent: 'space-around',
-      marginTop: '20px',
-    }
+      flexDirection: "column",
+      gap: "10px",
+      display: "flex",
+      justifyContent: "space-around",
+      marginTop: "20px",
+    },
   };
 
   const obtenerDiaSemana = (fecha) => {
-    const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const diasSemana = [
+      "Domingo",
+      "Lunes",
+      "Martes",
+      "Miércoles",
+      "Jueves",
+      "Viernes",
+      "Sábado",
+    ];
     const fechaObj = new Date(fecha);
     const diaSemana = fechaObj.getDay();
     return diasSemana[diaSemana];
+  };
+  const [selectedHorario, setSelectedHorario] = useState(horario);
+  const [selectedTipo, setSelectedTipo] = useState(tipoAmbiente || "");
+  const handleHorarioChange = (newHorario) => {
+    setSelectedHorario(newHorario);
+    setFiltroHorario(newHorario);
+  };
+  const handleTipoChange = (newTipo) => {
+    setSelectedTipo(newTipo);
+    setFiltroTipo(newTipo);
   };
 
   return (
     <div style={defaultStyle.outerContainer}>
       <div style={defaultStyle.container}>
         <Card
-          style={defaultStyle.cardStyle}
+          style={{ ...defaultStyle.cardStyle, position: "relative" }}
           minWidth="100px"
           minHeight="600px"
+          maxHeight="600px"
           fullWidth
           alignCenter
           padding="30px 50px"
           borderColor="blue"
           borderRadius="15px"
+          isLoading={loading}
+          overlayStyle={{
+            backgroundColor: "rgba(0, 0, 255, 0.5)",
+          }}
         >
           <div
             style={{
@@ -244,6 +292,7 @@ const BusquedaAmbiente = () => {
               display: "flex",
               gap: "15px",
               justifyContent: "space-between",
+              flex: 1,
             }}
           >
             <div
@@ -256,42 +305,51 @@ const BusquedaAmbiente = () => {
             >
               <StyledText boldText>Buscar ambientes</StyledText>
             </div>
+
             <RowPercentage firstChildPercentage={60} gap="10px">
               <div>
                 <EntradaFecha
                   etiqueta="Fecha"
                   enCambio={setFiltroFecha}
                   mensajeValidacion=""
+                  valorInicial={fecha}
                 />
               </div>
-            <div>
-              <Dropdown
-                etiqueta="Horario"
-                opciones={opcionesHorario}
-                cambio={setFiltroHorario}
-                esRequerido={true}
+              <div>
+                <Dropdown
+                  etiqueta="Horario"
+                  opciones={opcionesHorario}
+                  valorInicial={selectedHorario}
+                  cambio={handleHorarioChange}
+                  esRequerido={true}
                 />
-            </div>
+              </div>
             </RowPercentage>
             <RowPercentage firstChildPercentage={60} gap="10px">
               <div>
                 <TextInput
                   label="Capacidad Minima"
                   fullWidth={true}
-                  onChange={(event) => manejarCambioCapacidad(event, "^[0-9]*$", { min: 10, max: 300 })}
+                  onChange={(event) =>
+                    manejarCambioCapacidad(event, "^[0-9]*$", {
+                      min: 10,
+                      max: 300,
+                    })
+                  }
                   onBlur={validarVacioCapacidad}
                   isRequired={true}
                   validationMessage={mensajeError.capacidad}
                   pattern="^[0-9]*$"
                   rango={{ min: 10, max: 300 }}
+                  defaultValue={capacidad}
                 />
               </div>
               <div>
                 <Dropdown
                   etiqueta="Tipo de Ambiente"
                   opciones={ambientes}
-                  cambio={setFiltroTipo}
-
+                  valorInicial={selectedTipo}
+                  cambio={handleTipoChange}
                   esRequerido={true}
                 />
               </div>
@@ -300,13 +358,16 @@ const BusquedaAmbiente = () => {
               <div>
                 <TextInput
                   label="Servicios"
-                  pattern='^[A-Za-z0-9, ]{0,50}$'
+                  pattern="^[A-Za-z0-9, ]{0,50}$"
                   onChange={(event) => manejarCambioServicios(event)}
+                  defaultValue={servicios}
                 />
               </div>
               <div style={defaultStyle.iconContainer} onClick={() => { }}>
                 <IconButton onClick={funciona} style={{ color: "black" }}>
-                  <SearchIcon style={{ fontSize: 30, color: theme.highlight }} />
+                  <SearchIcon
+                    style={{ fontSize: 30, color: theme.highlight }}
+                  />
                 </IconButton>
               </div>
             </RowPercentage>
@@ -324,11 +385,11 @@ const BusquedaAmbiente = () => {
       </div>
       {seleccion && (
         <Card
-            minHeight="600px"
-            minWidth="100px"
-            maxWidth="270px"
-            alignCenter
-            padding="30px 50px"
+          minHeight="600px"
+          minWidth="100px"
+          maxWidth="270px"
+          alignCenter
+          padding="30px 50px"
         >
           <div
             style={{
@@ -347,21 +408,38 @@ const BusquedaAmbiente = () => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                textAlign: 'center',
-                padding: '10px 0'
+                textAlign: "center",
+                padding: "10px 0",
               }}
             >
               <StyledText boldText>Ambiente Seleccionado</StyledText>
             </div>
             <div style={defaultStyle.infoContainer}>
               {ambientesSeleccionados.map((ambiente, index) => (
-                <div key={index} style={defaultStyle.infoItem(ambientesSeleccionados.length > 1)}>
-                  <span style={defaultStyle.infoTitle}>Tipo:</span> {ambiente.tipo}<br />
-                  <span style={defaultStyle.infoTitle}>Nombre:</span> {ambiente.nombre}<br />
-                  <span style={defaultStyle.infoTitle}>Capacidad:</span> {ambiente.capacidad}<br />
-                  <span style={defaultStyle.infoTitle}>Planta:</span> {ambiente.planta}<br />
-                  <span style={defaultStyle.infoTitle}>Ubicación:</span> {ambiente.ubicacion}<br />
-                  <span style={defaultStyle.infoTitle}>Servicios:</span> {ambiente.servicios}<br />
+                <div
+                  key={index}
+                  style={defaultStyle.infoItem(
+                    ambientesSeleccionados.length > 1
+                  )}
+                >
+                  <span style={defaultStyle.infoTitle}>Tipo:</span>{" "}
+                  {ambiente.tipo}
+                  <br />
+                  <span style={defaultStyle.infoTitle}>Nombre:</span>{" "}
+                  {ambiente.nombre}
+                  <br />
+                  <span style={defaultStyle.infoTitle}>Capacidad:</span>{" "}
+                  {ambiente.capacidad}
+                  <br />
+                  <span style={defaultStyle.infoTitle}>Planta:</span>{" "}
+                  {ambiente.planta}
+                  <br />
+                  <span style={defaultStyle.infoTitle}>Ubicación:</span>{" "}
+                  {ambiente.ubicacion}
+                  <br />
+                  <span style={defaultStyle.infoTitle}>Servicios:</span>{" "}
+                  {ambiente.servicios}
+                  <br />
                 </div>
               ))}
             </div>
