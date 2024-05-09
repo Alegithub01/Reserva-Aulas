@@ -24,6 +24,7 @@ import PantallaReglas from "./PantallaAmbientes/PantallaReglas";
 import PanelGestionReservas from "./PantallaModulos/PanelGestionReservas";
 import AdministrarSolicitudes from "./PantallaGestionReserva/AdministrarSolicitudes"
 import SolicitudAdmin from "./PantallaGestionReserva/SolicitudAdmin";
+import AjustarSolicitudes from "./PantallaGestionReserva/AjustarSolicitudes";
 
 function App() {
   return (
@@ -365,6 +366,21 @@ function App() {
                   }}
                 >
                   <SolicitudAdmin />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/Ajustar-Solicitudes"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100%",
+                  }}
+                >
+                  <AjustarSolicitudes />
                 </div>
               </Layout>
             }

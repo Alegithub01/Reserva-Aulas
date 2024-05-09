@@ -4,6 +4,7 @@ import Card from "./Modulo";
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';    
 import SettingsIcon from '@mui/icons-material/Settings';
+import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
 
 const PanelGestionReservas = () => {
     const navegar = useNavigate();
@@ -51,10 +52,14 @@ const PanelGestionReservas = () => {
             />
             <Card 
                 text="Administrar Solicitudes" 
-                Icon={SettingsIcon}
+                Icon={DisplaySettingsIcon}
                 onClick={() => navegar('/Solicitudes')}
             />
-            
+            <Card 
+                text="Ajustar Solicitudes" 
+                Icon={SettingsIcon}
+                onClick={() => navegar('/Ajustar-Solicitudes')}
+            />
             <div
                 style={{
                     display: "flex",
