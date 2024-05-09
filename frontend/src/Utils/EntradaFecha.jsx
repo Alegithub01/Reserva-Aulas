@@ -10,9 +10,9 @@ const EntradaFecha = ({etiqueta, enCambio, onBlur = null, mensajeValidacion, val
   let mostrarMensajeDeError = true;
   const [errorFechaAnterior, setErrorFechaAnterior] = useState(false);
 
-  useEffect(() => {
-    setValor(valorInicial);
-  }, [valorInicial]);
+  // useEffect(() => {
+  //   setValor(valorInicial);
+  // }, [valorInicial]);
 
   const manejarCambio = (event) => {
     console.log(event.target.value, typeof event.target.value)
