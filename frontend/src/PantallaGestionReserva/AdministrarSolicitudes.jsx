@@ -41,7 +41,7 @@ const GestionReservas = () => {
           materia: "Calculo ll",
           // horas: ["08:15-09:45"],
           horas: ["09:45-11:15"],
-          servicios: "Wi-Fi",
+          servicios: "Data display",
           motivo: "Examen parcial", // "Examen parcial", Examen final", "Examen de mesa", "Reemplazo ambiente", "Taller", "Otro"
           fecha: "2024-05-11",
           created_at: "2024-05-02T12:34:56",
@@ -54,7 +54,7 @@ const GestionReservas = () => {
           grupo: ["1"],
           tipo_ambiente: "Aula",
           materia: "Redes de Computadoras",
-          horas: ["11:15-09:45"],
+          horas: ["11:15-12:45"],
           servicios: "Proyector, Wi-Fi",
           motivo: "Examen parcial", // "Examen parcial", Examen final", "Examen de mesa", "Reemplazo ambiente", "Taller", "Otro"
           fecha: "2024-05-09",

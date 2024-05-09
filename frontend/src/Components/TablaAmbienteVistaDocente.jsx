@@ -77,7 +77,8 @@ export default function TablaAmbienteVista({informacion}) {
   return (
     <Box
       sx={{
-        height: '100%',
+        // height: '100%',
+        height: 320,
         '& .actions': {
           color: 'text.secondary',
         },

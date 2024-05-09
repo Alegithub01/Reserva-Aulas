@@ -64,7 +64,7 @@ const BusquedaAmbiente = () => {
   const setAmbientesSeleccionados = useAmbienteStore(
     (state) => state.setAmbientesSeleccionados
   );
-
+  const [mensajeNoResultados, setMensajeNoResultados] = useState('');
   useEffect(() => {
     if (tipoAmbiente) {
       setFiltroTipo(tipoAmbiente);
@@ -85,54 +85,63 @@ const BusquedaAmbiente = () => {
 
   const funciona = async () => {
     try {
-      setLoading(true);
-      const filtro = {
-        capacidad: filtroCapacidad.trim(),
-        tipo: filtroTipo.trim(),
-        // horas: filtroHorario.trim(),
-        // servicios: filtroServicios.trim(),
-        // fecha: filtroFecha.trim()
-      };
-      Object.keys(filtro).forEach((key) => {
-        if (filtro[key] === "") {
-          delete filtro[key];
-        }
-      });
-      if (Object.keys(filtro).length === 0) {
-        console.error(
-          "Debe ingresar al menos un filtro para realizar la búsqueda."
-        );
-        setLoading(false);
-        return;
-      }
-      console.log("Filtro:", filtro);
-      // El filtro que se construye para la consulta tiene esta forma:
-      // capacidad:"200"
-      // fecha:"2024-05-11"    // verificar que el ambiente este disponible en esta fecha (segun las solicitudes)
-      // horas:"08:15-09:45"
-      // servicios:"Proyector, Wi-Fi"
-      // tipo:"Laboratorio"
-      // Realizar la solicitud al backend con el filtro
-      const response = await axios.post(`${URL_API}/ambientes-filtrar`, filtro);
-      const data = response.data;
-      console.log("Respuesta:", data);
-      const dataConFechaHora = data.map((ambiente) => {
-        const horasArray = JSON.parse(ambiente.horas);
-        const horasFormateadas = horasArray.join(", ");
-        return {
-          ...ambiente,
-          horario: horasFormateadas,
-          fecha: filtro.fecha,
+        setLoading(true);
+        const filtro = {
+            // capacidad: filtroCapacidad.trim(),
+            // tipo: filtroTipo.trim(),
+            horas: filtroHorario.trim(),
+            // servicios: filtroServicios.trim(),
+            // fecha: filtroFecha.trim()
         };
-      });
+        Object.keys(filtro).forEach((key) => {
+            if (filtro[key] === "") {
+                delete filtro[key];
+            }
+        });
 
-      setInformacionFinal(dataConFechaHora);
-      setLoading(false);
+        if (Object.keys(filtro).length === 0) {
+            console.error("Debe ingresar al menos un filtro para realizar la búsqueda.");
+            setLoading(false);
+            return;
+        }
+        // El filtro que se construye para la consulta tiene esta forma:
+        // capacidad:"200"
+        // fecha:"2024-05-11"  // verificar que el ambiente este disponible en esta fecha (segun las solicitudes)
+        // horas:"08:15-09:45" // si es de horario multiple seria así '06:45-08:15,08:15-09:45'      
+        // servicios:"Proyector, Wi-Fi"
+        // tipo:"Laboratorio"
+        // Realizar la solicitud al backend con el filtro
+        console.log("FILTRO",filtro)
+        const response = await axios.post(`${URL_API}/ambientes-filtrar`, filtro);
+        let data = response.data;
+        console.log("RESP",data)
+        if (data.length === 0 && filtroCapacidad) {
+            setMensajeNoResultados(`No se encontraron ambientes con la capacidad deseada (${filtroCapacidad}). Puede seleccionar dos ambientes de menos capacidad.`);
+            delete filtro.capacidad;
+            const retryResponse = await axios.post(`${URL_API}/ambientes-filtrar`, filtro);
+            data = retryResponse.data;
+            if (data.length === 0) {
+              setMensajeNoResultados(`No se encontraron ambientes con la capacidad deseada (${filtroCapacidad}). SSSSSSSS`);            
+            }
+        }
+
+        const dataConFechaHora = data.map((ambiente) => {
+            const horasArray = JSON.parse(ambiente.horas);
+            const horasFormateadas = horasArray.join(", ");
+            return {
+                ...ambiente,
+                horario: horasFormateadas,
+                fecha: filtro.fecha,
+            };
+        });
+
+        setInformacionFinal(dataConFechaHora);
+        setLoading(false);
     } catch (error) {
-      console.error("Error al obtener y filtrar ambientes:", error);
-      setLoading(false);
+        console.error("Error al obtener y filtrar ambientes:", error);
+        setLoading(false);
     }
-  };
+};
 
   const manejarCambioCapacidad = (event, pattern) => {
     const valor = event.target.value;
@@ -175,7 +184,7 @@ const BusquedaAmbiente = () => {
       height: "100%",
       width: "100%",
       background: theme.bgmain,
-    },
+          },
     container: {
       display: "flex",
       width: "60%",
@@ -227,6 +236,14 @@ const BusquedaAmbiente = () => {
   const handleTipoChange = (newTipo) => {
     setSelectedTipo(newTipo);
     setFiltroTipo(newTipo);
+  };
+
+  const verificarHorario = (ambientesSeleccionados, horarios) => {
+    return ambientesSeleccionados.every(ambiente => {
+      const horariosAmbiente = ambiente.horario.split(', ').map(h => h.trim());
+      console.log(`Horarios en ambiente ${ambiente.nombre}:`, horariosAmbiente);
+      return horarios.every(horarioBuscado => horariosAmbiente.includes(horarioBuscado));
+    });
   };
 
   return (
@@ -335,6 +352,11 @@ const BusquedaAmbiente = () => {
                 </IconButton>
               </div>
             </RowPercentage>
+            {mensajeNoResultados && (
+              <div style={{ padding: '10px', backgroundColor: 'lightpink', margin: '10px' }}>
+                {mensajeNoResultados}
+              </div>
+            )}
             <TablaAmbiente informacion={informacionFinal} />
             <div
               style={{
@@ -401,10 +423,7 @@ const BusquedaAmbiente = () => {
                     justifyContent: "space-between",
                   }}
                 >
-                  <Casilla2
-                    label="Fecha"
-                    checked={true}
-                  />
+                  <Casilla2 label="Fecha" checked={true} />
                   <Casilla2
                     label="Capacidad"
                     descripcion={`Solicitado: ${capacidad}, Asignado: ${ambientesSeleccionados
@@ -421,26 +440,31 @@ const BusquedaAmbiente = () => {
                   <Casilla2
                     label="Horario"
                     descripcion={`Solicitado: ${horario}`}
-                    checked={ambientesSeleccionados.every((ambiente) =>
-                      ambiente.horario.includes(horario)
-                    )}
+                    checked={verificarHorario(ambientesSeleccionados, horario)}
                   />
                   <Casilla2
-  label="Tipo de Ambiente"
-  descripcion={`Solicitado: ${tipoAmbiente}`}
-  checked={ambientesSeleccionados.some(ambiente => ambiente.tipo === tipoAmbiente)}
-  style={{
-    backgroundColor: ambientesSeleccionados.some(ambiente => ambiente.tipo === tipoAmbiente) ? 'lightgreen' : 'transparent'
-  }}
-/>
-<Casilla2
-  label="Servicios"
-  checked={
-    servicios === "" || ambientesSeleccionados.every(
-      ambiente => ambiente.servicios === servicios
-    )
-  }
-/>
+                    label="Tipo de Ambiente"
+                    descripcion={`Solicitado: ${tipoAmbiente}`}
+                    checked={ambientesSeleccionados.some(
+                      (ambiente) => ambiente.tipo === tipoAmbiente
+                    )}
+                    style={{
+                      backgroundColor: ambientesSeleccionados.some(
+                        (ambiente) => ambiente.tipo === tipoAmbiente
+                      )
+                        ? "lightgreen"
+                        : "transparent",
+                    }}
+                  />
+                  <Casilla2
+                    label="Servicios"
+                    checked={
+                      servicios === "" ||
+                      ambientesSeleccionados.every(
+                        (ambiente) => ambiente.servicios === servicios
+                      )
+                    }
+                  />
                 </div>
               ) : (
                 <div
