@@ -21,7 +21,6 @@ const StyledDataGrid = styled(DataGrid)`
 `;
 
 export default function TablaAmbienteVista({informacion}) {
-  console.log(informacion)
   const [filas, setFilas] = useState([...informacion]);
   const [selectedRows, setSelectedRows] = useState([]);
   const setAmbientesSeleccionados = useAmbienteStore(state => state.setAmbientesSeleccionados);

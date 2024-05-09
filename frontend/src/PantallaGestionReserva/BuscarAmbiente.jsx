@@ -15,6 +15,7 @@ import { useLocation } from "react-router-dom";
 import useAmbienteStore from "../Contexts/AmbienteStore";
 import Button from "../Utils/Button";
 import { URL_API } from "../services/const";
+import Casilla2 from "../Utils/Casilla2";
 
 //const informacion = [
 //  { id: 1, nombre: "691A", capacidad: 100, tipo: "Aula", planta: "Planta 1", ubicacion: 'ubi1', servicios: 'Data display', dia: "Lunes", periodos: "08:00-10:00, 15:45-17:15" },
@@ -46,7 +47,8 @@ const opcionesHorario = [
 const BusquedaAmbiente = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { seleccion, fecha, capacidad, horario, servicios, tipoAmbiente } = location.state || {};
+  const { seleccion, fecha, capacidad, horario, servicios, tipoAmbiente } =
+    location.state || {};
   const [filtroFecha, setFiltroFecha] = useState("");
   const [filtroHorario, setFiltroHorario] = useState("");
   const [filtroCapacidad, setFiltroCapacidad] = useState("");
@@ -70,86 +72,59 @@ const BusquedaAmbiente = () => {
     if (capacidad) {
       setFiltroCapacidad(capacidad.toString());
     }
-    // console.log(tipoAmbiente)
-    // if (horas && horas.length > 0) {
-    //   setFiltroHorario(horas[0]);
-    // }
-  }, [tipoAmbiente]);
+    if (horario) {
+      setFiltroHorario(horario.toString());
+    }
+    if (servicios) {
+      setFiltroServicios(servicios.toString());
+    }
+    if (fecha) {
+      setFiltroFecha(fecha.toString());
+    }
+  }, [tipoAmbiente, capacidad, horario, servicios, fecha]);
 
   const funciona = async () => {
     try {
-      setLoading(true); // Indica que se está realizando la búsqueda
-      // Construir el objeto de filtro
-      const filtro = {};
-
-      // Verificar y añadir capacidad al filtro
-      if (filtroCapacidad.trim() !== "") {
-        filtro.capacidad = filtroCapacidad;
-      }
-
-      // Verificar y añadir tipo al filtro
-      if (filtroTipo.trim() !== "") {
-        filtro.tipo = filtroTipo;
-      }
-
-      // Verificar y añadir horas al filtro
-      if (filtroHorario.trim() !== "") {
-        filtro.horas = filtroHorario;
-      }
-
-      // Verificar y añadir servicios al filtro
-      if (filtroServicios.trim() !== "") {
-        filtro.servicios = filtroServicios;
-      }
-
-      let diaSemana;
-      let fechaAux;
-      if (filtroFecha.trim() !== "") {
-        diaSemana = obtenerDiaSemana(filtroFecha);
-        fechaAux = filtroFecha;
-      } else {
-        const fechaActual = new Date();
-        const diasSemana = [
-          "Domingo",
-          "Lunes",
-          "Martes",
-          "Miércoles",
-          "Jueves",
-          "Viernes",
-          "Sábado",
-        ];
-        const diaActual = fechaActual.getDay();
-        // diaSemana = diasSemana[diaActual];
-        fechaAux = fechaActual.toISOString().split("T")[0];
-      }
-      // filtro.dia = diaSemana;
-
-      // Verificar si no se ha ingresado ningún filtro
+      setLoading(true);
+      const filtro = {
+        capacidad: filtroCapacidad.trim(),
+        tipo: filtroTipo.trim(),
+        // horas: filtroHorario.trim(),
+        // servicios: filtroServicios.trim(),
+        // fecha: filtroFecha.trim()
+      };
+      Object.keys(filtro).forEach((key) => {
+        if (filtro[key] === "") {
+          delete filtro[key];
+        }
+      });
       if (Object.keys(filtro).length === 0) {
-        // Mostrar un mensaje de error o simplemente retornar sin hacer nada
-        console.error("Debe ingresar al menos un filtro");
-        setLoading(false); // Indicar que la búsqueda ha finalizado
+        console.error(
+          "Debe ingresar al menos un filtro para realizar la búsqueda."
+        );
+        setLoading(false);
         return;
       }
-
-      console.log("Datos enviados a la solicitud:", filtro);
-
+      console.log("Filtro:", filtro);
+      // El filtro que se construye para la consulta tiene esta forma:
+      // capacidad:"200"
+      // fecha:"2024-05-11"    // verificar que el ambiente este disponible en esta fecha (segun las solicitudes)
+      // horas:"08:15-09:45"
+      // servicios:"Proyector, Wi-Fi"
+      // tipo:"Laboratorio"
       // Realizar la solicitud al backend con el filtro
-      console.log("filtro");
-      console.log(filtro);
       const response = await axios.post(`${URL_API}/ambientes-filtrar`, filtro);
       const data = response.data;
-      console.log("RESP:", data);
-
+      console.log("Respuesta:", data);
       const dataConFechaHora = data.map((ambiente) => {
         const horasArray = JSON.parse(ambiente.horas);
         const horasFormateadas = horasArray.join(", ");
         return {
           ...ambiente,
           horario: horasFormateadas,
-          fecha: fechaAux,
+          fecha: filtro.fecha,
         };
-      }); 
+      });
 
       setInformacionFinal(dataConFechaHora);
       setLoading(false);
@@ -177,7 +152,6 @@ const BusquedaAmbiente = () => {
   };
 
   const handleConfirm = () => {
-    // proximamente... validaciones
     navigate(-1);
   };
 
@@ -187,6 +161,7 @@ const BusquedaAmbiente = () => {
   };
 
   const ambientes = [
+    { value: " ", label: " Todos " },
     { value: "Aula", label: "Aula" },
     { value: "Auditorio", label: "Auditorio" },
     { value: "Laboratorio", label: "Laboratorio" },
@@ -243,20 +218,6 @@ const BusquedaAmbiente = () => {
     },
   };
 
-  const obtenerDiaSemana = (fecha) => {
-    const diasSemana = [
-      "Domingo",
-      "Lunes",
-      "Martes",
-      "Miércoles",
-      "Jueves",
-      "Viernes",
-      "Sábado",
-    ];
-    const fechaObj = new Date(fecha);
-    const diaSemana = fechaObj.getDay();
-    return diasSemana[diaSemana];
-  };
   const [selectedHorario, setSelectedHorario] = useState(horario);
   const [selectedTipo, setSelectedTipo] = useState(tipoAmbiente || "");
   const handleHorarioChange = (newHorario) => {
@@ -363,9 +324,10 @@ const BusquedaAmbiente = () => {
                   pattern="^[A-Za-z0-9, ]{0,50}$"
                   onChange={(event) => manejarCambioServicios(event)}
                   defaultValue={servicios}
+                  value={filtroServicios}
                 />
               </div>
-              <div style={defaultStyle.iconContainer} onClick={() => { }}>
+              <div style={defaultStyle.iconContainer} onClick={() => {}}>
                 <IconButton onClick={funciona} style={{ color: "black" }}>
                   <SearchIcon
                     style={{ fontSize: 30, color: theme.highlight }}
@@ -391,7 +353,7 @@ const BusquedaAmbiente = () => {
           minWidth="100px"
           maxWidth="270px"
           alignCenter
-          padding="30px 50px"
+          padding="30px 30px"
         >
           <div
             style={{
@@ -414,37 +376,90 @@ const BusquedaAmbiente = () => {
                 padding: "10px 0",
               }}
             >
-              <StyledText boldText>Ambiente Seleccionado</StyledText>
+              <StyledText>
+                Ambientes Seleccionados:{" "}
+                {ambientesSeleccionados.length > 0
+                  ? ambientesSeleccionados.map((a) => a.nombre).join(", ")
+                  : "Ninguno"}
+              </StyledText>
             </div>
-            <div style={defaultStyle.infoContainer}>
-              {ambientesSeleccionados.map((ambiente, index) => (
+
+            <div
+              style={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+              }}
+            >
+              {ambientesSeleccionados.length > 0 ? (
                 <div
-                  key={index}
-                  style={defaultStyle.infoItem(
-                    ambientesSeleccionados.length > 1
-                  )}
+                  style={{
+                    display: "flex",
+                    flex: 1,
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                  }}
                 >
-                  <span style={defaultStyle.infoTitle}>Tipo:</span>{" "}
-                  {ambiente.tipo}
-                  <br />
-                  <span style={defaultStyle.infoTitle}>Nombre:</span>{" "}
-                  {ambiente.nombre}
-                  <br />
-                  <span style={defaultStyle.infoTitle}>Capacidad:</span>{" "}
-                  {ambiente.capacidad}
-                  <br />
-                  <span style={defaultStyle.infoTitle}>Planta:</span>{" "}
-                  {ambiente.planta}
-                  <br />
-                  <span style={defaultStyle.infoTitle}>Ubicación:</span>{" "}
-                  {ambiente.ubicacion}
-                  <br />
-                  <span style={defaultStyle.infoTitle}>Servicios:</span>{" "}
-                  {ambiente.servicios}
-                  <br />
+                  <Casilla2
+                    label="Fecha"
+                    checked={true}
+                  />
+                  <Casilla2
+                    label="Capacidad"
+                    descripcion={`Solicitado: ${capacidad}, Asignado: ${ambientesSeleccionados
+                      .map((a) => `${a.capacidad}`)
+                      .join(", ")}`}
+                    checked={
+                      ambientesSeleccionados.reduce(
+                        (acc, ambiente) =>
+                          acc + parseInt(ambiente.capacidad, 10),
+                        0
+                      ) >= parseInt(capacidad, 10)
+                    }
+                  />
+                  <Casilla2
+                    label="Horario"
+                    descripcion={`Solicitado: ${horario}`}
+                    checked={ambientesSeleccionados.every((ambiente) =>
+                      ambiente.horario.includes(horario)
+                    )}
+                  />
+                  <Casilla2
+  label="Tipo de Ambiente"
+  descripcion={`Solicitado: ${tipoAmbiente}`}
+  checked={ambientesSeleccionados.some(ambiente => ambiente.tipo === tipoAmbiente)}
+  style={{
+    backgroundColor: ambientesSeleccionados.some(ambiente => ambiente.tipo === tipoAmbiente) ? 'lightgreen' : 'transparent'
+  }}
+/>
+<Casilla2
+  label="Servicios"
+  checked={
+    servicios === "" || ambientesSeleccionados.every(
+      ambiente => ambiente.servicios === servicios
+    )
+  }
+/>
                 </div>
-              ))}
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    flex: 1,
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Casilla2 label="Fecha" checked={false} />
+                  <Casilla2 label="Capacidad" checked={false} />
+                  <Casilla2 label="Horario" checked={false} />
+                  <Casilla2 label="Tipo de Ambiente" checked={false} />
+                  <Casilla2 label="Servicios" checked={false} />
+                </div>
+              )}
             </div>
+
             <div style={defaultStyle.buttonContainer}>
               <Button onClick={handleConfirm}>Confirmar</Button>
               <Button onClick={handleReturn}>Cancelar</Button>
