@@ -87,8 +87,8 @@ const BusquedaAmbiente = () => {
     try {
         setLoading(true);
         const filtro = {
-            // capacidad: filtroCapacidad.trim(),
-            // tipo: filtroTipo.trim(),
+            capacidad: filtroCapacidad.trim(),
+            tipo: filtroTipo.trim(),
             horas: filtroHorario.trim(),
             // servicios: filtroServicios.trim(),
             // fecha: filtroFecha.trim()
@@ -114,14 +114,14 @@ const BusquedaAmbiente = () => {
         console.log("FILTRO",filtro)
         const response = await axios.post(`${URL_API}/ambientes-filtrar`, filtro);
         let data = response.data;
-        console.log("RESP",data)
+        console.log('respuesta',data)
         if (data.length === 0 && filtroCapacidad) {
-            setMensajeNoResultados(`No se encontraron ambientes con la capacidad deseada (${filtroCapacidad}). Puede seleccionar dos ambientes de menos capacidad.`);
+            setMensajeNoResultados(`No se encontraron ambientes con la capacidad deseada (${filtroCapacidad}). Puede seleccionar dos ambientes de menor capacidad.`);
             delete filtro.capacidad;
             const retryResponse = await axios.post(`${URL_API}/ambientes-filtrar`, filtro);
             data = retryResponse.data;
             if (data.length === 0) {
-              setMensajeNoResultados(`No se encontraron ambientes con la capacidad deseada (${filtroCapacidad}). SSSSSSSS`);            
+              setMensajeNoResultados(`No se encontraron ambientes con la capacidad deseada (${filtroCapacidad}).`);            
             }
         }
 
@@ -241,11 +241,20 @@ const BusquedaAmbiente = () => {
   const verificarHorario = (ambientesSeleccionados, horarios) => {
     return ambientesSeleccionados.every(ambiente => {
       const horariosAmbiente = ambiente.horario.split(', ').map(h => h.trim());
-      console.log(`Horarios en ambiente ${ambiente.nombre}:`, horariosAmbiente);
       return horarios.every(horarioBuscado => horariosAmbiente.includes(horarioBuscado));
     });
   };
 
+  const verificaServicios = (ambientesSeleccionados, servicios) => {
+    const serviciosRequeridos = servicios.split(',').map(servicio => servicio.trim());
+    return ambientesSeleccionados.every(ambiente => {
+      if (!ambiente.servicios) return false;
+      const serviciosAmbiente = ambiente.servicios.split(',').map(servicio => servicio.trim());
+      return serviciosRequeridos.every(servicioRequerido =>
+        serviciosAmbiente.some(servicioAmbiente => servicioAmbiente.includes(servicioRequerido))
+      );
+    });
+  };
   return (
     <div style={defaultStyle.outerContainer}>
       <div style={defaultStyle.container}>
@@ -353,7 +362,7 @@ const BusquedaAmbiente = () => {
               </div>
             </RowPercentage>
             {mensajeNoResultados && (
-              <div style={{ padding: '10px', backgroundColor: 'lightpink', margin: '10px' }}>
+              <div style={{ padding: '10px', backgroundColor: 'lightpink', margin: '0px', borderRadius:'10px' }}>
                 {mensajeNoResultados}
               </div>
             )}
@@ -458,12 +467,7 @@ const BusquedaAmbiente = () => {
                   />
                   <Casilla2
                     label="Servicios"
-                    checked={
-                      servicios === "" ||
-                      ambientesSeleccionados.every(
-                        (ambiente) => ambiente.servicios === servicios
-                      )
-                    }
+                    checked={servicios === "" || verificaServicios(ambientesSeleccionados, servicios)}
                   />
                 </div>
               ) : (

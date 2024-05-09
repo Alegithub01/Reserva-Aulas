@@ -37,10 +37,9 @@ const GestionReservas = () => {
           id: 2,
           user_id: 5,
           grupo: ["1"],
-          tipo_ambiente: "Aula",
+          tipo_ambiente: "Auditorio",
           materia: "Calculo ll",
-          // horas: ["08:15-09:45"],
-          horas: ["09:45-11:15"],
+          horas: ["08:15-09:45"],
           servicios: "Data display",
           motivo: "Examen parcial", // "Examen parcial", Examen final", "Examen de mesa", "Reemplazo ambiente", "Taller", "Otro"
           fecha: "2024-05-11",
