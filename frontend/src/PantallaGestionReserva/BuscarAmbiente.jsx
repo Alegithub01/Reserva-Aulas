@@ -15,7 +15,6 @@ import { useLocation } from "react-router-dom";
 import useAmbienteStore from "../Contexts/AmbienteStore";
 import Button from "../Utils/Button";
 import { URL_API } from "../services/const";
-import CircularProgress from "@mui/material/CircularProgress";
 
 //const informacion = [
 //  { id: 1, nombre: "691A", capacidad: 100, tipo: "Aula", planta: "Planta 1", ubicacion: 'ubi1', servicios: 'Data display', dia: "Lunes", periodos: "08:00-10:00, 15:45-17:15" },
@@ -140,14 +139,17 @@ const BusquedaAmbiente = () => {
       console.log(filtro);
       const response = await axios.post(`${URL_API}/ambientes-filtrar`, filtro);
       const data = response.data;
-      // console.log("RESP:", data);
+      console.log("RESP:", data);
 
-      // Agregar la fecha y la hora a los datos obtenidos
-      const dataConFechaHora = data.map((ambiente) => ({
-        ...ambiente,
-        horario: filtroHorario,
-        fecha: fechaAux,
-      }));
+      const dataConFechaHora = data.map((ambiente) => {
+        const horasArray = JSON.parse(ambiente.horas);
+        const horasFormateadas = horasArray.join(", ");
+        return {
+          ...ambiente,
+          horario: horasFormateadas,
+          fecha: fechaAux,
+        };
+      }); 
 
       setInformacionFinal(dataConFechaHora);
       setLoading(false);

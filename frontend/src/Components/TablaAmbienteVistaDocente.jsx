@@ -21,7 +21,8 @@ const StyledDataGrid = styled(DataGrid)`
 `;
 
 export default function TablaAmbienteVista({informacion}) {
-  const [filas, setFilas] = useState(informacion);
+  console.log(informacion)
+  const [filas, setFilas] = useState([...informacion]);
   const [selectedRows, setSelectedRows] = useState([]);
   const setAmbientesSeleccionados = useAmbienteStore(state => state.setAmbientesSeleccionados);
 
@@ -65,7 +66,7 @@ export default function TablaAmbienteVista({informacion}) {
     { field: 'nombre', headerName: 'Nombre', width: 100, align: 'center', headerAlign: 'center' },
     { field: 'capacidad', headerName: 'Capacidad', type: 'number', width: 117, align: 'center', headerAlign: 'center' },
     { field: 'planta', headerName: 'Planta', width: 100, align: 'center', headerAlign: 'center' },
-    { field: 'horario', headerName: 'Horario', width: 110, align: 'center', headerAlign: 'center' },
+    { field: 'horario', headerName: 'Horario', width: 200, align: 'center', headerAlign: 'center' },
     { field: 'tipo', headerName: 'Tipo Ambiente', width: 100, align: 'center', headerAlign: 'center' },
     { field: 'fecha', headerName: 'Fecha', width: 100, align: 'center', headerAlign: 'center' },
     { field: 'ubicacion', headerName: 'Ubicación', width: 110, headerAlign: 'center', align: 'center' },
