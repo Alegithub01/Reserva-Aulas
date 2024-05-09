@@ -94,9 +94,17 @@ const SolicitudAdmin = () => {
   };
 
   const navegarPreload = () => {
-    navigate('/Buscar-Ambiente', { state: { seleccion: true } });
-  }
+    const dataToSend = {
+        seleccion: true,
+        fecha: dataRow.fecha,
+        capacidad: dataRow.capacidad,
+        horario: dataRow.horas,
+        servicios: dataRow.servicios,
+        tipoAmbiente: dataRow.tipo_ambiente
+    };
 
+    navigate('/Buscar-Ambiente', { state: dataToSend });
+};
   const manejoConfirmarAceptar =() => {
     console.log("se confirma");
     setDialogoAbierto({...dialogoAbierto, aceptar: false});
