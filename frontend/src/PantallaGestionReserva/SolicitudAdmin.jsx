@@ -188,10 +188,7 @@ const SolicitudAdmin = () => {
                     <StyledText style={defaultStyle.titles}>Horario:</StyledText>
                   </div>
                   <div>
-                    {dataRow.horas.map((horario, index) => (
-                      <StyledText key={index}>{horario}</StyledText>
-                    ))
-                    }
+                      <StyledText>{dataRow.horas.join(', ')}</StyledText>
                   </div>
                 </RowPercentage>
 

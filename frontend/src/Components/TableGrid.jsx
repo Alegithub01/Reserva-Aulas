@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -17,7 +17,6 @@ import {
 } from '@mui/x-data-grid';
 import styled from 'styled-components';
 import { useTheme } from '../Contexts/ThemeContext';
-import { useEffect } from 'react';
 import axios from 'axios';
 
 //const informacion = [

@@ -38,8 +38,8 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
   ];
 
   const motivos = [
-    { value: "Examen parcial", label: "Examen parcial" },
     { value: "Examen final", label: "Examen final" },
+    { value: "Examen parcial", label: "Examen parcial" },
     { value: "Examen de mesa", label: "Examen de mesa" },
     { value: "Práctica", label: "Práctica" },
     { value: "Reemplazo ambiente", label: "Reemplazo ambiente" },
