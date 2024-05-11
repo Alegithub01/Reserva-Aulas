@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import Box from '@mui/material/Box';
 import { GridRowModes, GridActionsCellItem, GridRowEditStopReasons, DataGrid } from '@mui/x-data-grid';
 import styled from 'styled-components';
@@ -51,6 +51,7 @@ const TablaSolicitudes = () => {
     }
   };
   const manejoEditar = (id) => () => {
+    console.log(id);
     const filaEditada = filas.find((fila) => fila.id === id);
     if (filasModificadas[id]) {
       setFilasModificadas((filasModificadasAnteriores) => ({
@@ -168,7 +169,7 @@ const TablaSolicitudes = () => {
       headerAlign: 'center',
       editable: true,
       valueFormatter: (params) => {
-        if(params < 1 || params > 10) {
+        if (params < 1 || params > 10) {
           return 'Error';
         } else {
           return params;
@@ -207,15 +208,15 @@ const TablaSolicitudes = () => {
     },
     { field: 'servicios', headerName: 'Servicios solicitados', flex: 1, minWidth: 190, headerAlign: 'center', align: 'center', editable: true, },
     {
-      field: 'Motivo', 
-      headerName: 'Motivo de solicitud', 
-      flex: 1, 
-      minWidth: 140, 
-      headerAlign: 'center', 
-      align: 'center', 
+      field: 'Motivo',
+      headerName: 'Motivo de solicitud',
+      flex: 1,
+      minWidth: 140,
+      headerAlign: 'center',
+      align: 'center',
       editable: true,
       type: 'singleSelect',
-      valueOptions: ["Examen final","Examen parcial", "Examen de mesa", "Práctica", "Reemplazo ambiente", "Taller", "Otro"],
+      valueOptions: ["Examen final", "Examen parcial", "Examen de mesa", "Práctica", "Reemplazo ambiente", "Taller", "Otro"],
     },
     {
       field: 'estado',
@@ -239,8 +240,13 @@ const TablaSolicitudes = () => {
       headerName: 'Acciones',
       width: 100,
       cellClassName: 'actions',
-      getActions: ({ id }) => {
-        const estaModoEdicion = filasModificadas[id]?.mode === GridRowModes.Edit;
+      getActions: (params) => {
+        console.log(params);
+        const ambiente = params.row.ambiente;
+        if (ambiente) {
+          return [];
+        }
+        const estaModoEdicion = filasModificadas[params.id]?.mode === GridRowModes.Edit;
 
         if (estaModoEdicion) {
           return [
@@ -250,34 +256,33 @@ const TablaSolicitudes = () => {
               sx={{
                 color: 'primary.main',
               }}
-              onClick={manejoGuardarClick(id)}
+              onClick={manejoGuardarClick(params.id)}
             />,
             <GridActionsCellItem
               icon={<CancelIcon />}
               label="Cancel"
               className="textPrimary"
-              onClick={manejoCancelar(id)}
+              onClick={manejoCancelar(params.id)}
               color="inherit"
             />,
           ];
         }
-
         return [
           <GridActionsCellItem
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
-            onClick={manejoEditar(id)}
+            onClick={manejoEditar(params.id)}
             color="inherit"
           />,
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={abrirDialogoEliminar(id)}
+            onClick={abrirDialogoEliminar(params.id)}
             color="inherit"
           />,
         ];
-      },
+      }
     },];
   const { theme } = useTheme();
   return (
@@ -300,13 +305,9 @@ const TablaSolicitudes = () => {
         onRowModesModelChange={manejoFilasEnCambio}
         onRowEditStop={manejoEdicionParar}
         processRowUpdate={procesarFilasModificadas}
-        slots={{
-          toolbar: EditarFilas,
-        }}
         slotProps={{
           toolbar: { setFilas, setFilasModificadas },
         }}
-
         sx={{
           '& .MuiDataGrid-root, .MuiDataGrid-withBorderColor': {
             bgcolor: theme.headerColor,
