@@ -15,10 +15,11 @@ import FormControl from '@mui/material/FormControl';
 import TextInput from "../Utils/TextInput";
 import SearchIcon from '@mui/icons-material/Search';
 import { IconButton } from "@mui/material";
-import Button from "../Utils/Button";
+import Button1 from "../Utils/Button";
 import { Dialog, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import { useLocation } from 'react-router-dom';
 import useAmbienteStore from "../Contexts/AmbienteStore";
+import Button from '@mui/material/Button';
 
 const SolicitudAdmin = () => {
   const { theme } = useTheme();
@@ -90,6 +91,12 @@ const SolicitudAdmin = () => {
     textSubtitle: {
       display: 'flex',
       justifyContent: 'flex-end',
+    },
+    info: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '15px',
+      width: '50%',
     }
   };
 
@@ -126,8 +133,8 @@ const SolicitudAdmin = () => {
   }
 
   const navegarBuscar = () => {
-    //aca colocar los datos para autocompletarse
-    navigate('/Panel-Gestion-Reservas');
+    console.log("se cancela");
+    navigate('/Solicitudes');
   }
   return (
     <div style={defaultStyle.outerContainer}>
@@ -164,10 +171,10 @@ const SolicitudAdmin = () => {
             </div>
 
             <div className="infoCompleta" style={defaultStyle.infoCompleta}>
-              <div className="Info" style={{ width: '60%' }}>
+              <div className="Info" style={defaultStyle.info}>
                 <RowPercentage firstChildPercentage={50} >
                   <div style={defaultStyle.textSubtitle}>
-                    <StyledText style={defaultStyle.titles}>Mensaje Solicitud:</StyledText>
+                    <StyledText style={defaultStyle.titles}>Motivo:</StyledText>
                   </div>
                   <div>
                     <StyledText >{dataRow.motivo}</StyledText>
@@ -290,9 +297,9 @@ const SolicitudAdmin = () => {
             </div>
 
             <div style={defaultStyle.buttonsContainer}>
-              <Button onClick={() => { setDialogoAbierto({...dialogoAbierto, aceptar: true})}}>Aceptar</Button>
-              <Button onClick={() => { setDialogoAbierto({...dialogoAbierto, rechazar: true})}}>Rechazar</Button>
-              <Button onClick={() => { navegarBuscar}}>Cancelar</Button>
+              <Button1 onClick={() => { setDialogoAbierto({...dialogoAbierto, aceptar: true})}}>Aceptar</Button1>
+              <Button1 onClick={() => { setDialogoAbierto({...dialogoAbierto, rechazar: true})}}>Rechazar</Button1>
+              <Button1 onClick={navegarBuscar}>Cancelar</Button1>
             </div>
             <Dialog
               open={dialogoAbierto.aceptar}

@@ -18,7 +18,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 
 const AjustarSolicitudes = () => {
   const [mensajeError, cambiarMensajeError] = useState({
-    capacidad: "",
+    nroPeriodos: "",
     fecha1: "",
     fecha2: "",
   });
@@ -60,9 +60,12 @@ const AjustarSolicitudes = () => {
     validarNroPeriodos();
     validarFecha1();
     validarFecha2();
-    if (nroPeriodos !== "" && fecha1 !== "" && fecha2 !== "") {
+    if (nroPeriodos !== "" && fecha1 !== "" && fecha2 !== ""
+      && mensajeError.nroPeriodos === "" && mensajeError.fecha1 === "" && mensajeError.fecha2 === ""
+    ) {
       setDialogoAbierto(true);
-      console.log(nroPeriodos, fecha1, fecha2)
+      //backend acaa o no
+      //console.log(nroPeriodos, fecha1, fecha2)
     } else {
       console.log("No se puede guardar cambios");
     }
@@ -73,17 +76,17 @@ const AjustarSolicitudes = () => {
     if (value.match(pattern)) {
       if (value >= rango.min && value <= rango.max) {
         setNroPeriodos(value);
-        cambiarMensajeError({ ...mensajeError, capacidad: "" });
+        cambiarMensajeError({ ...mensajeError, nroPeriodos: "" });
       } else {
         cambiarMensajeError({
           ...mensajeError,
-          capacidad: `El número de periodos debe estar entre ${rango.min} y ${rango.max}`,
+          nroPeriodos: `El número de periodos debe estar entre ${rango.min} y ${rango.max}`,
         });
       }
     } else {
       cambiarMensajeError({
         ...mensajeError,
-        capacidad: "Ingrese un número válido",
+        nroPeriodos: "Ingrese un número válido",
       });
     }
   };
@@ -92,7 +95,7 @@ const AjustarSolicitudes = () => {
     if (nroPeriodos === "") {
       cambiarMensajeError({
         ...mensajeError,
-        capacidad: "Ingrese un número de periodos",
+        nroPeriodos: "Ingrese un número de periodos",
       });
     }
   }
@@ -188,7 +191,7 @@ const AjustarSolicitudes = () => {
                 }
                 onBlur={validarNroPeriodos}
                 isRequired={true}
-                validationMessage={mensajeError.capacidad}
+                validationMessage={mensajeError.nroPeriodos}
                 pattern="^[0-9]*$"
                 rango={{ min: 1, max: 10 }}
                 defaultValue={nroPeriodos}

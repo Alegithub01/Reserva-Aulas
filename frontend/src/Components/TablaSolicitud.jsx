@@ -51,7 +51,6 @@ const TablaSolicitudes = () => {
     }
   };
   const manejoEditar = (id) => () => {
-    console.log(id);
     const filaEditada = filas.find((fila) => fila.id === id);
     if (filasModificadas[id]) {
       setFilasModificadas((filasModificadasAnteriores) => ({
@@ -241,7 +240,6 @@ const TablaSolicitudes = () => {
       width: 100,
       cellClassName: 'actions',
       getActions: (params) => {
-        console.log(params);
         const ambiente = params.row.ambiente;
         if (ambiente) {
           return [];
