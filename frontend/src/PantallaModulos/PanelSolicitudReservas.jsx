@@ -4,11 +4,24 @@ import Card from "./Modulo";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import HistoryIcon from '@mui/icons-material/History';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import { useNavigate } from 'react-router-dom';
-import SearchIcon from '@mui/icons-material/Search';    
+import { useNavigate } from 'react-router-dom';  
+import useAjusteStore from "../Contexts/AjusteStore";
+import { useEffect } from "react";
 
 const PanelSolicitudReservas = () => {
     const navegar = useNavigate();
+    const fechaInicio = useAjusteStore((state) => state.fechaInicio);
+    const fechaFin = useAjusteStore((state) => state.fechaFin);
+    
+    const controlarFechaSolicitud = () => {
+        const today = new Date().toISOString().split('T')[0];
+        if(today >= fechaInicio && today <= fechaFin){
+            navegar('/Solicitud')
+        }else {
+            alert("No se puede solicitar reserva en este momento");
+        }
+        
+    };
     const contenidoIzq = (
         <div
             style={{
@@ -48,7 +61,7 @@ const PanelSolicitudReservas = () => {
             <Card 
                 text="Solicitar Reserva" 
                 Icon={AddCircleOutlineIcon}
-                onClick={() => navegar('/Solicitud')}
+                onClick={controlarFechaSolicitud}
             />
             <Card 
                 text="Ver Disponibilidad" 

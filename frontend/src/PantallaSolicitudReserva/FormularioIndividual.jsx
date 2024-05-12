@@ -13,7 +13,7 @@ import { URL_API } from "../services/const";
 const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   const { aula, dia, horario } = CalendarioStore();
   const [materia, setMateria] = useState('');
-  const [nombreDocente, setNombreDocente] = useState('user'); //nombre del docente loggeado
+  const [nombreDocente, setNombreDocente] = useState('prueba'); //nombre del docente loggeado
   const [grupoDocente, setGrupoDocente] = useState(''); //grupo del docente loggeado
   const [capacidad, setCapacidad] = useState(0); //capacidad del aula
   const [ambiente, setAmbiente] = useState('');
@@ -97,12 +97,16 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   const validarSeleccionMateria = () => {
     if (materia === '') {
       setMensajeError(previo => ({ ...previo, materia: 'Seleccione una materia' }));
+    }else {
+      setMensajeError(previo => ({ ...previo, materia: '' }));
     }
   }
 
   const validarFecha = () => {
     if (fecha === null || fecha === '') {
       setMensajeError(previo => ({ ...previo, fecha: 'Seleccione una fecha' }));
+    } else{
+      setMensajeError(previo => ({ ...previo, fecha: '' }));
     }
   }
 
@@ -155,7 +159,9 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
     validarFecha();
     validarSeleccionHora();
     validarSeleccionDetalles();
-    if (materia !== '' && fecha !== '' && hora.length !== 0 && detalles !== '' && grupoDocente !== '') {
+    if (materia !== '' && fecha !== '' && hora.length !== 0 && detalles !== '' && grupoDocente !== ''
+      && mensajeError.materia === '' && mensajeError.grupoDocente === '' && mensajeError.fecha === '' && mensajeError.hora === '' && mensajeError.detalles === ''
+    ) {
       console.log("Solicitud enviada");
 
       try {

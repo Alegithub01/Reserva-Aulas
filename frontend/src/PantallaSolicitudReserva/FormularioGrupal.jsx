@@ -28,6 +28,7 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
     ambiente: '',
     fecha: '',
     hora: '',
+    detalles: '',
   });
 
   /*datos de prueba para los dropdowns */
@@ -38,8 +39,8 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
   ];
 
   const motivos = [
-    { value: "Examen parcial", label: "Examen parcial" },
     { value: "Examen final", label: "Examen final" },
+    { value: "Examen parcial", label: "Examen parcial" },
     { value: "Examen de mesa", label: "Examen de mesa" },
     { value: "Práctica", label: "Práctica" },
     { value: "Reemplazo ambiente", label: "Reemplazo ambiente" },
@@ -103,12 +104,16 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
   const validarSeleccionMateria = () => {
     if (materia === '') {
       setMensajeError(previo => ({ ...previo, materia: 'Seleccione una materia' }));
+    }else {
+      setMensajeError(previo => ({ ...previo, materia: '' }));
     }
   }
 
   const validarFecha = () => {
     if (fecha === null || fecha === '') {
       setMensajeError(previo => ({ ...previo, fecha: 'Seleccione una fecha' }));
+    }else {
+      setMensajeError(previo => ({ ...previo, fecha: '' }));
     }
   }
 
@@ -161,7 +166,9 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
     validarFecha();
     validarSeleccionHora();
     validarSeleccionDetalles();
-    if (materia !== '' && fecha !== '' && hora.length !== 0 && detalles !== '') {
+    console.log(mensajeError.hora,mensajeError.fecha, mensajeError.materia, mensajeError.detalles)
+    if (materia !== '' && fecha !== '' && hora.length !== 0 && detalles !== ''
+      && mensajeError.fecha === '' && mensajeError.hora === '' && mensajeError.materia === '' && mensajeError.detalles === '') {
       console.log("Solicitud enviada");
       cambiarAbrirDialogo(true);
     } else {

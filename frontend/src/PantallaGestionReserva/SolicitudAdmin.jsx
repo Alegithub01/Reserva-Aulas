@@ -15,10 +15,11 @@ import FormControl from '@mui/material/FormControl';
 import TextInput from "../Utils/TextInput";
 import SearchIcon from '@mui/icons-material/Search';
 import { IconButton } from "@mui/material";
-import Button from "../Utils/Button";
+import Button1 from "../Utils/Button";
 import { Dialog, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import { useLocation } from 'react-router-dom';
 import useAmbienteStore from "../Contexts/AmbienteStore";
+import Button from '@mui/material/Button';
 
 const SolicitudAdmin = () => {
   const { theme } = useTheme();
@@ -27,6 +28,10 @@ const SolicitudAdmin = () => {
   const { dataRow } = location.state || {};
   const [nombreDocente, setNombreDocente] = useState('user'); //nombre del docente loggeado
   const [tipo, setTipo] = useState(dataRow.tipo_ambiente || "aula");
+  const [sugerido, setSugerido] = useState({
+    aceptar: false,
+    rechazar: false,
+  });
   const ambientesSeleccionados = useAmbienteStore(state => state.ambientesSeleccionados);
   const setAmbientesSeleccionados = useAmbienteStore(state => state.setAmbientesSeleccionados);
   const [ambienteSeleccionado, setAmbienteSeleccionado] = useState(
@@ -41,6 +46,12 @@ const SolicitudAdmin = () => {
     setAmbienteSeleccionado(ambientesSeleccionados.map(amb => amb.nombre).join(', '));
     console.log("Ambientes recibidos:", ambientesSeleccionados);
     setAmbientesSeleccionados([]);
+    if(ambienteSeleccionado.trim() === "") {
+      setSugerido({aceptar: false, rechazar: true});
+    }else{
+      setSugerido({aceptar: true, rechazar: true});
+    }    
+    console.log("Ambientes seleccionados:", ambientesSeleccionados);
   }, []);
 
   const defaultStyle = {
@@ -90,7 +101,49 @@ const SolicitudAdmin = () => {
     textSubtitle: {
       display: 'flex',
       justifyContent: 'flex-end',
-    }
+    },
+    info: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '15px',
+      width: '50%',
+    },
+    botonConfirmar: {
+      padding: '0.6em 3em',
+      fontSize: '16px',
+      letterSpacing: '1px',
+      color: 'rgb(255, 255, 255)',
+      backgroundColor:  sugerido.aceptar?theme.green:theme.disabled,
+      border: 'none',
+      borderRadius: '15px',
+      transition: 'all 0.3s ease 0s',
+      cursor: 'pointer',
+      boxShadow: 'rgba(0, 0, 0, 0.1) 0px 8px 15px',
+    },
+    botonRechazar: {
+      padding: '0.6em 3em',
+      fontSize: '16px',
+      letterSpacing: '1px',
+      color: 'rgb(255, 255, 255)',
+      backgroundColor: sugerido.rechazar?theme.red:theme.disabled,
+      border: 'none',
+      borderRadius: '15px',
+      transition: 'all 0.3s ease 0s',
+      cursor: 'pointer',
+      boxShadow: 'rgba(0, 0, 0, 0.1) 0px 8px 15px',
+    },
+    botonCancelar: {
+      padding: '0.6em 3em',
+      fontSize: '16px',
+      letterSpacing: '1px',
+      color: 'rgb(255, 255, 255)',
+      backgroundColor: theme.disabled,
+      border: 'none',
+      borderRadius: '15px',
+      transition: 'all 0.3s ease 0s',
+      cursor: 'pointer',
+      boxShadow: 'rgba(0, 0, 0, 0.1) 0px 8px 15px',
+    },
   };
 
   const navegarPreload = () => {
@@ -126,8 +179,8 @@ const SolicitudAdmin = () => {
   }
 
   const navegarBuscar = () => {
-    //aca colocar los datos para autocompletarse
-    navigate('/Panel-Gestion-Reservas');
+    console.log("se cancela");
+    navigate('/Solicitudes');
   }
   return (
     <div style={defaultStyle.outerContainer}>
@@ -164,10 +217,10 @@ const SolicitudAdmin = () => {
             </div>
 
             <div className="infoCompleta" style={defaultStyle.infoCompleta}>
-              <div className="Info" style={{ width: '60%' }}>
+              <div className="Info" style={defaultStyle.info}>
                 <RowPercentage firstChildPercentage={50} >
                   <div style={defaultStyle.textSubtitle}>
-                    <StyledText style={defaultStyle.titles}>Mensaje Solicitud:</StyledText>
+                    <StyledText style={defaultStyle.titles}>Motivo:</StyledText>
                   </div>
                   <div>
                     <StyledText >{dataRow.motivo}</StyledText>
@@ -188,10 +241,7 @@ const SolicitudAdmin = () => {
                     <StyledText style={defaultStyle.titles}>Horario:</StyledText>
                   </div>
                   <div>
-                    {dataRow.horas.map((horario, index) => (
-                      <StyledText key={index}>{horario}</StyledText>
-                    ))
-                    }
+                      <StyledText>{dataRow.horas.join(', ')}</StyledText>
                   </div>
                 </RowPercentage>
 
@@ -293,9 +343,9 @@ const SolicitudAdmin = () => {
             </div>
 
             <div style={defaultStyle.buttonsContainer}>
-              <Button onClick={() => { setDialogoAbierto({...dialogoAbierto, aceptar: true})}}>Aceptar</Button>
-              <Button onClick={() => { setDialogoAbierto({...dialogoAbierto, rechazar: true})}}>Rechazar</Button>
-              <Button onClick={() => { navegarBuscar}}>Cancelar</Button>
+              <Button1 onClick={() => { setDialogoAbierto({...dialogoAbierto, aceptar: true})}} style={defaultStyle.botonConfirmar}>Aceptar</Button1>
+              <Button1 onClick={() => { setDialogoAbierto({...dialogoAbierto, rechazar: true})}} style={defaultStyle.botonRechazar}>Rechazar</Button1>
+              <Button1 onClick={navegarBuscar}  style={defaultStyle.botonCancelar}>Cancelar</Button1>
             </div>
             <Dialog
               open={dialogoAbierto.aceptar}

@@ -41,7 +41,7 @@ const opcionesHorario = [
   { value: "15:45-17:15", label: "15:45-17:15" },
   { value: "17:15-18:45", label: "17:15-18:45" },
   { value: "18:45-20:15", label: "18:45-20:15" },
-  { value: "20:30-21:45", label: "20:30-21:45" },
+  { value: "20:45-21:45", label: "20:45-21:45" },
 ];
 
 const BusquedaAmbiente = () => {
