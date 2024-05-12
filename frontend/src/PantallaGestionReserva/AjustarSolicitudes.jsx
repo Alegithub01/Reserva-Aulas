@@ -14,6 +14,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
+import useAjusteStore from "../Contexts/AjusteStore";
+import { set } from "date-fns";
 
 
 const AjustarSolicitudes = () => {
@@ -28,6 +30,7 @@ const AjustarSolicitudes = () => {
   const [nroPeriodos, setNroPeriodos] = useState("");
   const [dialogoAbierto, setDialogoAbierto] = useState(false);
   const navigate = useNavigate();
+  const {fechaInicio, fechaFin, nroPeriodosA,setFechaInicio, setFechaFin, setNroPeriodosAmbiente} = useAjusteStore();
 
   const defaultStyle = {
     outerContainer: {
@@ -76,6 +79,7 @@ const AjustarSolicitudes = () => {
     if (value.match(pattern)) {
       if (value >= rango.min && value <= rango.max) {
         setNroPeriodos(value);
+        setNroPeriodosAmbiente(value);
         cambiarMensajeError({ ...mensajeError, nroPeriodos: "" });
       } else {
         cambiarMensajeError({
@@ -111,6 +115,8 @@ const AjustarSolicitudes = () => {
         ...previo,
         fecha1: "",
       }));
+      console.log("por que no se ajusta", fecha1);
+      setFechaInicio(fecha1);
     }
   }
 
@@ -130,6 +136,7 @@ const AjustarSolicitudes = () => {
         ...previo,
         fecha2: "",
       }));
+      setFechaFin(fecha2);
     }
   }
 
