@@ -28,6 +28,10 @@ const SolicitudAdmin = () => {
   const { dataRow } = location.state || {};
   const [nombreDocente, setNombreDocente] = useState('user'); //nombre del docente loggeado
   const [tipo, setTipo] = useState(dataRow.tipo_ambiente || "aula");
+  const [sugerido, setSugerido] = useState({
+    aceptar: false,
+    rechazar: false,
+  });
   const ambientesSeleccionados = useAmbienteStore(state => state.ambientesSeleccionados);
   const setAmbientesSeleccionados = useAmbienteStore(state => state.setAmbientesSeleccionados);
   const [ambienteSeleccionado, setAmbienteSeleccionado] = useState(
@@ -42,6 +46,12 @@ const SolicitudAdmin = () => {
     setAmbienteSeleccionado(ambientesSeleccionados.map(amb => amb.nombre).join(', '));
     console.log("Ambientes recibidos:", ambientesSeleccionados);
     setAmbientesSeleccionados([]);
+    if(ambienteSeleccionado.trim() === "") {
+      setSugerido({aceptar: false, rechazar: true});
+    }else{
+      setSugerido({aceptar: true, rechazar: true});
+    }    
+    console.log("Ambientes seleccionados:", ambientesSeleccionados);
   }, []);
 
   const defaultStyle = {
@@ -97,7 +107,43 @@ const SolicitudAdmin = () => {
       flexDirection: 'column',
       gap: '15px',
       width: '50%',
-    }
+    },
+    botonConfirmar: {
+      padding: '0.6em 3em',
+      fontSize: '16px',
+      letterSpacing: '1px',
+      color: 'rgb(255, 255, 255)',
+      backgroundColor:  sugerido.aceptar?theme.green:theme.disabled,
+      border: 'none',
+      borderRadius: '15px',
+      transition: 'all 0.3s ease 0s',
+      cursor: 'pointer',
+      boxShadow: 'rgba(0, 0, 0, 0.1) 0px 8px 15px',
+    },
+    botonRechazar: {
+      padding: '0.6em 3em',
+      fontSize: '16px',
+      letterSpacing: '1px',
+      color: 'rgb(255, 255, 255)',
+      backgroundColor: sugerido.rechazar?theme.red:theme.disabled,
+      border: 'none',
+      borderRadius: '15px',
+      transition: 'all 0.3s ease 0s',
+      cursor: 'pointer',
+      boxShadow: 'rgba(0, 0, 0, 0.1) 0px 8px 15px',
+    },
+    botonCancelar: {
+      padding: '0.6em 3em',
+      fontSize: '16px',
+      letterSpacing: '1px',
+      color: 'rgb(255, 255, 255)',
+      backgroundColor: theme.disabled,
+      border: 'none',
+      borderRadius: '15px',
+      transition: 'all 0.3s ease 0s',
+      cursor: 'pointer',
+      boxShadow: 'rgba(0, 0, 0, 0.1) 0px 8px 15px',
+    },
   };
 
   const navegarPreload = () => {
@@ -297,9 +343,9 @@ const SolicitudAdmin = () => {
             </div>
 
             <div style={defaultStyle.buttonsContainer}>
-              <Button1 onClick={() => { setDialogoAbierto({...dialogoAbierto, aceptar: true})}}>Aceptar</Button1>
-              <Button1 onClick={() => { setDialogoAbierto({...dialogoAbierto, rechazar: true})}}>Rechazar</Button1>
-              <Button1 onClick={navegarBuscar}>Cancelar</Button1>
+              <Button1 onClick={() => { setDialogoAbierto({...dialogoAbierto, aceptar: true})}} style={defaultStyle.botonConfirmar}>Aceptar</Button1>
+              <Button1 onClick={() => { setDialogoAbierto({...dialogoAbierto, rechazar: true})}} style={defaultStyle.botonRechazar}>Rechazar</Button1>
+              <Button1 onClick={navegarBuscar}  style={defaultStyle.botonCancelar}>Cancelar</Button1>
             </div>
             <Dialog
               open={dialogoAbierto.aceptar}

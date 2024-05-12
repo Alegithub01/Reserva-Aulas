@@ -15,7 +15,6 @@ const PanelSolicitudReservas = () => {
     
     const controlarFechaSolicitud = () => {
         const today = new Date().toISOString().split('T')[0];
-        console.log("hoy es",today, "fechain", fechaInicio, "fechafin", fechaFin);
         if(today >= fechaInicio && today <= fechaFin){
             navegar('/Solicitud')
         }else {
