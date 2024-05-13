@@ -68,6 +68,7 @@ Route::post('/solicitudes', [SolicitudController::class, 'store'])->name('solici
 Route::get('/solicitudes/{id}', [SolicitudController::class, 'show'])->name('solicitudes.show');
 Route::put('/solicitudes/{id}', [SolicitudController::class, 'update'])->name('solicitudes.update');
 Route::delete('/solicitudes/{id}', [SolicitudController::class, 'destroy'])->name('solicitudes.destroy');
+Route::put('/solicitudes/{id}/aceptar', [SolicitudController::class, 'aceptar'])->name('solicitudes.aceptar');
 
 
 
