@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Solicitud;
 use App\Models\User;
+use App\Models\Reserva;
 
 
 
@@ -20,7 +21,7 @@ class SolicitudController extends Controller
     {
         // Buscar el usuario por su nombre
         $usuario = User::where('nombres', $request->nombre_usuario)->first();
-        
+
 
         // Verificar si el usuario existe
         if ($usuario) {
@@ -68,4 +69,26 @@ class SolicitudController extends Controller
         $solicitud = Solicitud::destroy($id);
         return $solicitud;
     }
+
+
+    public function aceptar($id)
+    {
+        $solicitud = Solicitud::findOrFail($id);
+
+        if ($solicitud->estado === 'aceptada') {
+            return response()->json(['error' => 'La solicitud ya ha sido aceptada'], 400);
+        }
+
+        $reserva = new Reserva();
+        $reserva->solicitud_id = $solicitud->id;
+
+        $reserva->save();
+
+        $solicitud->estado = 'aceptada';
+        $solicitud->save();
+
+        return response()->json(['message' => 'Solicitud aceptada exitosamente'], 200);
+    }
+
+
 }
