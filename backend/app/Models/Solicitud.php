@@ -11,7 +11,7 @@ class Solicitud extends Model
     protected $fillable = [
         'user_id', 
         'grupo', 
-        'ambiente', 
+        'nombre_ambiente', 
         'materia', 
         'horas', 
         'servicios', 
@@ -19,6 +19,7 @@ class Solicitud extends Model
         'fecha'
     ];
 
+    
     public function user()
     {
         return $this->belongsTo(User::class);

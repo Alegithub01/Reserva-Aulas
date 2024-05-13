@@ -26,13 +26,15 @@ class MateriaDocenteController extends Controller
         }
     }
 
-    public function obtenerGruposEInscritos($idDocente, $idMateria)
+    public function obtenerGruposEInscritosPorIdDocenteYNombreMateria($idDocente, $nombreMateria)
     {
         try {
-            // Buscar todas las filas en la tabla MateriaDocente que corresponden al ID del docente y el ID de la materia
+            // Buscar todas las filas en la tabla MateriaDocente que corresponden al ID del docente y el nombre de la materia
             $materiaDocentes = MateriaDocente::where('docente_id', $idDocente)
-                                              ->where('materia_id', $idMateria)
-                                              ->get();
+                                            ->whereHas('materia', function ($query) use ($nombreMateria) {
+                                                $query->where('nombre', $nombreMateria);
+                                            })
+                                            ->get();
 
             $resultados = [];
 
@@ -49,4 +51,5 @@ class MateriaDocenteController extends Controller
             return response()->json(['error' => 'Hubo un problema al obtener los grupos e inscritos de la materia.'], 500);
         }
     }
+
 }

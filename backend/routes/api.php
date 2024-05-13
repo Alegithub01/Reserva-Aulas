@@ -52,7 +52,7 @@ Route::put('/ambientes/{ambiente}', [AmbienteController::class, 'update'])->name
 Route::delete('/ambientes/{ambiente}', [AmbienteController::class, 'destroy'])->name('ambientes.destroy');
 Route::post('/importar-ambientes', [AmbienteController::class, 'importar']);
 Route::get('/enviar-correo', [CorreoController::class, 'index']);
-Route::post('/enviar-correo-notificacion', [CorreoController::class, 'notificarCambioReglas']);
+Route::get('/enviar-correo-notificacion', [CorreoController::class, 'notificarCambioReglas']);
 Route::post('/agregar-regla', [AmbienteController::class, 'addRule']);
 Route::get('/reglas', [AmbienteController::class, 'getRules']);
 Route::post('/ambientes-filtrar', [AmbienteController::class, 'filtrar']);
@@ -68,9 +68,11 @@ Route::post('/solicitudes', [SolicitudController::class, 'store'])->name('solici
 Route::get('/solicitudes/{id}', [SolicitudController::class, 'show'])->name('solicitudes.show');
 Route::put('/solicitudes/{id}', [SolicitudController::class, 'update'])->name('solicitudes.update');
 Route::delete('/solicitudes/{id}', [SolicitudController::class, 'destroy'])->name('solicitudes.destroy');
-Route::put('/solicitudes/{id}/aceptar', [SolicitudController::class, 'aceptar'])->name('solicitudes.aceptar');
 
 
 
 
 Route::get('/docentes/{idDocente}/materias', [MateriaDocenteController::class, 'obtenerMateriasPorIdDocente']);
+
+
+Route::get('/docentes/{idDocente}/materias/{nombreMateria}/grupos-inscritos', [MateriaDocenteController::class, 'obtenerGruposEInscritosPorIdDocenteYNombreMateria']);
