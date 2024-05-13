@@ -30,7 +30,7 @@ const AjustarSolicitudes = () => {
   const [nroPeriodos, setNroPeriodos] = useState("");
   const [dialogoAbierto, setDialogoAbierto] = useState(false);
   const navigate = useNavigate();
-  const {fechaInicio, fechaFin, nroPeriodosA,setFechaInicio, setFechaFin, setNroPeriodosAmbiente} = useAjusteStore();
+  const {setFechaInicio, setFechaFin, setNroPeriodosAmbiente} = useAjusteStore();
 
   const defaultStyle = {
     outerContainer: {

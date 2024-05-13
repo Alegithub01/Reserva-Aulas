@@ -7,9 +7,11 @@ import MensajeExito from "../Utils/MensajeExito";
 import EntradaFecha from "../Utils/EntradaFecha";
 import Button from "../Utils/Button";
 import CalendarioStore from "../Contexts/CalendarioStore"
+import useAjusteStore from "../Contexts/AjusteStore";
 
 const FormularioGrupal = ({aulaInicial, horaInicial}) => {
   const { aula, dia, horario } = CalendarioStore();
+  const nroPeriodosA = useAjusteStore((state) => state.nroPeriodosA);
   const [materia, setMateria] = useState('');
   const [gruposDocentes, setGruposDocentes] = useState([]); // modo grupal
   const [docentes, setDocentes] = useState([]);
@@ -122,6 +124,7 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
       setMensajeError(previo => ({ ...previo, hora: 'Seleccione una hora' }));
     } else {
       const horaOrdenada = hora.sort();
+      let contador = 1;
       for (let i = 1; i < horaOrdenada.length; i++) {
         const before = parseInt(horaOrdenada[i - 1]);
         const current = parseInt(horaOrdenada[i]);
@@ -130,7 +133,11 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
           break;
         } else {
           setMensajeError(previo => ({ ...previo, hora: '' }));
+          contador++;
         }
+      }
+      if (contador > parseInt(nroPeriodosA)) {
+        setMensajeError(previo => ({ ...previo, hora: `Seleccione menos periodos de hora` }));
       }
     }
   }

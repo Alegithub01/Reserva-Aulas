@@ -8,10 +8,12 @@ import EntradaFecha from "../Utils/EntradaFecha";
 import Button from "../Utils/Button";
 import CalendarioStore from "../Contexts/CalendarioStore";
 import axios from 'axios';
+import useAjusteStore from "../Contexts/AjusteStore";
 import { URL_API } from "../services/const";
 
 const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   const { aula, dia, horario } = CalendarioStore();
+  const nroPeriodosA = useAjusteStore((state) => state.nroPeriodosA);
   const [materia, setMateria] = useState('');
   const [nombreDocente, setNombreDocente] = useState('prueba'); //nombre del docente loggeado
   const [grupoDocente, setGrupoDocente] = useState(''); //grupo del docente loggeado
@@ -115,6 +117,7 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
       setMensajeError(previo => ({ ...previo, hora: 'Seleccione una hora' }));
     } else {
       const horaOrdenada = hora.sort();
+      let contador = 1;
       for (let i = 1; i < horaOrdenada.length; i++) {
         const before = parseInt(horaOrdenada[i - 1]);
         const current = parseInt(horaOrdenada[i]);
@@ -123,7 +126,11 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
           break;
         } else {
           setMensajeError(previo => ({ ...previo, hora: '' }));
+          contador++;
         }
+      }
+      if(contador > parseInt(nroPeriodosA)){
+        setMensajeError(previo => ({ ...previo, hora: 'Seleccione menos periodos de hora' }));
       }
     }
   }
