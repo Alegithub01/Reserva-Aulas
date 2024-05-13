@@ -207,7 +207,7 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
 
   const obtenerGrupoEInscritosPorIdDocenteYMateria = async (docenteId, materia) => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/docentes/${docenteId}/materias/${materia}/grupos-inscritos`);
+      const response = await axios.get(`${URL_API}/docentes/${docenteId}/materias/${materia}/grupos-inscritos`);
       const gruposEInscritos = response.data.resultados.map(resultado => ({
         value: resultado.grupo,
         label: resultado.grupo,
@@ -222,7 +222,7 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   const obtenerDocenteId = async (nombreDocente) => {
     try {
       if (docenteId === null) {
-        const response = await axios.get(`http://localhost:8000/api/users/${nombreDocente}/id`);
+        const response = await axios.get(`${URL_API}/users/${nombreDocente}/id`);
         setDocenteId(response.data.id); 
         return response.data.id;
       } else {
