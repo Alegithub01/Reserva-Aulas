@@ -20,6 +20,7 @@ import { Dialog, DialogContent, DialogContentText, DialogActions } from "@mui/ma
 import { useLocation } from 'react-router-dom';
 import useAmbienteStore from "../Contexts/AmbienteStore";
 import Button from '@mui/material/Button';
+import useNavegacionStore from "../Contexts/NavegacionStore";
 
 const SolicitudAdmin = () => {
   const { theme } = useTheme();
@@ -31,7 +32,10 @@ const SolicitudAdmin = () => {
   const [sugerido, setSugerido] = useState({
     aceptar: false,
     rechazar: false,
+    cancelar: false,
   });
+  const nClick = useNavegacionStore((state) => state).nClick;
+  const {setClicks} = useNavegacionStore();
   const ambientesSeleccionados = useAmbienteStore(state => state.ambientesSeleccionados);
   const setAmbientesSeleccionados = useAmbienteStore(state => state.setAmbientesSeleccionados);
   const [ambienteSeleccionado, setAmbienteSeleccionado] = useState(
@@ -47,9 +51,9 @@ const SolicitudAdmin = () => {
     console.log("Ambientes recibidos:", ambientesSeleccionados);
     setAmbientesSeleccionados([]);
     if(ambienteSeleccionado.trim() === "") {
-      setSugerido({aceptar: false, rechazar: true});
+      setSugerido({aceptar: false, rechazar: nClick!==0, cancelar: nClick===0});
     }else{
-      setSugerido({aceptar: true, rechazar: true});
+      setSugerido({aceptar: true, rechazar: false, cancelar: nClick===0});
     }    
     console.log("Ambientes seleccionados:", ambientesSeleccionados);
   }, []);
@@ -137,7 +141,7 @@ const SolicitudAdmin = () => {
       fontSize: '16px',
       letterSpacing: '1px',
       color: 'rgb(255, 255, 255)',
-      backgroundColor: theme.disabled,
+      backgroundColor: sugerido.cancelar?theme.highlight:theme.disabled,
       border: 'none',
       borderRadius: '15px',
       transition: 'all 0.3s ease 0s',
@@ -147,6 +151,7 @@ const SolicitudAdmin = () => {
   };
 
   const navegarPreload = () => {
+    setClicks(nClick + 1);
     const dataToSend = {
         seleccion: true,
         fecha: dataRow.fecha,
@@ -162,6 +167,7 @@ const SolicitudAdmin = () => {
     console.log("se confirma");
     setDialogoAbierto({...dialogoAbierto, aceptar: false});
     //backend acaa
+    navigate('/Solicitudes');
   }
 
   const manejoCancelarAceptar =() => {
@@ -179,9 +185,21 @@ const SolicitudAdmin = () => {
   }
 
   const navegarBuscar = () => {
-    console.log("se cancela");
     navigate('/Solicitudes');
   }
+
+  const manipularBotonAceptar = () => {
+    if(sugerido.aceptar){
+      setDialogoAbierto({...dialogoAbierto, aceptar: true})
+    }
+  }
+
+  const manipularBotonRechazar = () => {
+    if(sugerido.rechazar){
+      setDialogoAbierto({...dialogoAbierto, rechazar: true})
+    }
+  }
+
   return (
     <div style={defaultStyle.outerContainer}>
       <div style={defaultStyle.container}>
@@ -343,8 +361,8 @@ const SolicitudAdmin = () => {
             </div>
 
             <div style={defaultStyle.buttonsContainer}>
-              <Button1 onClick={() => { setDialogoAbierto({...dialogoAbierto, aceptar: true})}} style={defaultStyle.botonConfirmar}>Aceptar</Button1>
-              <Button1 onClick={() => { setDialogoAbierto({...dialogoAbierto, rechazar: true})}} style={defaultStyle.botonRechazar}>Rechazar</Button1>
+              <Button1 onClick={manipularBotonAceptar} style={defaultStyle.botonConfirmar}>Aceptar</Button1>
+              <Button1 onClick={manipularBotonRechazar} style={defaultStyle.botonRechazar}>Rechazar</Button1>
               <Button1 onClick={navegarBuscar}  style={defaultStyle.botonCancelar}>Cancelar</Button1>
             </div>
             <Dialog
