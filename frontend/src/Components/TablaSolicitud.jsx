@@ -31,10 +31,6 @@ const prueba = [
   { id: 3, nombre: 'Maria Perez', materia: 'Base de datos 1', grupo: '1', fecha: '2024-10-10', horario: '8:15-09:45', servicios: 'Proyector', Motivo: 'Examen final', estado: 'Rechazada', ambiente: '' },
 ];
 
-function EditarFilas(props) {
-  const { setFilas, setFilasModificadas } = props;
-}
-
 const TablaSolicitudes = () => {
   const [filas, setFilas] = useState(prueba);
   const [filasModificadas, setFilasModificadas] = useState({});

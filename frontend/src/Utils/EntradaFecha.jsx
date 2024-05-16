@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
@@ -9,10 +9,6 @@ const EntradaFecha = ({etiqueta, enCambio, onBlur = null, mensajeValidacion, val
   const { theme } = useTheme();
   let mostrarMensajeDeError = true;
   const [errorFechaAnterior, setErrorFechaAnterior] = useState(false);
-
-  // useEffect(() => {
-  //   setValor(valorInicial);
-  // }, [valorInicial]);
 
   const manejarCambio = (event) => {
     console.log(event.target.value, typeof event.target.value)

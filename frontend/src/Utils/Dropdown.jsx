@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -12,6 +12,7 @@ function Dropdown({ etiqueta, opciones, mensajeValidacion = '', esRequerido, cam
 
   const manejarCambio = (event) => {
     const valor = event.target.value;
+    cambio && cambio(valor);
     cambiarValorSeleccionado(valor);
   }
   const manejarPresionado = () => {
@@ -20,10 +21,6 @@ function Dropdown({ etiqueta, opciones, mensajeValidacion = '', esRequerido, cam
     }
   }
   const mostrarMensajeDeError = esRequerido  && !valorSeleccionado;
-
-  useEffect(() => {
-    cambio && cambio(valorSeleccionado);
-  }, [cambio, valorSeleccionado]);
 
   const mensajeValidacionEstilo = {
     color: 'red',

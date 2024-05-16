@@ -1,8 +1,8 @@
 import {create} from 'zustand';
 
 const useAjusteStore = create((set) => ({
-    fechaInicio: "",
-    fechaFin: "",
+    fechaInicio: "2024-01-01",
+    fechaFin: "2025-01-01",
     nroPeriodosA: "",
     setFechaInicio: (fecha) => set({ fechaInicio: fecha }),
     setFechaFin: (fecha) => set({ fechaFin: fecha }),
