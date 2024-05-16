@@ -96,8 +96,16 @@ class SolicitudController extends Controller
         Rechazado::create([
             'id_solicitud' => $id
         ]);
+        $usuarioId = $solicitud->user_id;
+        $usuario = User::find($usuarioId);
+        $correo = $usuario ? $usuario->email : null;
+        if ($correo) {
+            $this->correoController->notificarSolicitudRechazada($correo);
+            return response()->json(['message' => 'Solicitud rechazada exitosamente'], 200);
+        } else {
+            return response()->json(['message' => 'Solicitud rechazada exitosamente, pero no se pudo encontrar el correo del usuario'], 200);
+        }
 
-        return response()->json(['message' => 'Solicitud rechazada exitosamente'], 200);
     }
 
 
