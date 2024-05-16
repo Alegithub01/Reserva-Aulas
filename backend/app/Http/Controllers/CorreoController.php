@@ -50,4 +50,23 @@ class CorreoController extends Controller
         }
     }
 
+    public function notificarReservaAceptada($email){
+        // Datos del correo electrónico
+        $datos = [
+            'subject' => 'Reserva Aceptada',
+            'body' => 'Tu reserva ha sido aceptada, por favor revisa el estado de tu solicitud en el Sistema'
+        ];
+
+        try {
+            // Enviar el correo electrónico
+            Mail::to($email)->send(new MailNotify($datos));
+
+            // Retornar una respuesta exitosa
+            return response()->json(['message' => 'Correo enviado'], 200);
+        } catch (\Exception $e) {
+            // Retornar una respuesta de error en caso de excepción
+            return response()->json(['message' => 'Error al enviar el correo'], 400);
+        }
+    }
+
 }

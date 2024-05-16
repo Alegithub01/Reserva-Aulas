@@ -7,11 +7,20 @@ use App\Models\Solicitud;
 use App\Models\User;
 use App\Models\Reserva;
 use App\Models\Rechazado;
+use App\Http\Controllers\CorreoController;
 
 
 
 class SolicitudController extends Controller
 {
+
+    protected $correoController;
+
+    public function __construct(CorreoController $correoController)
+    {
+        $this->correoController = $correoController;
+    }
+
     public function index()
     {
         $solicitudes = Solicitud::all();
@@ -75,9 +84,13 @@ class SolicitudController extends Controller
     public function rechazarSolicitud($id)
     {
         $solicitud = Solicitud::find($id);
-
         if (!$solicitud) {
             return response()->json(['error' => 'Solicitud no encontrada'], 404);
+        }
+
+        $rechazoExistente = Rechazado::where('id_solicitud', $id)->first();
+        if ($rechazoExistente) {
+            return response()->json(['error' => 'Esta solicitud ya ha sido rechazada'], 400);
         }
 
         Rechazado::create([
@@ -87,12 +100,15 @@ class SolicitudController extends Controller
         return response()->json(['message' => 'Solicitud rechazada exitosamente'], 200);
     }
 
+
     public function aceptarSolicitud($id)
     {
         $solicitud = Solicitud::find($id);
         if (!$solicitud) {
             return response()->json(['error' => 'Solicitud no encontrada'], 404);
         }
+
+        $usuarioId = $solicitud->user_id;
 
         $reservaExistente = Reserva::where('solicitud_id', $id)->first();
         if ($reservaExistente) {
@@ -103,8 +119,18 @@ class SolicitudController extends Controller
             'solicitud_id' => $id
         ]);
 
-        return response()->json(['message' => 'Solicitud aceptada exitosamente'], 200);
+        // Obtener el correo del usuario
+        $usuario = User::find($usuarioId);
+        $correo = $usuario ? $usuario->email : null;
+        // Enviar la notificación de reserva aceptada si se encuentra el correo del usuario
+        if ($correo) {
+            $this->correoController->notificarReservaAceptada($correo);
+            return response()->json(['message' => 'Solicitud aceptada exitosamente'], 200);
+        } else {
+            return response()->json(['message' => 'Solicitud aceptada exitosamente, pero no se pudo encontrar el correo del usuario'], 200);
+        }
     }
+
 
 
     public function dummy($id){
