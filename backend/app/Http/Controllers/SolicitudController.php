@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Solicitud;
 use App\Models\User;
 use App\Models\Reserva;
+use App\Models\Rechazado;
 
 
 
@@ -71,24 +72,33 @@ class SolicitudController extends Controller
     }
 
 
-    public function aceptar($id)
+    public function rechazarSolicitud($id)
     {
-        $solicitud = Solicitud::findOrFail($id);
+        $solicitud = Solicitud::find($id);
 
-        if ($solicitud->estado === 'aceptada') {
-            return response()->json(['error' => 'La solicitud ya ha sido aceptada'], 400);
+        if (!$solicitud) {
+            return response()->json(['error' => 'Solicitud no encontrada'], 404);
         }
 
-        $reserva = new Reserva();
-        $reserva->solicitud_id = $solicitud->id;
+        Rechazado::create([
+            'id_solicitud' => $id
+        ]);
 
-        $reserva->save();
+        return response()->json(['message' => 'Solicitud rechazada exitosamente'], 200);
+    }
 
-        $solicitud->estado = 'aceptada';
-        $solicitud->save();
+    public function aceptarSolicitud($id)
+    {
+        $solicitud = Solicitud::find($id);
+
+        if (!$solicitud) {
+            return response()->json(['error' => 'Solicitud no encontrada'], 404);
+        }
+
+        Reserva::create([
+            'id_solicitud' => $id
+        ]);
 
         return response()->json(['message' => 'Solicitud aceptada exitosamente'], 200);
     }
-
-
 }
