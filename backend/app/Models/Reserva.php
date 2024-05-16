@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reserva extends Model
 {
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
     protected $table = 'reserva';
+
+    protected $fillable = [
+        'solicitud_id',
+    ];
+
 
     use HasFactory;
 

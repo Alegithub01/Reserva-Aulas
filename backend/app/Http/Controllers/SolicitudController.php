@@ -90,15 +90,24 @@ class SolicitudController extends Controller
     public function aceptarSolicitud($id)
     {
         $solicitud = Solicitud::find($id);
-
         if (!$solicitud) {
             return response()->json(['error' => 'Solicitud no encontrada'], 404);
         }
 
+        $reservaExistente = Reserva::where('solicitud_id', $id)->first();
+        if ($reservaExistente) {
+            return response()->json(['error' => 'Ya existe una reserva para esta solicitud'], 400);
+        }
+
         Reserva::create([
-            'id_solicitud' => $id
+            'solicitud_id' => $id
         ]);
 
         return response()->json(['message' => 'Solicitud aceptada exitosamente'], 200);
+    }
+
+
+    public function dummy($id){
+        return 123;
     }
 }

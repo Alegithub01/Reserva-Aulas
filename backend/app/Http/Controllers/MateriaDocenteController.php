@@ -13,7 +13,7 @@ class MateriaDocenteController extends Controller
         try {
             // Buscar las filas en la tabla MateriaDocente que corresponden al ID del docente
             $materiaDocente = MateriaDocente::where('docente_id', $idDocente)->get();
-            
+
             // Extraer los ID de las materias
             $materiaIds = $materiaDocente->pluck('materia_id');
 

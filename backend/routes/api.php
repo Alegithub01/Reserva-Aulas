@@ -68,9 +68,10 @@ Route::post('/solicitudes', [SolicitudController::class, 'store'])->name('solici
 Route::get('/solicitudes/{id}', [SolicitudController::class, 'show'])->name('solicitudes.show');
 Route::put('/solicitudes/{id}', [SolicitudController::class, 'update'])->name('solicitudes.update');
 Route::delete('/solicitudes/{id}', [SolicitudController::class, 'destroy'])->name('solicitudes.destroy');
-Route::put('/solicitudes/{id}/aceptar', [SolicitudController::class, 'aceptar'])->name('solicitudes.aceptar');
-
+Route::post('/solicitudes/{id}/aceptar', [SolicitudController::class, 'aceptarSolicitud'])->name('solicitudes.aceptarSolicitud');
+Route::post('/solicitudes/{id}/rechazar', [SolicitudController::class, 'rechazarSolicitud'])->name('solicitudes.rechazarSolicitud');
 
 
 
 Route::get('/docentes/{idDocente}/materias', [MateriaDocenteController::class, 'obtenerMateriasPorIdDocente']);
+
