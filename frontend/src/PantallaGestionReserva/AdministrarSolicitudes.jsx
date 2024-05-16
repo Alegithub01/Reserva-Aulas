@@ -4,7 +4,7 @@ import StyledText from "../StyledText";
 import { useTheme } from '../Contexts/ThemeContext';
 import { DataGrid } from '@mui/x-data-grid';
 import Dropdown from '../Utils/Dropdown';
-
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const GestionReservas = () => {
@@ -18,50 +18,98 @@ const GestionReservas = () => {
     const fetchData = async () => {
       // Reemplazar datos estáticos "data" con llamada a API real.
       // El backend debe devolver los datos de las reservas en el siguiente formato JSON:
-      const data = [
-        {
-          id: 1,
-          user_id: 5,
-          grupo: ["1", "2"],
-          tipo_ambiente: "Aula",
-          materia: "Taller de Sistemas Operativos",
-          horas: ["06:45-08:15", "08:15-09:45"],
-          servicios: "Proyector, Wi-Fi",
-          motivo: "Taller", // "Examen parcial", Examen final", "Examen de mesa", "Reemplazo ambiente", "Taller", "Otro"
-          fecha: "2024-05-10",
-          created_at: "2024-05-01T12:34:56",
-          updated_at: "2024-05-02T14:30:21",
-          capacidad: 200
-        },
-        {
-          id: 2,
-          user_id: 5,
-          grupo: ["1"],
-          tipo_ambiente: "Laboratorio",
-          materia: "Calculo ll",
-          horas: ["08:15-09:45"],
-          servicios: "Proyector, Wi-Fi",
-          motivo: "Examen parcial", // "Examen parcial", Examen final", "Examen de mesa", "Reemplazo ambiente", "Taller", "Otro"
-          fecha: "2024-05-11",
-          created_at: "2024-05-02T12:34:56",
-          updated_at: "2024-05-02T14:30:21",
-          capacidad: 200
-        },
-        {
-          id: 3,
-          user_id: 5,
-          grupo: ["1"],
-          tipo_ambiente: "Laboratorio",
-          materia: "Redes de Computadoras",
-          horas: ["11:15-09:45"],
-          servicios: "Proyector, Wi-Fi",
-          motivo: "Examen parcial", // "Examen parcial", Examen final", "Examen de mesa", "Reemplazo ambiente", "Taller", "Otro"
-          fecha: "2024-05-09",
-          created_at: "2024-05-03T12:34:56",
-          updated_at: "2024-05-03T14:30:21",
-          capacidad: 200
-        },
-      ];
+      // http://127.0.0.1:8000/api/solicitudes
+      const response = await axios.get('http://127.0.0.1:8000/api/solicitudes');
+      console.log(response.data);
+      /*
+      response.data es un array de objetos con la siguiente estructura:
+
+      created_at: null
+
+      detalle: null
+
+      fecha: "2024-05-15"
+
+      grupo: "[\"1\", \"2\"]"
+
+      horas: "[\"08:00\", \"10:00\"]"
+
+      id: 4
+
+      materia: "Matemáticas"
+
+      nombre_ambiente: "{\"nombre\": \"Aula 101\"}"
+
+      servicios: null
+
+      updated_at: null
+
+      user_id: 1
+
+      Object Prototype
+      */
+      // parsear los datos de response.data para que coincidan con el formato de "data" en el ejemplo
+      console.log("paila "+ response.data);
+      const data = response.data.map((reserva) => {
+        return {
+          id: reserva.id,
+          user_id: reserva.user_id,
+          grupo: JSON.parse(reserva.grupo),
+          nombre_ambiente: JSON.parse(reserva.nombre_ambiente).nombre,
+          materia: reserva.materia,
+          horas: JSON.parse(reserva.horas),
+          servicios: reserva.servicios,
+          detalle: reserva.detalle,
+          fecha: reserva.fecha,
+          created_at: reserva.created_at,
+          updated_at: reserva.updated_at
+        };
+      });
+
+      console.log(data);
+      
+
+      // const data = [
+      //   {
+      //     id: 1,
+      //     user_id: 5,
+      //     grupo: ["1", "2"],
+      //     nombre_ambiente: "Aula",
+      //     materia: "Taller de Sistemas Operativos",
+      //     horas: ["06:45-08:15", "08:15-09:45"],
+      //     servicios: "Proyector, Wi-Fi",
+      //     detalle: "Taller", // "Examen parcial", Examen final", "Examen de mesa", "Reemplazo ambiente", "Taller", "Otro"
+      //     fecha: "2024-05-10",
+      //     created_at: "2024-05-01T12:34:56",
+      //     updated_at: "2024-05-02T14:30:21"
+      //   },
+      //   {
+      //     id: 2,
+      //     user_id: 5,
+      //     grupo: ["1"],
+      //     nombre_ambiente: "Laboratorio",
+      //     materia: "Calculo ll",
+      //     horas: ["08:15-09:45"],
+      //     servicios: "Proyector, Wi-Fi",
+      //     detalle: "Examen parcial", // "Examen parcial", Examen final", "Examen de mesa", "Reemplazo ambiente", "Taller", "Otro"
+      //     fecha: "2024-05-11",
+      //     created_at: "2024-05-02T12:34:56",
+      //     updated_at: "2024-05-02T14:30:21"
+      //   },
+      //   {
+      //     id: 3,
+      //     user_id: 5,
+      //     grupo: ["1"],
+      //     nombre_ambiente: "Laboratorio",
+      //     materia: "Redes de Computadoras",
+      //     horas: ["11:15-09:45"],
+      //     servicios: "Proyector, Wi-Fi",
+      //     detalle: "Examen parcial", // "Examen parcial", Examen final", "Examen de mesa", "Reemplazo ambiente", "Taller", "Otro"
+      //     fecha: "2024-05-09",
+      //     created_at: "2024-05-03T12:34:56",
+      //     updated_at: "2024-05-03T14:30:21"
+      //   },
+      // ];
       setReservas(data);
     };
 
@@ -87,7 +135,7 @@ const GestionReservas = () => {
             "Otro": 7
           };
           // eslint-disable-next-line no-case-declarations
-          const ordenadoPorUrgencia = [...reservas].sort((a, b) => prioridad[a.motivo] - prioridad[b.motivo]);
+          const ordenadoPorUrgencia = [...reservas].sort((a, b) => prioridad[a.detalle] - prioridad[b.detalle]);
           setReservas(ordenadoPorUrgencia);
           break;
         case 'proximos':
@@ -113,7 +161,7 @@ const GestionReservas = () => {
       }
     },
     { field: 'materia', headerName: 'Materia', flex: 1.5, minWidth: 250 },
-    { field: 'motivo', headerName: 'Motivo', flex: 1.2, minWidth: 200 },
+    { field: 'detalle', headerName: 'Motivo', flex: 1.2, minWidth: 200 },
 ];
 
 

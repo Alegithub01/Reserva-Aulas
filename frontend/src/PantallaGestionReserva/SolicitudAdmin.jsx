@@ -18,6 +18,7 @@ import Button from "../Utils/Button";
 import { Dialog, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import { useState } from "react";
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 const SolicitudAdmin = () => {
   const { theme } = useTheme();
@@ -87,14 +88,34 @@ const SolicitudAdmin = () => {
     navigate('/Buscar-Ambiente');
   }
 
-  const manejoConfirmarAceptar =() => {
+  const manejoConfirmarAceptar = async () => {
     console.log("se confirma");
     setDialogoAbierto({...dialogoAbierto, aceptar: false});
-    //backend acaa
-  }
+    
+    try {
+        const response = await axios.post(`http://127.0.0.1:8000/api/solicitudes/4/aceptar`);
+        console.log(response);
+        console.log(response.data);
+        // Realizar otras acciones después de recibir la respuesta, si es necesario
+    } catch (error) {
+        console.error(error);
+        // Manejar errores aquí, si es necesario
+    }
+}
 
-  const manejoCancelarAceptar =() => {
+
+  const manejoCancelarAceptar = async() => {
     setDialogoAbierto({...dialogoAbierto, aceptar: false})
+
+    try {
+        const response = await axios.post(`http://127.0.0.1:8000/api/solicitudes/4/rechazar`);
+        console.log(response);
+        console.log(response.data);
+        // Realizar otras acciones después de recibir la respuesta, si es necesario
+    } catch (error) {
+        console.error(error);
+        // Manejar errores aquí, si es necesario
+    }
   }
 
   const manejoConfirmarRechazar =() => {
