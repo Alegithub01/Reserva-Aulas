@@ -4,15 +4,15 @@ import StyledText from "../StyledText";
 import { useTheme } from '../Contexts/ThemeContext';
 import { DataGrid } from '@mui/x-data-grid';
 import Dropdown from '../Utils/Dropdown';
-
 import { useNavigate } from 'react-router-dom';
+import useNavegacionStore from '../Contexts/NavegacionStore';
 
 const GestionReservas = () => {
   const { theme } = useTheme();
   const navegar = useNavigate();
   const [reservas, setReservas] = useState([]);
   const [orden, setOrden] = useState('');
-
+  const { setClicks } = useNavegacionStore();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -119,6 +119,7 @@ const GestionReservas = () => {
 
   const handleRowClick = (params) => {
     // redireccionar a pantalla Solicitud Admin 
+    setClicks(0);
     navegar('/SolicitudAdmin', { state:  {dataRow: params.row} });
     console.log('Reserva seleccionada:', params.row);
   };

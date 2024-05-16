@@ -15,7 +15,6 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import useAjusteStore from "../Contexts/AjusteStore";
-import { set } from "date-fns";
 
 
 const AjustarSolicitudes = () => {
@@ -29,6 +28,14 @@ const AjustarSolicitudes = () => {
   const [fecha2, setFecha2] = useState("");
   const [nroPeriodos, setNroPeriodos] = useState("");
   const [dialogoAbierto, setDialogoAbierto] = useState(false);
+  const [mensajeDialogo, setMensajeDialogo] = useState({
+    mensajeNormal: "¿Estás seguro de que deseas guardar estos cambios?",
+    mensajeFechas: "El rango de fechas no puede ser menor a 30 días, ¿Desea continuar?",
+  });
+  const [mostrarMensaje, setMostrarMensaje] = useState({
+    mensajeNormal: true,
+    mensajeFechas: false, 
+  });
   const navigate = useNavigate();
   const {setFechaInicio, setFechaFin, setNroPeriodosAmbiente} = useAjusteStore();
 
@@ -63,6 +70,7 @@ const AjustarSolicitudes = () => {
     validarNroPeriodos();
     validarFecha1();
     validarFecha2();
+    validarAmbasFechas();
     if (nroPeriodos !== "" && fecha1 !== "" && fecha2 !== ""
       && mensajeError.nroPeriodos === "" && mensajeError.fecha1 === "" && mensajeError.fecha2 === ""
     ) {
@@ -74,18 +82,19 @@ const AjustarSolicitudes = () => {
     }
 
   };
+
   const manejarNroPeriodos = (event, pattern, rango) => {
     const { value } = event.target;
     if (value.match(pattern)) {
       if (value >= rango.min && value <= rango.max) {
         setNroPeriodos(value);
         setNroPeriodosAmbiente(value);
-        cambiarMensajeError({ ...mensajeError, nroPeriodos: "" });
+        cambiarMensajeError(others => ({ ...others, nroPeriodos: "" }));
       } else {
-        cambiarMensajeError({
-          ...mensajeError,
+        cambiarMensajeError(others => ({
+          ...others,
           nroPeriodos: `El número de periodos debe estar entre ${rango.min} y ${rango.max}`,
-        });
+        }));
       }
     } else {
       cambiarMensajeError({
@@ -97,10 +106,15 @@ const AjustarSolicitudes = () => {
 
   const validarNroPeriodos = () => {
     if (nroPeriodos === "") {
-      cambiarMensajeError({
-        ...mensajeError,
+      cambiarMensajeError( mensaje => ({
+        ...mensaje,
         nroPeriodos: "Ingrese un número de periodos",
-      });
+      }));
+    }else{
+      cambiarMensajeError(mensaje => ({
+        ...mensaje,
+        nroPeriodos: "",
+      }));
     }
   }
 
@@ -115,7 +129,6 @@ const AjustarSolicitudes = () => {
         ...previo,
         fecha1: "",
       }));
-      console.log("por que no se ajusta", fecha1);
       setFechaInicio(fecha1);
     }
   }
@@ -130,8 +143,8 @@ const AjustarSolicitudes = () => {
       cambiarMensajeError(previo => ({
         ...previo,
         fecha2: "Seleccione una fecha fin mayor a la fecha de inicio",
-      }));
-    } else {
+      })); 
+    }else {
       cambiarMensajeError(previo => ({
         ...previo,
         fecha2: "",
@@ -140,12 +153,24 @@ const AjustarSolicitudes = () => {
     }
   }
 
+  const validarAmbasFechas = () => {
+    const fechita1 = fecha1.split("-");
+    const fechita2 = fecha2.split("-");
+    const diferencia = fechita2[2] - fechita1[2];
+    if (diferencia < 30 && fechita1[1] === fechita2[1] && fechita1[0] === fechita2[0]
+      || fechita1[1] !== fechita2[1] && (30 - parseInt(fechita1[2])) + parseInt(fechita2[2]) < 30) {
+      setMostrarMensaje({mensajeNormal: false, mensajeFechas: true});
+    } else {
+      setMostrarMensaje({mensajeNormal: true, mensajeFechas: false});
+    }
+  };
+
   const manejoDialogoCerrar = () => {
     setDialogoAbierto(false);
   }
 
   const guardarTodo = () => {
-    //backend acaaa
+    //backend acaaa si hace falta
     console.log("Guardando cambios");
     navigate("/Panel-Gestion-Reservas");
   }
@@ -244,7 +269,7 @@ const AjustarSolicitudes = () => {
             >
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  ¿Estás seguro de que deseas guardar estos cambios?
+                  {mostrarMensaje.mensajeNormal ? mensajeDialogo.mensajeNormal : mensajeDialogo.mensajeFechas}
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
