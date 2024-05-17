@@ -11,7 +11,9 @@ import useAjusteStore from "../Contexts/AjusteStore";
 
 const FormularioGrupal = ({aulaInicial, horaInicial}) => {
   const { aula, dia, horario } = CalendarioStore();
-  const nroPeriodosA = useAjusteStore((state) => state.nroPeriodosA);
+  const nroPeriodosAul = useAjusteStore((state) => state.nroPeriodosAul);
+  const nroPeriodosAud = useAjusteStore((state) => state.nroPeriodosAud);
+  const nroPeriodosLab = useAjusteStore((state) => state.nroPeriodosLab);
   const [materia, setMateria] = useState('');
   const [gruposDocentes, setGruposDocentes] = useState([]); // modo grupal
   const [docentes, setDocentes] = useState([]);
@@ -136,8 +138,9 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
           contador++;
         }
       }
+      const nroPeriodosA = ambiente === "Aula" ? nroPeriodosAul : ambiente === "Auditorio" ? nroPeriodosAud : nroPeriodosLab;
       if (contador > parseInt(nroPeriodosA)) {
-        setMensajeError(previo => ({ ...previo, hora: `Seleccione menos periodos de hora` }));
+        setMensajeError(previo => ({ ...previo, hora: `Seleccione menos periodos de hora, este ambiente no lo permite` }));
       }
     }
   }
