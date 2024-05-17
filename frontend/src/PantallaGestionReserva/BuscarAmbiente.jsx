@@ -82,28 +82,6 @@ const BusquedaAmbiente = () => {
       setFiltroFecha(fecha.toString());
     }
   }, [tipoAmbiente, capacidad, horario, servicios, fecha]);
-
-  const funciona = async () => {
-    try {
-        setLoading(true);
-        const filtro = {
-            capacidad: filtroCapacidad.trim(),
-            tipo: filtroTipo.trim(),
-            horas: filtroHorario.trim(),
-            // servicios: filtroServicios.trim(),
-            // fecha: filtroFecha.trim()
-        };
-        Object.keys(filtro).forEach((key) => {
-            if (filtro[key] === "") {
-                delete filtro[key];
-            }
-        });
-
-        if (Object.keys(filtro).length === 0) {
-            console.error("Debe ingresar al menos un filtro para realizar la búsqueda.");
-            setLoading(false);
-            return;
-        }
         // El filtro que se construye para la consulta tiene esta forma:
         // capacidad:"200"
         // fecha:"2024-05-11"  // verificar que el ambiente este disponible en esta fecha (segun las solicitudes)
@@ -111,37 +89,79 @@ const BusquedaAmbiente = () => {
         // servicios:"Proyector, Wi-Fi"
         // tipo:"Laboratorio"
         // Realizar la solicitud al backend con el filtro
-        console.log("FILTRO",filtro)
-        const response = await axios.post(`${URL_API}/ambientes-filtrar`, filtro);
-        let data = response.data;
-        console.log('respuesta',data)
-        if (data.length === 0 && filtroCapacidad) {
-            setMensajeNoResultados(`No se encontraron ambientes con la capacidad deseada (${filtroCapacidad}). Puede seleccionar dos ambientes de menor capacidad.`);
-            delete filtro.capacidad;
-            const retryResponse = await axios.post(`${URL_API}/ambientes-filtrar`, filtro);
-            data = retryResponse.data;
-            if (data.length === 0) {
-              setMensajeNoResultados(`No se encontraron ambientes con la capacidad deseada (${filtroCapacidad}).`);            
+        const funciona = async () => {
+          try {
+            setLoading(true);
+            const filtro = {
+              capacidad: filtroCapacidad.trim(),
+              tipo: filtroTipo.trim(),
+              horas: filtroHorario.trim(),
+              // servicios: filtroServicios.trim(),
+              // fecha: filtroFecha.trim()
+            };
+            Object.keys(filtro).forEach((key) => {
+              if (filtro[key] === "") {
+                delete filtro[key];
+              }
+            });
+        
+            if (Object.keys(filtro).length === 0) {
+              console.error("Debe ingresar al menos un filtro para realizar la búsqueda.");
+              setLoading(false);
+              return;
             }
-        }
-
-        const dataConFechaHora = data.map((ambiente) => {
-            const horasArray = JSON.parse(ambiente.horas);
-            const horasFormateadas = horasArray.join(", ");
-            return {
+        
+            console.log("FILTRO", filtro);
+            const response = await axios.post(`${URL_API}/ambientes-filtrar`, filtro);
+            let data = response.data;
+            console.log('respuesta', data);
+        
+            if (data.length === 0 && filtroCapacidad) {
+              setMensajeNoResultados(`No se encontraron ambientes con la capacidad deseada (${filtroCapacidad}). Puede seleccionar dos ambientes de menor capacidad.`);
+              delete filtro.capacidad;
+              const retryResponse = await axios.post(`${URL_API}/ambientes-filtrar`, filtro);
+              data = retryResponse.data;
+        
+              // Verificar si hay menos de 2 ambientes
+              if (data.length < 2) {
+                setMensajeNoResultados("No se encontraron ambientes que cumplan con las especificaciones.");
+                setLoading(false);
+                return;
+              }
+        
+              // Verificar que los ambientes sean contiguos
+              if (!sonAmbientesContiguos(data)) {
+                setMensajeNoResultados("No se encontraron ambientes contiguos que cumplan con las especificaciones.");
+                setLoading(false);
+                return;
+              }
+            }
+        
+            const dataConFechaHora = data.map((ambiente) => {
+              const horasArray = JSON.parse(ambiente.horas);
+              const horasFormateadas = horasArray.join(", ");
+              return {
                 ...ambiente,
                 horario: horasFormateadas,
                 fecha: filtro.fecha,
-            };
-        });
+              };
+            });
+        
+            dataConFechaHora.sort((a, b) => a.nombre.localeCompare(b.nombre));
+        
+            setInformacionFinal(dataConFechaHora);
+            setLoading(false);
+          } catch (error) {
+            console.error("Error al obtener y filtrar ambientes:", error);
+            setLoading(false);
+          }
+        };
 
-        setInformacionFinal(dataConFechaHora);
-        setLoading(false);
-    } catch (error) {
-        console.error("Error al obtener y filtrar ambientes:", error);
-        setLoading(false);
-    }
-};
+  const sonAmbientesContiguos = (ambientes) => {
+    if (ambientes.length <= 1) return true;
+    const prefix = ambientes[0].nombre.slice(0, 3);
+    return ambientes.every(ambiente => ambiente.nombre.slice(0, 3) === prefix);
+  };
 
   const manejarCambioCapacidad = (event, pattern) => {
     const valor = event.target.value;

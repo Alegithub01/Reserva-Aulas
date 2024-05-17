@@ -67,7 +67,7 @@ export default function TablaAmbienteVista({informacion}) {
     { field: 'planta', headerName: 'Planta', width: 100, align: 'center', headerAlign: 'center' },
     { field: 'horario', headerName: 'Horario', width: 200, align: 'center', headerAlign: 'center' },
     { field: 'tipo', headerName: 'Tipo Ambiente', width: 100, align: 'center', headerAlign: 'center' },
-    { field: 'fecha', headerName: 'Fecha', width: 100, align: 'center', headerAlign: 'center' },
+    // { field: 'fecha', headerName: 'Fecha', width: 100, align: 'center', headerAlign: 'center' },
     { field: 'ubicacion', headerName: 'Ubicación', width: 110, headerAlign: 'center', align: 'center' },
     { field: 'servicios', headerName: 'Servicios', width: 110, headerAlign: 'center', align: 'center' },
   ];
