@@ -54,7 +54,7 @@ const GestionReservas = () => {
           tipo_ambiente: "Aula",
           materia: "Redes de Computadoras",
           horas: ["11:15-12:45"],
-          servicios: "Proyector, Wi-Fi",
+          servicios: "",
           motivo: "Examen parcial", // "Examen parcial", Examen final", "Examen de mesa", "Reemplazo ambiente", "Taller", "Otro"
           fecha: "2024-05-09",
           created_at: "2024-05-03T12:34:56",
