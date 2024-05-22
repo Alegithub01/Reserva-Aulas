@@ -47,6 +47,7 @@ const TablaSolicitudes = () => {
     }
   };
   const manejoEditar = (id) => () => {
+    //visto por el admin, no se puede editar
     const filaEditada = filas.find((fila) => fila.id === id);
     if (filasModificadas[id]) {
       setFilasModificadas((filasModificadasAnteriores) => ({
@@ -239,6 +240,17 @@ const TablaSolicitudes = () => {
         const ambiente = params.row.ambiente;
         if (ambiente) {
           return [];
+        }
+        const estadoo = params.row.estado;
+        if (estadoo === 'Rechazada') {
+          return [
+            <GridActionsCellItem
+              icon={<DeleteIcon />}
+              label="Delete"
+              onClick={abrirDialogoEliminar(params.id)}
+              color="inherit"
+            />,
+          ];
         }
         const estaModoEdicion = filasModificadas[params.id]?.mode === GridRowModes.Edit;
 
