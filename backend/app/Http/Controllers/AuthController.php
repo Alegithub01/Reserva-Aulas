@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -18,7 +18,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register', 'dummyGet','registerMany', 'me']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'dummyGet', 'registerMany', 'me']]);
     }
 
     public function dummyGet()
@@ -86,7 +86,8 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => auth()->factory()->getTTL() * 60,
+            'role' => 2
         ]);
     }
 
@@ -94,24 +95,33 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nombres' => 'required',
-            'apellidos'=> 'required',
+            'apellidos' => 'required',
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|min:6',
+            // 'rol_id' no es obligatorio, se establece por defecto en 2
+            'rol_id' => 'integer'
         ]);
-        if($validator->fails()){
-            return response()->json($validator->errors()->toJson(),400);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
         }
 
-        $user = User::create(array_merge(
+        // Si no se proporciona el rol_id, se establece el valor predeterminado como 2
+        $userData = array_merge(
             $validator->validate(),
             ['password' => bcrypt($request->password)]
-        ));
+        );
+        if (!isset($userData['rol_id'])) {
+            $userData['rol_id'] = 2;
+        }
+        $user = User::create($userData);
 
         return response()->json([
             'message' => '¡Usuario registrado exitosamente!',
             'user' => $user
         ], 201);
     }
+
 
     public function registerMany(Request $request)
     {
@@ -120,12 +130,12 @@ class AuthController extends Controller
         foreach ($users as $user) {
             $validator = Validator::make($user, [
                 'nombres' => 'required',
-                'apellidos'=> 'required',
+                'apellidos' => 'required',
                 'email' => 'required|string|email|max:100|unique:users',
                 'password' => 'required|string|min:6',
             ]);
-            if($validator->fails()){
-                return response()->json($validator->errors()->toJson(),400);
+            if ($validator->fails()) {
+                return response()->json($validator->errors()->toJson(), 400);
             }
 
             $user = User::create(array_merge(
@@ -141,5 +151,4 @@ class AuthController extends Controller
             'users' => $response
         ], 201);
     }
-
 }

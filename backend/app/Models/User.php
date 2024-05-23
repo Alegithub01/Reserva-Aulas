@@ -30,6 +30,7 @@ class User extends Authenticatable implements JWTSubject
         'apellidos',
         'email',
         'password',
+        'rol_id',
     ];
 
     /**
@@ -65,7 +66,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsTo(Rol::class, 'rol_id');
     }
-    
+
     public function solicitudes()
     {
         return $this->hasMany(Solicitud::class);
