@@ -16,7 +16,6 @@ class CreateReserva extends Migration
         Schema::create('reserva', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('solicitud_id');
-            //array de ambientes poner.
             $table->timestamps();
 
             // Definición de la clave foránea
