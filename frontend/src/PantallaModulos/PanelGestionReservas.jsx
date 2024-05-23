@@ -7,6 +7,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
 
 const PanelGestionReservas = () => {
+    const rol = localStorage.getItem('rol');
     const navegar = useNavigate();
     const contenidoIzq = (
         <div
@@ -79,7 +80,9 @@ const PanelGestionReservas = () => {
 
     return (
         <>
+        {rol === "1" &&
             <SplitScreenLayout left={contenidoIzq} right={contenidoDer} />
+        }   
         </>
     );
 };

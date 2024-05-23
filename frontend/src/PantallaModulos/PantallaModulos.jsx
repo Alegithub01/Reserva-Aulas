@@ -6,36 +6,14 @@ import IconoAmbientes from '@mui/icons-material/RoomPreferences';
 import IconoReservas from '@mui/icons-material/EventNote';
 import BookOnlineIcon from '@mui/icons-material/BookOnline';
 import { useNavigate } from 'react-router-dom';
-import { URL_API } from "../services/const";
-import axios from "axios";
 import { useEffect, useState } from "react";
-import  UsuarioStore  from "../Contexts/UsuarioStore";
 
 const PantallaModulos = () => {
     const [rolActual, setRolActual] = useState("1");
-    const {actualizarNombre, actualizarCorreo} = UsuarioStore();
-
     const navegar = useNavigate();
 
-    const controlRol = async () => {
-        try {
-            const response = await axios.post(`${URL_API}/auth/me`, {},{
-                headers:
-                {
-                    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-                },
-            });
-            console.log("here", response);
-            actualizarNombre(response.data.nombre);
-            actualizarCorreo(response.data.correo);
-            // setRolActual(response.data.rol_id);   //falta que no sea null
-        }catch (error) {
-            console.error(error);
-        }
-    }
-
     useEffect(()=> {
-        controlRol();
+        setRolActual(localStorage.getItem('rol'));   //falta que no sea null
     }, []);
 
     const contenidoIzq = (

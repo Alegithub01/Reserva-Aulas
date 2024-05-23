@@ -13,12 +13,9 @@ import {
 } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import UsuarioStore from '../Contexts/UsuarioStore';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const BarraSuperior = () => {
-  const nombre = UsuarioStore((state) => state.nombre);
-  const correo = UsuarioStore((state) => state.correo);
   const [anchorElPerfil, setAnchorElPerfil] = useState(null);
   const abiertoPerfil = Boolean(anchorElPerfil);
   const [anchorElNotificaciones, setAnchorElNotificaciones] = useState(null);

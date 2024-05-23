@@ -102,14 +102,14 @@ const PantallaInicioSesionProfesor = () => {
           Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
       });
-      console.log("here", response);
       actualizarNombre(response.data.nombres);
-      console.log("data", response.data.nombres, typeof response.data.nombres);
       actualizarCorreo(response.data.email);
       localStorage.setItem('nombre', response.data.nombres + ' ' + response.data.apellidos);
       localStorage.setItem('correo', response.data.email);
-      localStorage.setItem('rol', response.data.rol_id);
-      // setRolActual(response.data.rol_id);   //falta ver si son numeros 1,2
+      console.log('Datos del usuario:', response.data.rol_id);
+      //BACKEND
+      const rolNoNulo = response.data.rol_id || "1"; 
+      localStorage.setItem('rol', rolNoNulo);  
     } catch (error) {
       console.error(error);
     }

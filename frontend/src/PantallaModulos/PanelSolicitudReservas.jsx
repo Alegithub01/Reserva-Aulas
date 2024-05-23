@@ -10,6 +10,7 @@ import { useEffect } from "react";
 
 const PanelSolicitudReservas = () => {
     const navegar = useNavigate();
+    const rol = localStorage.getItem('rol');
     const fechaInicio = useAjusteStore((state) => state.fechaInicio);
     const fechaFin = useAjusteStore((state) => state.fechaFin);
     
@@ -92,8 +93,10 @@ const PanelSolicitudReservas = () => {
 
     return (
         <>
+        {rol === "2" &&
             <SplitScreenLayout left={contenidoIzq} right={contenidoDer} />
-        </>
+        }
+        s</>
     );
 };
 
