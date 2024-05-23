@@ -108,7 +108,7 @@ const PantallaInicioSesionProfesor = () => {
       localStorage.setItem('correo', response.data.email);
       console.log('Datos del usuario:', response.data.rol_id);
       //BACKEND
-      const rolNoNulo = response.data.rol_id || "1"; 
+      const rolNoNulo = response.data.rol_id || "2"; 
       localStorage.setItem('rol', rolNoNulo);  
     } catch (error) {
       console.error(error);

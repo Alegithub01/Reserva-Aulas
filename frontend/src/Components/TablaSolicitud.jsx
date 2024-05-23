@@ -12,6 +12,7 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
+import CheckIcon from '@mui/icons-material/Check';
 
 const StyledDataGrid = styled(DataGrid)`
   .MuiDataGrid-cell {
@@ -28,7 +29,8 @@ const StyledDataGrid = styled(DataGrid)`
 const prueba = [
   { id: 1, nombre: 'Juan Perez', materia: 'Base de datos 1', grupo: '1', fecha: '2024-10-10', horario: '8:15-09:45, 09:45-11:15', servicios: 'Proyector', Motivo: 'Taller', estado: 'Pendiente', ambiente: '' },
   { id: 2, nombre: 'Jose Perez', materia: 'Programación', grupo: '2', fecha: '2024-10-10', horario: '8:15-09:45', servicios: 'Proyector', Motivo: 'Examen parcial', estado: 'Aceptada', ambiente: '692H' },
-  { id: 3, nombre: 'Maria Perez', materia: 'Base de datos 1', grupo: '1', fecha: '2024-10-10', horario: '8:15-09:45', servicios: 'Proyector', Motivo: 'Examen final', estado: 'Rechazada', ambiente: '' },
+  { id: 3, nombre: 'Maria Perez', materia: 'Base de datos 1', grupo: '1', fecha: '2024-10-15', horario: '8:15-09:45', servicios: 'Proyector', Motivo: 'Examen final', estado: 'Rechazada', ambiente: '' },
+  { id: 4, nombre: 'Maria Perez', materia: 'Base de datos 2', grupo: '3', fecha: '2024-10-20', horario: '18:45-20:15', servicios: 'Wi-fi', Motivo: 'Taller', estado: 'Aceptada', ambiente: '690A, 690B' },
 ];
 
 const TablaSolicitudes = () => {
@@ -137,6 +139,15 @@ const TablaSolicitudes = () => {
     return filaModificada;
   };
 
+  const manejoAceptarOferta = (id) => () => {
+    console.log('Se aceptó la solicitud');
+      // PARA BACKEND ----------************-**----------------------
+  }
+
+  const manejoRechazarOferta = (id) => () => {
+    console.log('Se rechazó la solicitud');
+      // PARA BACKEND ----------************-**----------------------
+  }
   const columnas = [
     {
       field: 'nombre',
@@ -238,8 +249,26 @@ const TablaSolicitudes = () => {
       cellClassName: 'actions',
       getActions: (params) => {
         const ambiente = params.row.ambiente;
-        if (ambiente) {
+        if (ambiente && ambiente.split(',').length === 1){
           return [];
+        }else if (ambiente && ambiente.split(',').length > 1){
+          return [
+            <GridActionsCellItem
+              icon={<CheckIcon />}
+              label="Check"
+              sx={{
+                color: 'primary.main',
+              }}
+              onClick={manejoAceptarOferta(params.id)}
+            />,
+            <GridActionsCellItem
+              icon={<CancelIcon />}
+              label="Cancel"
+              className="textPrimary"
+              onClick={manejoRechazarOferta(params.id)}
+              color="inherit"
+            />,
+          ];
         }
         const estadoo = params.row.estado;
         if (estadoo === 'Rechazada') {
