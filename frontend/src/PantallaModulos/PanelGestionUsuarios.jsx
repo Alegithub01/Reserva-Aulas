@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const PanelGestionUsuarios = () => {
     const navegar = useNavigate();
+    const rol = localStorage.getItem('rol');
     const contenidoIzq = (
         <div
             style={{
@@ -78,7 +79,9 @@ const PanelGestionUsuarios = () => {
 
     return (
         <>
+        {rol === "1" &&
             <SplitScreenLayout left={contenidoIzq} right={contenidoDer} />
+        }
         </>
     );
 };

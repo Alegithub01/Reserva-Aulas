@@ -178,6 +178,7 @@ const SolicitudAdmin = () => {
     console.log("se rechaza");
     setDialogoAbierto({...dialogoAbierto, rechazar: false});
     //backend acaa
+    navigate('/Solicitudes');
   }
 
   const manejoCancelarRechazar =() => {

@@ -13,7 +13,9 @@ import { URL_API } from "../services/const";
 
 const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   const { aula, dia, horario } = CalendarioStore();
-  const nroPeriodosA = useAjusteStore((state) => state.nroPeriodosA);
+  const nroPeriodosAul = useAjusteStore((state) => state.nroPeriodosAul);
+  const nroPeriodosAud = useAjusteStore((state) => state.nroPeriodosAud);
+  const nroPeriodosLab = useAjusteStore((state) => state.nroPeriodosLab);
   const [materia, setMateria] = useState('');
   const [nombreDocente, setNombreDocente] = useState('prueba'); //nombre del docente loggeado
   const [grupoDocente, setGrupoDocente] = useState(''); //grupo del docente loggeado
@@ -126,8 +128,9 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
           contador++;
         }
       }
-      if(contador > parseInt(nroPeriodosA)){
-        setMensajeError(previo => ({ ...previo, hora: 'Seleccione menos periodos de hora' }));
+      const nroPeriodosA = ambiente === "Aula" ? nroPeriodosAul : ambiente === "Auditorio" ? nroPeriodosAud : nroPeriodosLab;
+      if (contador > parseInt(nroPeriodosA)) {
+        setMensajeError(previo => ({ ...previo, hora: `Seleccione menos periodos de hora, este ambiente no lo permite` }));
       }
     }
   }
