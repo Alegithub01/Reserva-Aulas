@@ -128,13 +128,7 @@ const BusquedaAmbiente = () => {
                 setLoading(false);
                 return;
               }
-        
-              // Verificar que los ambientes sean contiguos
-              if (!sonAmbientesContiguos(data)) {
-                setMensajeNoResultados("No se encontraron ambientes contiguos que cumplan con las especificaciones.");
-                setLoading(false);
-                return;
-              }
+              
             }
         
             const dataConFechaHora = data.map((ambiente) => {

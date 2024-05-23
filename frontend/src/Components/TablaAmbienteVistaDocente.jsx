@@ -35,16 +35,16 @@ export default function TablaAmbienteVista({informacion}) {
 
   const handleCheckboxClick = (row, isChecked) => {
     setSelectedRows(prev => {
-      const existingRow = prev.find(r => r.id === row.id);
-      if (isChecked && !existingRow) {
-        return [...prev, row];
-      } else if (!isChecked && existingRow) {
+      if (isChecked && prev.length < 2) {
+        if (prev.length === 0 || (prev.length === 1 && prev[0].nombre.slice(0, 3) === row.nombre.slice(0, 3))) {
+          return [...prev, row];
+        }
+      } else if (!isChecked) {
         return prev.filter(r => r.id !== row.id);
       }
       return prev;
     });
   };
-
   const columnas = [
     {
       field: 'checkbox',
