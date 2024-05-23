@@ -9,9 +9,11 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import CircularProgress from "@mui/material/CircularProgress";
 import { URL_API } from "../services/const";
+import UsuarioStore from "../Contexts/UsuarioStore";
 
 const PantallaInicioSesionProfesor = () => {
   const navegar = useNavigate();
+  const { actualizarNombre, actualizarCorreo } = UsuarioStore();
   const [correoElectronico, setCorreoElectronico] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [errores, setErrores] = useState({
@@ -91,14 +93,35 @@ const PantallaInicioSesionProfesor = () => {
         });
     }
   };
-  
-  const obtenerDatosUsuario = () => {
+
+  const controlStore = async () => {
+    try {
+      const response = await axios.post(`${URL_API}/auth/me`, {}, {
+        headers:
+        {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      console.log("here", response);
+      actualizarNombre(response.data.nombres);
+      console.log("data", response.data.nombres, typeof response.data.nombres);
+      actualizarCorreo(response.data.email);
+      localStorage.setItem('nombre', response.data.nombres + ' ' + response.data.apellidos);
+      localStorage.setItem('correo', response.data.email);
+      localStorage.setItem('rol', response.data.rol_id);
+      // setRolActual(response.data.rol_id);   //falta ver si son numeros 1,2
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const obtenerDatosUsuario = async () => {
     const token = localStorage.getItem('access_token');
     if (!token) {
       console.error("No se enconto el token");
       return Promise.reject(new Error("No se enconto el token"));
     }
-    // return axios.get('http://localhost:8000/api/user/profile', {
+    await controlStore();
+    // return axios.get(`${URL_API}/auth/me`, {
     //   headers: {
     //     Authorization: `Bearer ${token}`
     //   }
@@ -117,7 +140,7 @@ const PantallaInicioSesionProfesor = () => {
     setMensajeSnackbar(mensaje);
     setSnackbarAbierto(true);
   };
-  
+
   const manejarCerrarSnackbar = (evento, razon) => {
     if (razon === 'clickaway') {
       return;

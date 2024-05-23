@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -17,12 +17,13 @@ import UsuarioStore from '../Contexts/UsuarioStore';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const BarraSuperior = () => {
-  const { nombre, correo } = UsuarioStore();
+  const nombre = UsuarioStore((state) => state.nombre);
+  const correo = UsuarioStore((state) => state.correo);
   const [anchorElPerfil, setAnchorElPerfil] = useState(null);
   const abiertoPerfil = Boolean(anchorElPerfil);
   const [anchorElNotificaciones, setAnchorElNotificaciones] = useState(null);
   const abiertoNotificaciones = Boolean(anchorElNotificaciones);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
 
   const manejarCierreSesion = () => {
     navigate('/');
@@ -128,9 +129,9 @@ const BarraSuperior = () => {
                 paddingY: 1,
               }}
             >
-              {nombre}
+              {localStorage.getItem('nombre')}
               <br />
-              {correo}
+              {localStorage.getItem('correo')}
             </Typography>
             <Divider />
             <MenuItem onClick={manejarCierreSesion}>Cerrar sesión</MenuItem>
