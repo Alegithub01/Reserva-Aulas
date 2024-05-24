@@ -160,6 +160,13 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
     }
   };
 
+  const obtenerLabelsHora = (valores) => {
+    return valores.map(valor => {
+      const horaEncontrada = horas.find(hora => hora.value === valor);
+      return horaEncontrada ? horaEncontrada.label : valor;
+    });
+  };
+
   const validarTodo = async () => {
     validarSeleccionMateria();
     validarGrupoDocente();
@@ -172,12 +179,13 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
       console.log("Solicitud enviada");
 
       try {
+        const horasLabels = obtenerLabelsHora(hora);
         const response = await axios.post(`${URL_API}/solicitudes`, {
           nombre_usuario: nombreDocente,
           grupo: grupoDocente,
           tipo_ambiente: ambiente,
           materia: materia,
-          horas: hora,
+          horas: horasLabels,
           servicios: serviciosSolicitados,
           detalle: detalles,
           fecha: fecha,
