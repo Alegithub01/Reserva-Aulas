@@ -9,7 +9,7 @@ import Button from "../Utils/Button";
 import CalendarioStore from "../Contexts/CalendarioStore"
 import useAjusteStore from "../Contexts/AjusteStore";
 import axios from "axios";
-import { URL_API } from "../Utils/URL_API";
+import { URL_API } from "../services/const";
 
 const FormularioGrupal = ({aulaInicial, horaInicial}) => {
   const { aula, dia, horario } = CalendarioStore();
