@@ -18,7 +18,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register', 'dummyGet', 'registerMany', 'me']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register', 'dummyGet', 'registerMany', 'me','getRoleName']]);
     }
 
     public function dummyGet()
@@ -150,5 +150,35 @@ class AuthController extends Controller
             'message' => '¡Usuarios registrados exitosamente!',
             'users' => $response
         ], 201);
+    }
+
+    
+    public function getRoleName(Request $request)
+    {
+        // Validar la entrada
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email|max:100',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors()->toJson(), 400);
+        }
+
+        // Obtener el usuario por email
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        // Cargar la relación del rol
+        $user->load('rol');
+
+        // Obtener el nombre del rol
+        $roleName = $user->rol ? $user->rol->nombre : 'Role not found';
+
+        return response()->json([
+            'role_name' => $roleName
+        ]);
     }
 }

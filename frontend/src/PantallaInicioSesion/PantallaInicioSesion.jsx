@@ -57,41 +57,68 @@ const PantallaInicioSesionProfesor = () => {
   };
 
   const iniciarSesion = () => {
-    if (validarFormulario()) {
-      setCargando(true);
-      axios
-        .post(`${URL_API}/auth/login`, {
-          email: correoElectronico,
-          password: contrasena,
-        })
-        .then((response) => {
-          if (response.data.access_token) {
-            console.log("Token recibido:", response.data.access_token);
-            localStorage.setItem("access_token", response.data.access_token);
-            return obtenerDatosUsuario();
-          } else {
-            console.error("No se recibió token");
-            setSnackbarMessage("Inicio de sesión fallido");
-            setSnackbarSeverity("error");
-            return Promise.reject(new Error("No se recibió token"));
-          }
-        })
-        .then((userData) => {
-          console.log("Datos del usuario obtenidos:", userData);
-          navegar("/ModulosAdmin");
-          setSnackbarMessage("Inicio de sesión exitoso");
-          setSnackbarSeverity("success");
-        })
-        .catch((error) => {
-          console.error("Error al iniciar sesión o al obtener los datos del usuario:", error);
+  if (validarFormulario()) {
+    setCargando(true);
+    axios
+      .post(`${URL_API}/auth/login`, {
+        email: correoElectronico,
+        password: contrasena,
+      })
+      .then((response) => {
+        if (response.data.access_token) {
+          console.log("Token recibido:", response.data.access_token);
+          localStorage.setItem("access_token", response.data.access_token);
+          // Después de iniciar sesión con éxito, obtén el rol del usuario
+          obtenerRolUsuario();
+        } else {
+          console.error("No se recibió token");
           setSnackbarMessage("Inicio de sesión fallido");
           setSnackbarSeverity("error");
-        })
-        .finally(() => {
-          setCargando(false);
-          setSnackbarOpen(true);
-        });
+          throw new Error("No se recibió token");
+        }
+      })
+      .catch((error) => {
+        console.error("Error al iniciar sesión:", error);
+        setSnackbarMessage("Inicio de sesión fallido");
+        setSnackbarSeverity("error");
+      })
+      .finally(() => {
+        setCargando(false);
+        setSnackbarOpen(true);
+      });
+  }
+};
+
+  const obtenerRolUsuario = () => {
+    // Llama a tu backend para obtener el rol del usuario usando el token
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      console.error("No se encontró el token");
+      return;
     }
+  
+    axios
+      .post(`${URL_API}/auth/get-role-name`, {
+        email: correoElectronico
+      })
+      .then((response) => {
+        console.log("Respuesta del servidor:", response.data);
+        const nombreRol = response.data.role_name;
+        console.log("Nombre del rol:", nombreRol);
+        // Redirige según el rol del usuario
+        if (nombreRol === "Administrador") {
+          console.log("Redirigiendo a ModulosAdmin...");
+          navegar("/ModulosAdmin");
+        } else {
+          console.log("Redirigiendo a Panel-Solicitud-Reservas...");
+          navegar("/Panel-Solicitud-Reservas");
+        }
+      })
+      .catch((error) => {
+        console.error("Error al obtener el rol del usuario:", error);
+        // Si hay un error al obtener el rol, redirige a una página de error o maneja de otra forma
+        navegar("/error");
+      });
   };
 
   const controlStore = async () => {
@@ -121,19 +148,6 @@ const PantallaInicioSesionProfesor = () => {
       return Promise.reject(new Error("No se enconto el token"));
     }
     await controlStore();
-    // return axios.get(`${URL_API}/auth/me`, {
-    //   headers: {
-    //     Authorization: `Bearer ${token}`
-    //   }
-    // })
-    // .then(response => {
-    //   console.log('Datos del usuario:', response.data);
-    //   return response.data;
-    // })
-    // .catch(error => {
-    //   console.error('Error al obtener los datos del usuario:', error);
-    //   return Promise.reject(error);
-    // });
   };
 
   const manejarAbrirSnackbar = (mensaje) => {
