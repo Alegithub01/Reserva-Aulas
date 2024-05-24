@@ -17,7 +17,7 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   const nroPeriodosAud = useAjusteStore((state) => state.nroPeriodosAud);
   const nroPeriodosLab = useAjusteStore((state) => state.nroPeriodosLab);
   const [materia, setMateria] = useState('');
-  const [nombreDocente, setNombreDocente] = useState('prueba'); //nombre del docente loggeado
+  const [nombreDocente, setNombreDocente] = useState('Leticia'); //nombre del docente loggeado
   const [grupoDocente, setGrupoDocente] = useState(''); //grupo del docente loggeado
   const [capacidad, setCapacidad] = useState(0); //capacidad del aula
   const [ambiente, setAmbiente] = useState('');
@@ -175,12 +175,13 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
         const response = await axios.post(`${URL_API}/solicitudes`, {
           nombre_usuario: nombreDocente,
           grupo: grupoDocente,
-          nombre_ambiente: ambiente,
+          tipo_ambiente: ambiente,
           materia: materia,
           horas: hora,
           servicios: serviciosSolicitados,
           detalle: detalles,
           fecha: fecha,
+          capacidad: capacidad,
         });
         console.log(response.data);
         cambiarAbrirDialogo(true);
