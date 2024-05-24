@@ -17,7 +17,8 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   const nroPeriodosAud = useAjusteStore((state) => state.nroPeriodosAud);
   const nroPeriodosLab = useAjusteStore((state) => state.nroPeriodosLab);
   const [materia, setMateria] = useState('');
-  const [nombreDocente, setNombreDocente] = useState('Leticia'); //nombre del docente loggeado
+  const nombre = localStorage.getItem('nombre');
+  const [nombreDocente, setNombreDocente] = useState(nombre); //nombre del docente loggeado
   const [grupoDocente, setGrupoDocente] = useState(''); //grupo del docente loggeado
   const [capacidad, setCapacidad] = useState(0); //capacidad del aula
   const [ambiente, setAmbiente] = useState('');
@@ -170,7 +171,6 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
       && mensajeError.materia === '' && mensajeError.grupoDocente === '' && mensajeError.fecha === '' && mensajeError.hora === '' && mensajeError.detalles === ''
     ) {
       console.log("Solicitud enviada");
-
       try {
         const response = await axios.post(`${URL_API}/solicitudes`, {
           nombre_usuario: nombreDocente,
@@ -239,7 +239,7 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   };
 
   const obtenerMaterias = async () => {
-    const docenteId = await obtenerDocenteId(nombreDocente);
+    const docenteId = await obtenerDocenteId(nombreDocente.split(' ')[0]);
     console.log(docenteId)
     if (docenteId) {
       obtenerMateriasDesdeBackend(docenteId);
