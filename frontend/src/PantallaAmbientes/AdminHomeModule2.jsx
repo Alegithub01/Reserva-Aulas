@@ -9,6 +9,7 @@ import SelectorMultiple from '../Utils/SelectorMultiple';
 import MensajeExito from '../Utils/MensajeExito';
 import axios from 'axios';
 import { useTheme } from '../Contexts/ThemeContext';
+import { URL_API } from '../services/const';
 
 const AdminHomeModule2 = () => {
   const { theme } = useTheme();
@@ -37,7 +38,7 @@ const AdminHomeModule2 = () => {
     const valorHoras = horas.map(hora => horarios.find(opcion => opcion.value === hora).label);
     console.log(valorTipo, valorPlanta, valorDia, valorHoras);
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/ambientes', {
+      const response = await axios.post(`${URL_API}/ambientes`, {
         nombre: nombre,
         capacidad: capacidad,
         tipo: valorTipo,
@@ -73,7 +74,7 @@ const AdminHomeModule2 = () => {
     { value: "70", label: "15:45-17:15" },
     { value: "80", label: "17:15-18:45" },
     { value: "90", label: "18:45-20:15" },
-    { value: "100", label: "20:30-21:45" },
+    { value: "100", label: "20:15-21:45" },
   ];
 
   const dias = [

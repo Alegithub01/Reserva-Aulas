@@ -1,4 +1,6 @@
+import React from 'react';
 import PropTypes from 'prop-types';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Card = ({
   children,
@@ -12,10 +14,11 @@ const Card = ({
   padding = '20px',
   borderRadius = '10px',
   block = false,
+  isLoading = false,
 }) => {
   const styles = {
     card: {
-      display: block ? 'blocked':'flex',
+      display: block ? 'block' : 'flex',
       flexDirection: 'column',
       backgroundColor: '#fff',
       justifyContent: alignCenter ? 'center' : 'flex-start',
@@ -30,10 +33,32 @@ const Card = ({
       borderRadius: borderRadius,
       boxSizing: 'border-box',
       boxShadow: '0px 0px 30px rgba(0, 0, 0, 0.2)',
+      position: 'relative',
     },
+    loadingOverlay: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'rgba(255, 255, 255, 0.5)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 1000,
+    }
   };
 
-  return <div style={styles.card}>{children}</div>;
+  return (
+    <div style={styles.card}>
+      {isLoading && (
+        <div style={styles.loadingOverlay}>
+          <CircularProgress />
+        </div>
+      )}
+      {children}
+    </div>
+  );
 };
 
 Card.propTypes = {
@@ -46,22 +71,9 @@ Card.propTypes = {
   alignCenter: PropTypes.bool,
   margin: PropTypes.string,
   padding: PropTypes.string,
-  borderColor: PropTypes.string,
   borderRadius: PropTypes.string,
   block: PropTypes.bool,
+  isLoading: PropTypes.bool, 
 };
 
 export default Card;
-
-{/* <Card
-  minWidth="300px"
-  maxWidth="500px"
-  minHeight="300px"
-  fullWidth
-  fullHeight
-  alignCenter
-  margin="20px"
-  padding="20px"
-  borderRadius="0"
->
-</Card> */}

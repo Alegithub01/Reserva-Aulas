@@ -6,9 +6,16 @@ import IconoAmbientes from '@mui/icons-material/RoomPreferences';
 import IconoReservas from '@mui/icons-material/EventNote';
 import BookOnlineIcon from '@mui/icons-material/BookOnline';
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
 
 const PantallaModulos = () => {
+    const [rolActual, setRolActual] = useState("1");
     const navegar = useNavigate();
+
+    useEffect(()=> {
+        setRolActual(localStorage.getItem('rol'));   //falta que no sea null
+    }, []);
+
     const contenidoIzq = (
         <div
             style={{
@@ -44,6 +51,8 @@ const PantallaModulos = () => {
             >
                 <StyledText boldText>Módulos</StyledText>
             </div>
+            {rolActual === "1" && 
+            <>
             <Card 
                 text="Gestión de Usuarios" 
                 Icon={IconoPersonas}
@@ -58,13 +67,16 @@ const PantallaModulos = () => {
                 text="Gestión de Reservas" 
                 Icon={IconoReservas}
                 onClick={() => navegar('/Panel-Gestion-Reservas')}
-            /> 
+            />
+            </> }
+            {rolActual === "2" &&
+            <>
             <Card 
                 text="Solicitud de Reservas" 
                 Icon={BookOnlineIcon}
                 onClick={() => navegar('/Panel-Solicitud-Reservas')}
             />
-            
+            </>}
             <div
                 style={{
                     display: "flex",

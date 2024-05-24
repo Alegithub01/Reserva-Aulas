@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Ambiente;
 use Illuminate\Http\Request;
+
+use App\Models\Regla;
+
 use Illuminate\Support\Facades\Log;
 
 
@@ -55,7 +58,7 @@ class AmbienteController extends Controller
 
         return $ambiente;
     }
-    
+
     public function destroy($id)
     {
         $ambiente = Ambiente::destroy($id);
@@ -72,7 +75,7 @@ class AmbienteController extends Controller
         $registrosImportados = $request->registros;
 
         foreach ($registrosImportados as $registroImportado) {
-            
+
             if (isset($registroImportado['nombre'], $registroImportado['capacidad'], $registroImportado['tipo'], $registroImportado['planta'])) {
                 $ambienteData = [
                     'nombre' => $registroImportado['nombre'],
@@ -84,16 +87,49 @@ class AmbienteController extends Controller
                     'dia' => $registroImportado['dia'] ?? null,
                     'horas' => isset($registroImportado['horas']) ? json_encode($registroImportado['horas']) : null,
                 ];
-        
-            
+
+
                 Ambiente::create(array_filter($ambienteData));
             }
         }
-        
-        
+
+
 
         return response()->json(['message' => 'Los ambientes se importaron correctamente'], 200);
     }
+
+    public function addRule(Request $request)
+    {
+        // Validar si el JSON contiene el atributo 'newRule'
+        if ($request->has('newRule')) {
+            // Obtener el valor del atributo 'newRule' del JSON
+            $newRule = $request->input('newRule');
+            // retonarn el newRule
+
+            // Crear una nueva instancia de la regla con la descripción recibida
+            $regla = new Regla(['descripcion' => $newRule]);
+
+            // Guardar la nueva regla en la base de datos
+            $regla->save();
+
+            // Devolver una respuesta JSON indicando que la regla ha sido creada
+            return response()->json(['message' => 'Nueva regla creada con descripción: ' . $newRule]);
+        } else {
+            // Devolver una respuesta de error si el JSON no contiene 'newRule'
+            return response()->json(['error' => 'El atributo newRule es requerido'], 400);
+        }
+    }
+
+
+    public function getRules()
+    {
+        // Obtener todas las reglas de la base de datos
+        $reglas = Regla::all();
+
+        // Devolver las reglas en formato JSON
+        return response()->json($reglas);
+    }
+
 
     #filtros 
     public function filtrar(Request $request)
@@ -134,6 +170,23 @@ class AmbienteController extends Controller
         $resultados = $query->get();
         Log::debug('Resultado de la consulta: ' . $resultados->toJson());
         return response()->json($resultados);
+    }
+
+
+    public function obtenerIdPorNombre(Request $request)
+    {
+        $nombreAmbiente = $request->input('nombre');
+
+        
+        $ambiente = Ambiente::where('nombre', $nombreAmbiente)->first();
+
+        if ($ambiente) {
+            
+            return response()->json(['id' => $ambiente->id], 200);
+        } else {
+            
+            return response()->json(['error' => 'Ambiente no encontrado'], 404);
+        }
     }
 
 }

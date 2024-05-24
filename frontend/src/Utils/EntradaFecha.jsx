@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
@@ -8,10 +8,7 @@ const EntradaFecha = ({etiqueta, enCambio, onBlur = null, mensajeValidacion, val
   const [valor, setValor] = useState(valorInicial || null);
   const { theme } = useTheme();
   let mostrarMensajeDeError = true;
-
-  useEffect(() => {
-    setValor(valorInicial);
-  }, [valorInicial]);
+  const [errorFechaAnterior, setErrorFechaAnterior] = useState(false);
 
   const manejarCambio = (event) => {
     console.log(event.target.value, typeof event.target.value)
@@ -20,6 +17,10 @@ const EntradaFecha = ({etiqueta, enCambio, onBlur = null, mensajeValidacion, val
     }
     setValor(event.target.value);
     mostrarMensajeDeError = false;
+    const fechaActual = new Date().toISOString().split('T')[0];
+    const fechaSeleccionada = new Date(event.target.value).toISOString().split('T')[0];
+
+    setErrorFechaAnterior(fechaSeleccionada <= fechaActual);
   };
   
   const manejarPresionado = () => {
@@ -95,6 +96,19 @@ const EntradaFecha = ({etiqueta, enCambio, onBlur = null, mensajeValidacion, val
         }}>
           {mensajeValidacion}
         </div>
+      )}
+      {errorFechaAnterior && (
+        <div style={{
+          color: 'red',
+          fontSize: '12px',
+          transition: 'opacity 0.3s ease',
+          opacity: 1,
+          height: 'auto',
+          overflow: 'hidden'
+        }}>
+          Seleccione una fecha próxima a la actual
+        </div>
+      
       )}
     </FormControl>
   );

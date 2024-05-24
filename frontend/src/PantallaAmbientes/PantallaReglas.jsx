@@ -5,6 +5,8 @@ import StyledText from "../StyledText";
 import { useTheme } from '../Contexts/ThemeContext';
 import ButtonEstilizado from "../Utils/Button";
 import MensajeExito from "../Utils/MensajeExito";
+import axios from 'axios';
+import { URL_API } from "../services/const";
 
 const TextAreaP = ({ onChange, value }) => {
   const [valor, setValor] = useState(value);
@@ -51,27 +53,44 @@ const AdminHomeModule3 = () => {
   const [publicado, setPublicado] = useState(false);
   const [guardado, setGuardado] = useState(false);
 
-  const guardarBaseDatos = () => {
+  const guardarBaseDatos = async() => {
     console.log(reglas);
     if (reglas.length < 10) {
       return;
     } else {
       //PARA BACKEND --------------------------------------------*****************--------------------
       //aca guardar en la base de datos reglas, considerando el estado publicado false
-      setGuardado(true);
+      if (!reglas) {
+        console.log("No hay regla para guardar.");
+        return;
+      }
+      try {
+        const response = await axios.post(`${URL_API}/agregar-regla`, {
+          newRule: reglas 
+        });
+        console.log(response);
+        setGuardado(true);
+      } catch (error) {
+        console.error('Error al guardar la regla:', error);
+      }
     }
-
+      
   }
 
-  const publicar = () => {
+  const publicar = async () => {
     if (reglas.length < 10) {
       return;
     } else {
       //PARA BACKEND --------------------------------------------*****************--------------------
       //aca actualizar el estado de publicado a true
-      setPublicado(true);
+      try {
+        const response = await axios.post(`${URL_API}/enviar-correo-notificacion`);
+        console.log(response);
+        setPublicado(true);
+      } catch (error) {
+        console.error('Error al publicar la regla:', error);
+      }
     }
-
   }
 
   const defaultStyle = {

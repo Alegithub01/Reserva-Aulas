@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
@@ -20,11 +20,6 @@ function SelectorMultiple({ etiqueta, opciones, cambio, valorInicial = [], llena
   const [valorSeleccionado, cambiarValorSeleccionado] = useState(valorInicial|| []);
   const { theme } = useTheme();
 
-  
-  useEffect(() => {
-    cambio && cambio(valorSeleccionado);
-  }, [valorSeleccionado, cambio]);
-
   const mensajeValidacionEstilo = {
     color: 'red',
     fontSize: '12px',
@@ -42,6 +37,7 @@ function SelectorMultiple({ etiqueta, opciones, cambio, valorInicial = [], llena
     const {
       target: { value },
     } = event;
+    cambio && cambio(typeof value === 'string' ? value.split(',') : value,);
     cambiarValorSeleccionado(
       typeof value === 'string' ? value.split(',') : value,
     );

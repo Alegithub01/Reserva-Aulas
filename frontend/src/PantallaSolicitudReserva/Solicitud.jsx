@@ -1,7 +1,7 @@
 import Card from "../Utils/Card";
 import StyledText from "../StyledText";
 import { useTheme } from '../Contexts/ThemeContext';
-import {useState } from "react";
+import { useState, useEffect } from "react";
 import CalendarioStore from "../Contexts/CalendarioStore"
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
@@ -14,15 +14,32 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import Button from '@mui/material/Button';
+import axios from 'axios';
+import { URL_API } from "../services/const";
 
 const SolicitudMultiple = () => {
   const { theme } = useTheme();
   const { aula, dia, horario } = CalendarioStore();
   const [modo, setModo] = useState('individual');
   const [dialogoAbierto, setDialogoAbierto] = useState(false);
-  
+
   /*---------------------***********************- Para Base de datos con lo de las reglas**********************************/
-  const infoDeLaBDReglas = "Reglas para solicitud de reserva de ambientes:\n" +"Mantener la limpieza y orden del ambiente. En caso de ser un laboratorio, registrar cada estudiante con la computadora asignada en la libreta."
+  const [infoDeLaBDReglas, setInfoDeLaBDReglas] = useState("Reglas para solicitud de reserva de ambientes: " + "Mantener la limpieza y orden del ambiente. En caso de ser un laboratorio, registrar cada estudiante con la computadora asignada en la libreta.");
+  useEffect(() => {
+    const obtenerReglas = async () => {
+      try {
+        const response = await axios.get(`${URL_API}/reglas`);
+        const ultimaRegla = response.data[response.data.length - 1];
+        console.log(ultimaRegla);
+        setInfoDeLaBDReglas(ultimaRegla.descripcion);
+      } catch (error) {
+        console.error('Error al obtener los ambientes.');
+      }
+    };
+    if(dialogoAbierto){
+      obtenerReglas();
+    }
+  }, [dialogoAbierto]);
 
   const horas = [
     { value: "10", label: "06:45-08:15" },
@@ -34,7 +51,7 @@ const SolicitudMultiple = () => {
     { value: "70", label: "15:45-17:15" },
     { value: "80", label: "17:15-18:45" },
     { value: "90", label: "18:45-20:15" },
-    { value: "100", label: "20:30-21:45" },
+    { value: "100", label: "20:15-21:45" },
   ];
 
   function obtenerValorHora(horaBuscada, listaHoras) {
@@ -118,21 +135,21 @@ const SolicitudMultiple = () => {
               <ToggleButton value="individual" sx={{ width: '50%', fontWeight: 'bold', border: `2px solid`, color: theme.secondary }}>Individual</ToggleButton>
               <ToggleButton value="grupal" sx={{ width: '50%', fontWeight: 'bold', border: `2px solid`, color: theme.secondary }}>Grupal</ToggleButton>
             </ToggleButtonGroup>
-            {modo === 'individual' ? 
-            (
-              <FormularioIndividual 
-                aulaInicial={aulaInicial}
-                horaInicial={horaInicial}
+            {modo === 'individual' ?
+              (
+                <FormularioIndividual
+                  aulaInicial={aulaInicial}
+                  horaInicial={horaInicial}
                 />
-            ):(
-              <FormularioGrupal 
-                aulaInicial={aulaInicial}
-                horaInicial={horaInicial}
+              ) : (
+                <FormularioGrupal
+                  aulaInicial={aulaInicial}
+                  horaInicial={horaInicial}
                 />
-            )}
+              )}
             <Dialog
               open={dialogoAbierto}
-              onClose={()=>{setDialogoAbierto(false)}}
+              onClose={() => { setDialogoAbierto(false) }}
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
             >
@@ -142,7 +159,7 @@ const SolicitudMultiple = () => {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={()=>{setDialogoAbierto(false)}}>Entendido</Button>
+                <Button onClick={() => { setDialogoAbierto(false) }}>Entendido</Button>
               </DialogActions>
             </Dialog>
             <div
@@ -158,7 +175,7 @@ const SolicitudMultiple = () => {
       </div>
       <div style={defaultStyle.reglitas}>
         <Tooltip title="Reglas para solicitud">
-          <IconButton style={{ color: 'white', border: '2px solid white' }} size="large" onClick={()=>{setDialogoAbierto(true)}}>
+          <IconButton style={{ color: 'white', border: '2px solid white' }} size="large" onClick={() => { setDialogoAbierto(true) }}>
             <RuleIcon />
           </IconButton>
         </Tooltip>

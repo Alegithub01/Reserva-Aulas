@@ -1,5 +1,6 @@
 // usuarioStore.js
 import create from 'zustand';
+
 const UsuarioStore = create((set) => ({
   nombre: 'Jhon Doe',
   correo: 'Jhondoe@gmail.com',

@@ -3,8 +3,11 @@ import StyledText from "../StyledText";
 import Card from "./Modulo";
 import { useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';    
+import SettingsIcon from '@mui/icons-material/Settings';
+import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
 
 const PanelGestionReservas = () => {
+    const rol = localStorage.getItem('rol');
     const navegar = useNavigate();
     const contenidoIzq = (
         <div
@@ -48,7 +51,16 @@ const PanelGestionReservas = () => {
                 Icon={SearchIcon}
                 onClick={() => navegar('/Buscar-Ambiente')}
             />
-            
+            <Card 
+                text="Administrar Solicitudes" 
+                Icon={DisplaySettingsIcon}
+                onClick={() => navegar('/Solicitudes')}
+            />
+            <Card 
+                text="Ajustar Solicitudes" 
+                Icon={SettingsIcon}
+                onClick={() => navegar('/Ajustar-Solicitudes')}
+            />
             <div
                 style={{
                     display: "flex",
@@ -68,7 +80,9 @@ const PanelGestionReservas = () => {
 
     return (
         <>
+        {rol === "1" &&
             <SplitScreenLayout left={contenidoIzq} right={contenidoDer} />
+        }   
         </>
     );
 };

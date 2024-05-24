@@ -3,13 +3,12 @@ import PropTypes from "prop-types";
 
 const StyledRowPercentage = styled.div.attrs(props => ({
   gap: props.gap || "0px",
-  backgroundColor: props.backgroundColor || "transparent",
 }))`
   display: flex;
   flex-direction: row;
   width: 100%;
   gap: ${(props) => props.gap};
-  background-color: ${(props) => props.backgroundColor};
+  background-color: ${(props) => props.backgroundColor || "transparent"};  // Usamos 'backgroundColor' directamente en el CSS
   > div:first-child {
     flex-grow: 1;
   }

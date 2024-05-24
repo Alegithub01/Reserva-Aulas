@@ -22,6 +22,9 @@ import Reservas from "./PantallaSolicitudReserva/Reservas";
 import BuscarAmbiente from "./PantallaGestionReserva/BuscarAmbiente";
 import PantallaReglas from "./PantallaAmbientes/PantallaReglas";
 import PanelGestionReservas from "./PantallaModulos/PanelGestionReservas";
+import AdministrarSolicitudes from "./PantallaGestionReserva/AdministrarSolicitudes"
+import SolicitudAdmin from "./PantallaGestionReserva/SolicitudAdmin";
+import AjustarSolicitudes from "./PantallaGestionReserva/AjustarSolicitudes";
 
 function App() {
   return (
@@ -72,16 +75,16 @@ function App() {
           <Route
             path="/"
             element={
-                <div
-                  style={{
-                    width: "100vw",
-                    height: "100vh",
-                    overflow: "auto",
-                  }}
-                >
-                  <PantallaPrincipal />
-                </div>
-              }
+              <div
+                style={{
+                  width: "100vw",
+                  height: "100vh",
+                  overflow: "auto",
+                }}
+              >
+                <PantallaPrincipal />
+              </div>
+            }
           />
           <Route
             path="/Panel-Gestion-Usuarios"
@@ -275,6 +278,22 @@ function App() {
             }
           />
           <Route
+            path="/Solicitudes"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100vh",
+                    overflow: "auto",
+                  }}
+                >
+                  <AdministrarSolicitudes />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
             path="/Solicitud"
             element={
               <Layout>
@@ -332,6 +351,36 @@ function App() {
                   }}
                 >
                   <BuscarAmbiente />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/SolicitudAdmin"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100%",
+                  }}
+                >
+                  <SolicitudAdmin />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/Ajustar-Solicitudes"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100%",
+                  }}
+                >
+                  <AjustarSolicitudes />
                 </div>
               </Layout>
             }

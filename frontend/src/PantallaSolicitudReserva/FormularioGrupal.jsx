@@ -7,9 +7,13 @@ import MensajeExito from "../Utils/MensajeExito";
 import EntradaFecha from "../Utils/EntradaFecha";
 import Button from "../Utils/Button";
 import CalendarioStore from "../Contexts/CalendarioStore"
+import useAjusteStore from "../Contexts/AjusteStore";
 
 const FormularioGrupal = ({aulaInicial, horaInicial}) => {
   const { aula, dia, horario } = CalendarioStore();
+  const nroPeriodosAul = useAjusteStore((state) => state.nroPeriodosAul);
+  const nroPeriodosAud = useAjusteStore((state) => state.nroPeriodosAud);
+  const nroPeriodosLab = useAjusteStore((state) => state.nroPeriodosLab);
   const [materia, setMateria] = useState('');
   const [gruposDocentes, setGruposDocentes] = useState([]); // modo grupal
   const [docentes, setDocentes] = useState([]);
@@ -28,6 +32,7 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
     ambiente: '',
     fecha: '',
     hora: '',
+    detalles: '',
   });
 
   /*datos de prueba para los dropdowns */
@@ -37,6 +42,15 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
     { value: 3, label: "Taller de Base de Datos" },
   ];
 
+  const motivos = [
+    { value: "Examen final", label: "Examen final" },
+    { value: "Examen parcial", label: "Examen parcial" },
+    { value: "Examen de mesa", label: "Examen de mesa" },
+    { value: "Práctica", label: "Práctica" },
+    { value: "Reemplazo ambiente", label: "Reemplazo ambiente" },
+    { value: "Taller", label: "Taller" },
+    { value: "Otro", label: "Otro" },
+  ];
   const cargarBDGruposGrupal = [
     { value: "1", label: "1" },
     { value: "2", label: "2" },
@@ -63,14 +77,10 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
   //convertir info de docentes en este diccionario (importa el id creo)
 
   const cargarBDAmbiente = [
-    { value: "691A", label: "691A", },
-    { value: "691B", label: "691B", },
-    { value: "691C", label: "691C", },
-    { value: "692A", label: "692A", },
-    { value: "692B", label: "692B", },
-    { value: "693C", label: "693C", },
-    { value: "693A", label: "693A", },
-  ];    //convertir info de ambientes en este diccionario (solo nombres de ambientes)
+    { value: "Aula", label: "Aula", },
+    { value: "Auditorio", label: "Auditorio", },
+    { value: "Laboratorio", label: "Laboratorio", },
+  ];   //convertir info de ambientes en este diccionario (solo nombres de ambientes)
   /* */
   const horas = [
     { value: "10", label: "06:45-08:15" },
@@ -82,7 +92,7 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
     { value: "70", label: "15:45-17:15" },
     { value: "80", label: "17:15-18:45" },
     { value: "90", label: "18:45-20:15" },
-    { value: "100", label: "20:30-21:45" },
+    { value: "100", label: "20:15-21:45" },
   ];
 
 
@@ -98,12 +108,16 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
   const validarSeleccionMateria = () => {
     if (materia === '') {
       setMensajeError(previo => ({ ...previo, materia: 'Seleccione una materia' }));
+    }else {
+      setMensajeError(previo => ({ ...previo, materia: '' }));
     }
   }
 
   const validarFecha = () => {
     if (fecha === null || fecha === '') {
       setMensajeError(previo => ({ ...previo, fecha: 'Seleccione una fecha' }));
+    }else {
+      setMensajeError(previo => ({ ...previo, fecha: '' }));
     }
   }
 
@@ -112,6 +126,7 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
       setMensajeError(previo => ({ ...previo, hora: 'Seleccione una hora' }));
     } else {
       const horaOrdenada = hora.sort();
+      let contador = 1;
       for (let i = 1; i < horaOrdenada.length; i++) {
         const before = parseInt(horaOrdenada[i - 1]);
         const current = parseInt(horaOrdenada[i]);
@@ -120,11 +135,23 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
           break;
         } else {
           setMensajeError(previo => ({ ...previo, hora: '' }));
+          contador++;
         }
+      }
+      const nroPeriodosA = ambiente === "Aula" ? nroPeriodosAul : ambiente === "Auditorio" ? nroPeriodosAud : nroPeriodosLab;
+      if (contador > parseInt(nroPeriodosA)) {
+        setMensajeError(previo => ({ ...previo, hora: `Seleccione menos periodos de hora, este ambiente no lo permite` }));
       }
     }
   }
 
+  const validarSeleccionDetalles = () => {
+    if (detalles === '') {
+      setMensajeError(previo => ({ ...previo, detalles: 'Seleccione un motivo' }));
+    } else {
+      setMensajeError(previo => ({ ...previo, detalles: '' }));
+    }
+  };
   const validarSeleccionAmbiente = () => {
     if (ambiente.length === 0) {
       setMensajeError(previo => ({ ...previo, ambiente: 'Seleccione un ambiente' }));
@@ -148,7 +175,10 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
     validarGruposDocentes();
     validarFecha();
     validarSeleccionHora();
-    if (materia !== '' && fecha !== '' && hora.length !== 0 && ambiente !== '') {
+    validarSeleccionDetalles();
+    console.log(mensajeError.hora,mensajeError.fecha, mensajeError.materia, mensajeError.detalles)
+    if (materia !== '' && fecha !== '' && hora.length !== 0 && detalles !== ''
+      && mensajeError.fecha === '' && mensajeError.hora === '' && mensajeError.materia === '' && mensajeError.detalles === '') {
       console.log("Solicitud enviada");
       cambiarAbrirDialogo(true);
     } else {
@@ -248,14 +278,12 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
         />
       </div>
       <div>
-        <SelectorMultiple
-          etiqueta="Ambiente"
+        <Dropdown
+          etiqueta="Tipo de Ambiente"
           opciones={cargarBDAmbiente}
           cambio={setAmbiente}
-          llenado={validarSeleccionAmbiente}
+          onBlur={()=>{}}
           mensajeValidacion=""
-          valorSeleccionado={ambiente}
-          valorInicial={aulaInicial}
         />
       </div>
     </RowPercentage>
@@ -281,14 +309,17 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
         />
       </div>
     </RowPercentage>
-    <TextInput
-      label="Detalles de Solicitud"
-      pattern='^[A-Za-z0-9, ]{0,50}$'
-      onChange={(event) => setDetalles(event.target.value)}
+    <Dropdown
+      etiqueta="Motivo de Solicitud"
+      opciones={motivos}
+      cambio={setDetalles}
+      onBlur={validarSeleccionDetalles}
+      esRequerido={true}
+      mensajeValidacion={mensajeError.detalles}
     />
     <TextInput
       label="Servicios solicitados"
-      pattern='^[A-Za-z0-9, ]{0,50}$'
+      pattern='^.{0,50}$'
       onChange={(event) => setServiciosSolicitados(event.target.value)}
     />
     <MensajeExito

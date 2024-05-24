@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -17,7 +17,6 @@ import {
 } from '@mui/x-data-grid';
 import styled from 'styled-components';
 import { useTheme } from '../Contexts/ThemeContext';
-import { useEffect } from 'react';
 import axios from 'axios';
 
 //const informacion = [
@@ -257,7 +256,7 @@ export default function GridTablaCrud() {
       headerName: 'Horas',
       width: 280,
       editable: true,
-      valueOptions: ["06:45-08:15", "08:30-09:45", "10:00-11:15", "11:30-12:45", "13:00-14:15", "14:30-15:45", "16:00-17:15", "17:30-18:45", "19:00-20:15", "20:30-21:45"],
+      valueOptions: ["06:45-08:15", "08:30-09:45", "10:00-11:15", "11:30-12:45", "13:00-14:15", "14:30-15:45", "16:00-17:15", "17:30-18:45", "19:00-20:15", "20:15-21:45"],
       valueFormatter: (params) => {
         // Verificar si 'params.value' es un array
         if (Array.isArray(params.value)) {

@@ -14,16 +14,21 @@ const TextInput = ({
   cambio,
   isFocusedDefault = false,
   isDisabled = false,
+  defaultValue = '',
   ...otherProps
 }) => {
   const { theme } = useTheme();
   const [isFocused, setIsFocused] = useState(isFocusedDefault);
   const [isHovered, setIsHovered] = useState(false);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(defaultValue);
   const [showValidationMessage, setShowValidationMessage] = useState({
     noLlenado: false,
     rangoIncumplido: false
   });
+
+  useEffect(() => {
+    setValue(defaultValue);
+  }, [defaultValue]);
 
   const handleFocus = () => setIsFocused(true);
   const handleBlur = () => {
@@ -36,6 +41,7 @@ const TextInput = ({
 
   const handleChange = (event) => {
     const valor = event.target.value;
+    cambio && cambio(valor);
     if (onChange) {
       onChange(event);
     }
@@ -52,10 +58,6 @@ const TextInput = ({
 
   const handleMouseEnter = () => setIsHovered(true);
   const handleMouseLeave = () => setIsHovered(false);
-
-  useEffect(() => {
-    cambio && cambio(value);
-  }, [value, cambio]);
 
   const containerStyle = {
     width: fullWidth ? 'calc(100% - 0px)' : 'auto',

@@ -7,6 +7,9 @@ import RowPercentage from "../Responsive/RowPercentage";
 import Dropdown from "../Utils/Dropdown";
 import { useCallback } from 'react';
 import { format, addDays, startOfWeek } from 'date-fns';
+import axios from 'axios';
+import { URL_API } from '../services/const';
+
 
 function useAmbientes() {
   const [aulas, setAulas] = useState([]);
@@ -15,119 +18,19 @@ function useAmbientes() {
 
   useEffect(() => {
     const fetchData = async () => {
-      // OBTENER DATOS DEL BACKEND
-      // SE NECESITAN LOS AMBIENTES REGISTRADOS
-      // Y TODAS LAS RESERVAS
-        
-      const data = [
-        {
-          nombre: "691A",
-          capacidad: 23,
-          tipo: "Aula",
-          planta: 0,
-          ubicacion: "Edif. Nuevo",
-          servicios: [],
-          dia: "Lunes",
-          periodos: ["11:15-12:45"]
-        },
-        {
-          nombre: "691B",
-          capacidad: 50,
-          tipo: "Aula",
-          planta: 1,
-          ubicacion: "Edif. Nuevo",
-          servicios: ["Data display"],
-          dia: "Martes",
-          periodos: ["11:15-12:45", "17:15-18:45"]
-        },
-        {
-          nombre: "691C",
-          capacidad: 100,
-          tipo: "Aula",
-          planta: 2,
-          ubicacion: "Edif. Nuevo",
-          servicios: ["Data display"],
-          dia: "Miércoles",
-          periodos: ["12:45-14:15"]
-        },
-        {
-          nombre: "692A",
-          capacidad: 100,
-          tipo: "Aula",
-          planta: 2,
-          ubicacion: "Edif. Nuevo",
-          servicios: ["Data display"],
-          dia: "Jueves",
-          periodos: ["11:15-12:45", "17:15-18:45"]
-        },
-        
-        {
-          nombre: "692B",
-          capacidad: 100,
-          tipo: "Aula",
-          planta: 2,
-          ubicacion: "Edif. Nuevo",
-          servicios: ["Data display"],
-          dia: "Viernes",
-          periodos: ["12:45-14-15", "17:15-18:45"]
-        },
-        {
-          nombre: "693C",
-          capacidad: 300,
-          tipo: "Aula",
-          planta: 3,
-          ubicacion: "Edif. Nuevo",
-          servicios: ["2 Data display"],
-          dia: "Miércoles",
-          periodos: ["06:45-08:15", "08:15-09:45"]
-        },
-        {
-          nombre: "693A",
-          capacidad: 50,
-          tipo: "Aula",
-          planta: 0,
-          ubicacion: "Edif. Nuevo",
-          servicios: [],
-          dia: "Miércoles",
-          periodos: ["11:15-12:45", "18:45-20:15"]
-        },
-        {
-          nombre: "Audit01",
-          capacidad: 100,
-          tipo: "Auditorio",
-          planta: 0,
-          ubicacion: "Dpto. Fisica",
-          servicios: [],
-          dia: "Lunes",
-          periodos: ["17:15-18:45"]
-        },
-        {
-          nombre: "Audit02",
-          capacidad: 100,
-          tipo: "Auditorio",
-          planta: 0,
-          ubicacion: "Dpto. Fisica",
-          servicios: [],
-          dia: "Jueves",
-          periodos: ["11:15-12:45"]
-        },
-        {
-          nombre: "LAB01",
-          capacidad: 50,
-          tipo: "Laboratorio",
-          planta: 0,
-          ubicacion: "Dpto. Inf Sis",
-          servicios: ["Computadoras"],
-          dia: "Lunes",
-          periodos: ["11:15-12:45", "18:45-20:15"]
-        },
-      ];
+      try{
+      const response = await axios.get(`${URL_API}/ambientes`)  
+      console.log(response.data);
+      const data = response.data;
       const aulasFiltradas = data.filter(amb => amb.tipo === 'Aula');
       const auditoriosFiltrados = data.filter(amb => amb.tipo === 'Auditorio');
       const laboratoriosFiltrados = data.filter(amb => amb.tipo === 'Laboratorio');
       setAulas(aulasFiltradas);
       setAuditorios(auditoriosFiltrados);
       setLaboratorios(laboratoriosFiltrados);
+    }catch(error){
+      console.error("Error al obtener los datos",error);
+    }
     };
     fetchData();
   }, []);

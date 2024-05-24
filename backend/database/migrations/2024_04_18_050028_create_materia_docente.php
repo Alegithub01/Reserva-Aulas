@@ -18,6 +18,7 @@ class CreateMateriaDocente extends Migration
             $table->unsignedBigInteger('materia_id');
             $table->unsignedBigInteger('docente_id');
             $table->string('grupo');
+            $table->integer('inscritos');
             $table->timestamps();
 
             // Definir las claves foráneas
