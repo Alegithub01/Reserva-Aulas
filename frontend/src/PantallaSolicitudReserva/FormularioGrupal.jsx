@@ -8,6 +8,8 @@ import EntradaFecha from "../Utils/EntradaFecha";
 import Button from "../Utils/Button";
 import CalendarioStore from "../Contexts/CalendarioStore"
 import useAjusteStore from "../Contexts/AjusteStore";
+import axios from "axios";
+import { URL_API } from "../services/const";
 
 const FormularioGrupal = ({aulaInicial, horaInicial}) => {
   const { aula, dia, horario } = CalendarioStore();
@@ -36,11 +38,14 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
   });
 
   /*datos de prueba para los dropdowns */
-  const cargarBDMateria = [
-    { value: 1, label: "Progr. Funcional" },
-    { value: 2, label: "Base de datos 2" },
-    { value: 3, label: "Taller de Base de Datos" },
-  ];
+  // const cargarBDMateria = [
+  //   { value: 1, label: "Progr. Funcional" },
+  //   { value: 2, label: "Base de datos 2" },
+  //   { value: 3, label: "Taller de Base de Datos" },
+  // ];
+
+  const [docenteId, setDocenteId] = useState(null);
+  const [cargarBDMateria, setCargarBDMateria] = useState([]);
 
   const motivos = [
     { value: "Examen final", label: "Examen final" },
@@ -51,29 +56,32 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
     { value: "Taller", label: "Taller" },
     { value: "Otro", label: "Otro" },
   ];
-  const cargarBDGruposGrupal = [
-    { value: "1", label: "1" },
-    { value: "2", label: "2" },
-    { value: "3", label: "3" },
-    { value: "4", label: "4" },
-    { value: "5", label: "5" },
-    { value: "6", label: "6" },
-    { value: "7", label: "7" },
-    { value: "8", label: "8" },
-    { value: "9", label: "9" },
-  ];
+  // const cargarBDGruposGrupal = [
+  //   { value: "1", label: "1" },
+  //   { value: "2", label: "2" },
+  //   { value: "3", label: "3" },
+  //   { value: "4", label: "4" },
+  //   { value: "5", label: "5" },
+  //   { value: "6", label: "6" },
+  //   { value: "7", label: "7" },
+  //   { value: "8", label: "8" },
+  //   { value: "9", label: "9" },
+  // ];
 
-  const cargarBDDocentes = [
-    { id: "1", nombre: "Leticia Coca", inscritos: 60 },
-    { id: "2", nombre: "Corina Flores", inscritos: 60},
-    { id: "3", nombre: "Vladimir Costas", inscritos: 50},
-    { id: "4", nombre: "Patricia Romero", inscritos: 50},
-    { id: "5", nombre: "Carla Salazar", inscritos: 50},
-    { id: "6", nombre: "Henry Villaroel", inscritos: 30 },
-    { id: "7", nombre: "Leticia Coca", inscritos: 40},
-    { id: "8", nombre: "Vladimir Costas", inscritos: 40},
-    { id: "9", nombre: "Leticia Coca", inscritos: 40},
-  ];
+  const [cargarBDGruposGrupal, setCargarBDGruposGrupal] = useState([]);
+  
+  // const cargarBDDocentes = [
+  //   { id: "1", nombre: "Leticia Coca", inscritos: 60 },
+  //   { id: "2", nombre: "Corina Flores", inscritos: 60},
+  //   { id: "3", nombre: "Vladimir Costas", inscritos: 50},
+  //   { id: "4", nombre: "Patricia Romero", inscritos: 50},
+  //   { id: "5", nombre: "Carla Salazar", inscritos: 50},
+  //   { id: "6", nombre: "Henry Villaroel", inscritos: 30 },
+  //   { id: "7", nombre: "Leticia Coca", inscritos: 40},
+  //   { id: "8", nombre: "Vladimir Costas", inscritos: 40},
+  //   { id: "9", nombre: "Leticia Coca", inscritos: 40},
+  // ];
+  const [cargarBDDocentes, setCargarBDDocentes] = useState([]);
   //convertir info de docentes en este diccionario (importa el id creo)
 
   const cargarBDAmbiente = [
@@ -187,7 +195,74 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
     }
   }
 
+  const obtenerMaterias = async () => {
+    const nombreDocente = localStorage.getItem("nombre");
+    const docenteId = await obtenerDocenteId(nombreDocente.split(' ')[0]);
+    if (docenteId) {
+      obtenerMateriasDesdeBackend(docenteId);
+    } else {
+      console.log('No se pudo obtener el ID del docente');
+    }
+  }
+  const obtenerDocenteId = async (nombreDocente) => {
+    try {
+      if (docenteId === null) {
+        const response = await axios.get(`${URL_API}/users/${nombreDocente}/id`);
+        setDocenteId(response.data.id); 
+        return response.data.id;
+      } else {
+        return docenteId; 
+      }
+    } catch (error) {
+      console.error('Error al obtener el ID del docente desde el backend:', error);
+      return null; 
+    }
+  };
+  
+  const obtenerMateriasDesdeBackend = async (docenteId) => {
+    try {
+      const response = await axios.get(`${URL_API}/docentes/${docenteId}/materias`);
+      const materiasFormateadas = response.data.materias.map(materia => ({
+        value: materia,
+        label: materia
+      }));
+      setCargarBDMateria(materiasFormateadas);
+    } catch (error) {
+      console.error('Error al obtener las materias desde el backend:', error);
+    }
+  }
+
+  const obtenerGruposDocentes = async (materia) => {
+    try {
+      const response = await axios.get(`${URL_API}/materia-docentes/grupos/${materia}`);
+      const gruposFormateados = response.data.grupos.map(grupo => ({
+        value: grupo,
+        label: grupo
+      }));
+      setCargarBDGruposGrupal(gruposFormateados);
+    } catch (error) {
+      console.error('Error al obtener los grupos docentes desde el backend:', error);
+    }
+  }
+
+  const obtenerDocentes = async (materia, grupo) => {
+    try {
+      const response = await axios.get(`${URL_API}/materia-docentes/info/${materia}`);
+      const docentes = response.data.filter(res => res.grupo== grupo);
+      const docentesFormateados =  docentes.map(resultado => ({
+        nombre_docente: resultado.nombre,
+        inscritos: resultado.inscritos,
+        docente_id: resultado.docente_id
+      }));
+      setCargarBDDocentes(docentesFormateados);
+    } catch (error) {
+      console.error('Error al obtener los docentes desde el backend:', error);
+    }
+  
+  }
+
   useEffect(() => {
+    obtenerMaterias();
     const lengthToFill = gruposDocentes.length;
     let capacidadTotal = 0;
     const corresponder = (grupo) => {
@@ -213,7 +288,11 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
         <Dropdown
           etiqueta="Materia"
           opciones={cargarBDMateria}
-          cambio={setMateria}
+          cambio={(materia) => {
+            setMateria(materia);
+           //setGruposDocentes([]);
+          
+          }}
           onBlur={validarSeleccionMateria}
           esRequerido={true}
           mensajeValidacion={mensajeError.materia}
