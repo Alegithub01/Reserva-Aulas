@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Await, useNavigate } from "react-router-dom";
 import SplitScreenLayout from "../Components/SplitScreenLayout";
 import TextInput from "../Utils/CampoValidado";
 import StyledText from "../StyledText";
@@ -89,7 +89,7 @@ const PantallaInicioSesionProfesor = () => {
   }
 };
 
-  const obtenerRolUsuario = () => {
+  const obtenerRolUsuario = async () => {
     // Llama a tu backend para obtener el rol del usuario usando el token
     const token = localStorage.getItem("access_token");
     if (!token) {
@@ -101,24 +101,27 @@ const PantallaInicioSesionProfesor = () => {
       .post(`${URL_API}/auth/get-role-name`, {
         email: correoElectronico
       })
-      .then((response) => {
+      .then(async (response) => {
         console.log("Respuesta del servidor:", response.data);
         const nombreRol = response.data.role_name;
         console.log("Nombre del rol:", nombreRol);
         // Redirige según el rol del usuario
         if (nombreRol === "Administrador") {
           console.log("Redirigiendo a ModulosAdmin...");
-          navegar("/ModulosAdmin");
+         // navegar("/ModulosAdmin");
         } else {
           console.log("Redirigiendo a Panel-Solicitud-Reservas...");
-          navegar("/Panel-Solicitud-Reservas");
+          //navegar("/Panel-Solicitud-Reservas");
         }
+        await obtenerDatosUsuario();
+        navegar("/ModulosAdmin");
       })
       .catch((error) => {
         console.error("Error al obtener el rol del usuario:", error);
         // Si hay un error al obtener el rol, redirige a una página de error o maneja de otra forma
-        navegar("/error");
+        //navegar("/error");
       });
+      
   };
 
   const controlStore = async () => {
