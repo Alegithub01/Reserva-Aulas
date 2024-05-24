@@ -9,12 +9,13 @@ class Docente extends Model
 {
     use HasFactory;
 
+    protected $table = 'docente';
+
+    protected $fillable = ['user_id'];
+
+    // Relación con el modelo User
     public function user()
     {
-        return $this->belongsTo(User::class);
-    }
-    public function materias()
-    {
-        return $this->belongsToMany(Materia::class, 'materia_docente');
+        return $this->belongsTo(User::class, 'user_id');
     }
 }
