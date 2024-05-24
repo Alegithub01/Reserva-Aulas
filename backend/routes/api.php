@@ -9,6 +9,8 @@ use App\Http\Controllers\CorreoController;
 use App\Http\Controllers\SolicitudController;
 use App\Http\Controllers\MateriaDocenteController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SolicitudGrupalController;
+use App\Http\Controllers\MateriaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -69,10 +71,23 @@ Route::get('/solicitudes/{id}', [SolicitudController::class, 'show'])->name('sol
 Route::put('/solicitudes/{id}', [SolicitudController::class, 'update'])->name('solicitudes.update');
 Route::delete('/solicitudes/{id}', [SolicitudController::class, 'destroy'])->name('solicitudes.destroy');
 
-
+Route::get('/aceptadas', [SolicitudController::class, 'solicitudesAceptadas'])->name('solicitudes.aceptadas');
 
 
 Route::get('/docentes/{idDocente}/materias', [MateriaDocenteController::class, 'obtenerMateriasPorIdDocente']);
 
 
 Route::get('/docentes/{idDocente}/materias/{nombreMateria}/grupos-inscritos', [MateriaDocenteController::class, 'obtenerGruposEInscritosPorIdDocenteYNombreMateria']);
+
+Route::get('/solicitudes-grupales', [SolicitudGrupalController::class, 'index'])->name('solicitudesGrupales.index');
+Route::post('/solicitudes-grupales', [SolicitudGrupalController::class, 'store'])->name('solicitudesGrupales.store');
+Route::get('/solicitudes-grupales/{id}', [SolicitudGrupalController::class, 'show'])->name('solicitudesGrupales.show');
+Route::put('/solicitudes-grupales/{id}', [SolicitudGrupalController::class, 'update'])->name('solicitudesGrupales.update');
+Route::delete('/solicitudes-grupales/{id}', [SolicitudGrupalController::class, 'destroy'])->name('solicitudesGrupales.destroy');
+
+
+Route::get('/materias/nombres', [MateriaController::class, 'getNombres']);
+
+Route::get('/materia-docente/grupos/{nombreMateria}', [MateriaDocenteController::class, 'gruposPorMateria']);
+
+Route::get('/materia-docente/info/{nombreMateria}', [MateriaDocenteController::class, 'obtenerInfoPorMateria']);

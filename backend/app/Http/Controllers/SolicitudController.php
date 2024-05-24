@@ -26,14 +26,15 @@ class SolicitudController extends Controller
         // Verificar si el usuario existe
         if ($usuario) {
             $solicitud = new Solicitud();
-            $solicitud->user_id = $usuario->id; // Asignar el ID del usuario encontrado
+            $solicitud->user_id = $usuario->id; 
             $solicitud->grupo = json_encode($request->grupo);
-            $solicitud->nombre_ambiente = json_encode($request->nombre_ambiente);
+            $solicitud->tipo_ambiente = $request->tipo_ambiente;
             $solicitud->materia = $request->materia;
             $solicitud->horas = json_encode($request->horas);
             $solicitud->servicios = $request->servicios;
             $solicitud->detalle = $request->detalle;
             $solicitud->fecha = $request->fecha;
+            $solicitud->capacidad = $request->capacidad;
             $solicitud->save();
 
             return response()->json($solicitud, 201);
@@ -53,12 +54,13 @@ class SolicitudController extends Controller
         $solicitud = Solicitud::findOrFail($id);
         $solicitud->user_id = $request->user_id;
         $solicitud->grupo = json_encode($request->grupo);
-        $solicitud->nombre_ambiente = json_encode($request->nombre_ambiente);
+        $solicitud->tipo_ambiente = $request->tipo_ambiente;
         $solicitud->materia = $request->materia;
         $solicitud->horas = json_encode($request->horas);
         $solicitud->servicios = $request->servicios;
         $solicitud->detalle = $request->detalle;
         $solicitud->fecha = $request->fecha;
+        $solicitud->capacidad = $request->capacidad;
         $solicitud->save();
 
         return response()->json($solicitud, 200);
@@ -90,5 +92,10 @@ class SolicitudController extends Controller
         return response()->json(['message' => 'Solicitud aceptada exitosamente'], 200);
     }
 
+    public function solicitudesAceptadas()
+    {
+        $solicitudes = Solicitud::where('estado', 'aceptada')->get();
+        return $solicitudes;
+    }
 
 }

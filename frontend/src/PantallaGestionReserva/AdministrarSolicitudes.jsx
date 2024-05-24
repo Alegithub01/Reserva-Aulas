@@ -6,7 +6,8 @@ import { DataGrid } from '@mui/x-data-grid';
 import Dropdown from '../Utils/Dropdown';
 import { useNavigate } from 'react-router-dom';
 import useNavegacionStore from '../Contexts/NavegacionStore';
-
+import axios from 'axios';
+import { URL_API } from "../services/const";
 const GestionReservas = () => {
   const { theme } = useTheme();
   const navegar = useNavigate();
@@ -16,53 +17,17 @@ const GestionReservas = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // Reemplazar datos estáticos "data" con llamada a API real.
-      // El backend debe devolver los datos de las reservas en el siguiente formato JSON:
-      const data = [
-        {
-          id: 1,
-          user_id: 5,
-          grupo: ["1", "2"],
-          tipo_ambiente: "Aula",
-          materia: "Taller de Sistemas Operativos",
-          horas: ["06:45-08:15", "08:15-09:45"],
-          servicios: "",
-          motivo: "Taller", // "Examen parcial", Examen final", "Examen de mesa", "Reemplazo ambiente", "Taller", "Otro"
-          fecha: "2024-05-10",
-          created_at: "2024-05-01T12:34:56",
-          updated_at: "2024-05-02T14:30:21",
-          capacidad: 150
-        },
-        {
-          id: 2,
-          user_id: 5,
-          grupo: ["1"],
-          tipo_ambiente: "Auditorio",
-          materia: "Calculo ll",
-          horas: ["08:15-09:45"],
-          servicios: "Data display",
-          motivo: "Examen parcial", // "Examen parcial", Examen final", "Examen de mesa", "Reemplazo ambiente", "Taller", "Otro"
-          fecha: "2024-05-11",
-          created_at: "2024-05-02T12:34:56",
-          updated_at: "2024-05-02T14:30:21",
-          capacidad: 100
-        },
-        {
-          id: 3,
-          user_id: 5,
-          grupo: ["1"],
-          tipo_ambiente: "Aula",
-          materia: "Redes de Computadoras",
-          horas: ["11:15-12:45"],
-          servicios: "",
-          motivo: "Examen parcial", // "Examen parcial", Examen final", "Examen de mesa", "Reemplazo ambiente", "Taller", "Otro"
-          fecha: "2024-05-09",
-          created_at: "2024-05-03T12:34:56",
-          updated_at: "2024-05-03T14:30:21",
-          capacidad: 200
-        },
-      ];
-      setReservas(data);
+      try {
+        const response = await axios.get(`${URL_API}/solicitudes`);
+        const data = response.data.map(item => ({
+          ...item,
+          horas: JSON.parse(item.horas), 
+          motivo: item.detalle 
+        }));
+        setReservas(data);
+      } catch (error) {
+        console.error('Error al obtener las reservas:', error);
+      }
     };
 
     fetchData();

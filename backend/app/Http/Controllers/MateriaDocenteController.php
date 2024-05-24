@@ -52,4 +52,50 @@ class MateriaDocenteController extends Controller
         }
     }
 
+    public function gruposPorMateria($nombreMateria)
+    {
+        $grupos = MateriaDocente::whereHas('materia', function($query) use ($nombreMateria) {
+            $query->where('nombre', $nombreMateria);
+        })->pluck('grupo')->unique()->toArray();
+
+        return $grupos;
+    }
+
+    public static function obtenerInfoPorMateria($nombreMateria)
+    {
+        $resultados = [];
+
+        // Obtener todas las entradas de MateriaDocente relacionadas con la materia proporcionada
+        $materiaDocentes = MateriaDocente::whereHas('materia', function($query) use ($nombreMateria) {
+            $query->where('nombre', $nombreMateria);
+        })->with('docente.user')->get();
+
+        // Iterar sobre las entradas y extraer la información necesaria
+        foreach ($materiaDocentes as $materiaDocente) {
+            $grupo = $materiaDocente->grupo;
+            $docente = $materiaDocente->docente;
+
+            // Si el docente tiene un usuario relacionado
+            if ($docente && $docente->user) {
+                $nombreDocente = $docente->user->nombres . ' ' . $docente->user->apellidos;
+                $docenteId = $docente->id;
+            } else {
+                $nombreDocente = 'Docente desconocido'; // Manejar caso donde no hay usuario relacionado
+                $docenteId = null;
+            }
+
+            $inscritos = $materiaDocente->inscritos;
+
+            // Agregar la información al arreglo de resultados
+            $resultados[] = [
+                'grupo' => $grupo,
+                'nombre_docente' => $nombreDocente,
+                'inscritos' => $inscritos,
+                'docente_id' => $docenteId,
+            ];
+        }
+
+        return $resultados;
+    }
+        
 }

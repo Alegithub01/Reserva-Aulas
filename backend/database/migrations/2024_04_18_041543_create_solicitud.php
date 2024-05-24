@@ -17,12 +17,14 @@ class CreateSolicitud extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->json('grupo');
-            $table->json('nombre_ambiente');
+            $table->string('tipo_ambiente');
             $table->string('materia');
             $table->json('horas');
             $table->string('servicios')->nullable();
             $table->string('detalle')->nullable();
             $table->date('fecha');
+            $table->integer('capacidad');
+            $table->string('estado')->default('En espera');
             $table->timestamps();
     
             // Definición de las claves foráneas
