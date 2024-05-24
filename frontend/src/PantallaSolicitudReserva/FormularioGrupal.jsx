@@ -219,6 +219,47 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
     }
   };
   
+  const obtenerMateriasDesdeBackend = async (docenteId) => {
+    try {
+      const response = await axios.get(`${URL_API}/docentes/${docenteId}/materias`);
+      const materiasFormateadas = response.data.materias.map(materia => ({
+        value: materia,
+        label: materia
+      }));
+      setCargarBDMateria(materiasFormateadas);
+    } catch (error) {
+      console.error('Error al obtener las materias desde el backend:', error);
+    }
+  }
+
+  const obtenerGruposDocentes = async (materia) => {
+    try {
+      const response = await axios.get(`${URL_API}/materia-docentes/grupos/${materia}`);
+      const gruposFormateados = response.data.grupos.map(grupo => ({
+        value: grupo,
+        label: grupo
+      }));
+      setCargarBDGruposGrupal(gruposFormateados);
+    } catch (error) {
+      console.error('Error al obtener los grupos docentes desde el backend:', error);
+    }
+  }
+
+  const obtenerDocentes = async (materia, grupo) => {
+    try {
+      const response = await axios.get(`${URL_API}/materia-docentes/info/${materia}`);
+      const docentes = response.data.filter(res => res.grupo== grupo);
+      const docentesFormateados =  docentes.map(resultado => ({
+        nombre_docente: resultado.nombre,
+        inscritos: resultado.inscritos,
+        docente_id: resultado.docente_id
+      }));
+      setCargarBDDocentes(docentesFormateados);
+    } catch (error) {
+      console.error('Error al obtener los docentes desde el backend:', error);
+    }
+  
+  }
 
   useEffect(() => {
     obtenerMaterias();
@@ -247,7 +288,11 @@ const FormularioGrupal = ({aulaInicial, horaInicial}) => {
         <Dropdown
           etiqueta="Materia"
           opciones={cargarBDMateria}
-          cambio={setMateria}
+          cambio={(materia) => {
+            setMateria(materia);
+           //setGruposDocentes([]);
+          
+          }}
           onBlur={validarSeleccionMateria}
           esRequerido={true}
           mensajeValidacion={mensajeError.materia}
