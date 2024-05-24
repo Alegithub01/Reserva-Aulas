@@ -108,10 +108,10 @@ const PantallaInicioSesionProfesor = () => {
         // Redirige según el rol del usuario
         if (nombreRol === "Administrador") {
           console.log("Redirigiendo a ModulosAdmin...");
-         // navegar("/ModulosAdmin");
+          navegar("/ModulosAdmin");
         } else {
           console.log("Redirigiendo a Panel-Solicitud-Reservas...");
-          //navegar("/Panel-Solicitud-Reservas");
+          navegar("/Panel-Solicitud-Reservas");
         }
         await obtenerDatosUsuario();
         navegar("/ModulosAdmin");
