@@ -113,6 +113,7 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   }
 
   const validarSeleccionHora = () => {
+    setMensajeError(previo => ({ ...previo, hora: '' }));
     if (hora.length === 0) {
       setMensajeError(previo => ({ ...previo, hora: 'Seleccione una hora' }));
     } else {
@@ -129,7 +130,7 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
           contador++;
         }
       }
-      const nroPeriodosA = ambiente === "Aula" ? nroPeriodosAul : ambiente === "Auditorio" ? nroPeriodosAud : nroPeriodosLab;
+      const nroPeriodosA = ambiente === "Aula" ? nroPeriodosAul : ambiente === "Laboratorio" ? nroPeriodosLab: nroPeriodosAud;
       if (contador > parseInt(nroPeriodosA)) {
         setMensajeError(previo => ({ ...previo, hora: `Seleccione menos periodos de hora, este ambiente no lo permite` }));
       }

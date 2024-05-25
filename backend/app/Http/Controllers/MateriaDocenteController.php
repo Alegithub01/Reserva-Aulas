@@ -54,6 +54,7 @@ class MateriaDocenteController extends Controller
 
     public function gruposPorMateria($nombreMateria)
     {
+        $nombreMateria =  str_replace('-', ' ', $nombreMateria);
         $grupos = MateriaDocente::whereHas('materia', function($query) use ($nombreMateria) {
             $query->where('nombre', $nombreMateria);
         })->pluck('grupo')->unique()->toArray();
@@ -64,6 +65,7 @@ class MateriaDocenteController extends Controller
     public static function obtenerInfoPorMateria($nombreMateria)
     {
         $resultados = [];
+        $nombreMateria =  str_replace('-', ' ', $nombreMateria);
 
         // Obtener todas las entradas de MateriaDocente relacionadas con la materia proporcionada
         $materiaDocentes = MateriaDocente::whereHas('materia', function($query) use ($nombreMateria) {
