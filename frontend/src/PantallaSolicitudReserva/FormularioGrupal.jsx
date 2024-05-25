@@ -37,13 +37,6 @@ const FormularioGrupal = ({ aulaInicial, horaInicial }) => {
     detalles: '',
   });
 
-  /*datos de prueba para los dropdowns */
-  // const cargarBDMateria = [
-  //   { value: 1, label: "Progr. Funcional" },
-  //   { value: 2, label: "Base de datos 2" },
-  //   { value: 3, label: "Taller de Base de Datos" },
-  // ];
-
   const [docenteId, setDocenteId] = useState(null);
   const [cargarBDMateria, setCargarBDMateria] = useState([]);
 
@@ -56,40 +49,16 @@ const FormularioGrupal = ({ aulaInicial, horaInicial }) => {
     { value: "Taller", label: "Taller" },
     { value: "Otro", label: "Otro" },
   ];
-  // const cargarBDGruposGrupal = [
-  //   { value: "1", label: "1" },
-  //   { value: "2", label: "2" },
-  //   { value: "3", label: "3" },
-  //   { value: "4", label: "4" },
-  //   { value: "5", label: "5" },
-  //   { value: "6", label: "6" },
-  //   { value: "7", label: "7" },
-  //   { value: "8", label: "8" },
-  //   { value: "9", label: "9" },
-  // ];
 
   const [cargarBDGruposGrupal, setCargarBDGruposGrupal] = useState([]);
 
-  // const cargarBDDocentes = [
-  //   { id: "1", nombre: "Leticia Coca", inscritos: 60 },
-  //   { id: "2", nombre: "Corina Flores", inscritos: 60},
-  //   { id: "3", nombre: "Vladimir Costas", inscritos: 50},
-  //   { id: "4", nombre: "Patricia Romero", inscritos: 50},
-  //   { id: "5", nombre: "Carla Salazar", inscritos: 50},
-  //   { id: "6", nombre: "Henry Villaroel", inscritos: 30 },
-  //   { id: "7", nombre: "Leticia Coca", inscritos: 40},
-  //   { id: "8", nombre: "Vladimir Costas", inscritos: 40},
-  //   { id: "9", nombre: "Leticia Coca", inscritos: 40},
-  // ];
   const [cargarBDDocentes, setCargarBDDocentes] = useState([]);
-  //convertir info de docentes en este diccionario (importa el id creo)
 
   const cargarBDAmbiente = [
     { value: "Aula", label: "Aula", },
     { value: "Auditorio", label: "Auditorio", },
     { value: "Laboratorio", label: "Laboratorio", },
-  ];   //convertir info de ambientes en este diccionario (solo nombres de ambientes)
-  /* */
+  ];   
   const horas = [
     { value: "10", label: "06:45-08:15" },
     { value: "20", label: "08:15-09:45" },

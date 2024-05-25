@@ -144,23 +144,6 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
       setMensajeError(previo => ({ ...previo, detalles: '' }));
     }
   }
-  const validarSeleccionAmbiente = () => {
-    if (ambiente.length === 0) {
-      setMensajeError(previo => ({ ...previo, ambiente: 'Seleccione un ambiente' }));
-    } else {
-      for (let i = 1; i < ambiente.length; i++) {
-        const before = ambiente[i - 1];
-        const current = ambiente[i];
-        console.log(before, current);
-        if (before.slice(0, 3) !== current.slice(0, 3)) {
-          setMensajeError(previo => ({ ...previo, ambiente: 'Seleccione ambientes contiguos' }));
-          break;
-        } else {
-          setMensajeError(previo => ({ ...previo, ambiente: '' }));
-        }
-      }
-    }
-  };
 
   const obtenerLabelsHora = (valores) => {
     return valores.map(valor => {
