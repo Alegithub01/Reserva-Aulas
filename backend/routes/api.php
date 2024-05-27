@@ -43,12 +43,15 @@ Route::group ([
     Route::get('dummyy', [AuthController::class, 'dummyGet']);
 });
 
+//rol
+Route::get('/rol-obtener-id-por-nombre', [RolController::class, 'obtenerIdPorNombre']);
 
 //usuario
 Route::get('/listaUsers', [UserController::class, 'index']);
 Route::get('users/{nombre}/id', [UserController::class, 'obtenerIdPorNombre']);
 Route::get('/listaRoles', [RolController::class, 'index']);
-
+Route::put('/updateUser/{id}', [UserController::class, 'updateUser']);
+Route::put('/disableUser/{id}', [UserController::class, 'disableUser']);
 
 //Rutas de los ambientes
 Route::get('/ambientes', [AmbienteController::class, 'index'])->name('ambientes.index');

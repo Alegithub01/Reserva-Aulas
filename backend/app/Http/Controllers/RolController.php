@@ -19,6 +19,17 @@ class RolController extends Controller
         return response()->json($roles);
     }
 
+    public function obtenerIdPorNombre($request)
+    {
+        $nombreRol = $request->input('nombre');
+        $rol = Rol::where('nombre', $nombreRol)->first();
+        if ($rol) {
+            return response()->json(['id' => $rol->id]);
+        } else {
+            return response()->json(['error' => 'Rol not found'], 404);
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      *

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-
+use App\Http\Controllers\RolController;
 class UserController extends Controller
 {
     /**
@@ -32,5 +32,41 @@ class UserController extends Controller
     {
         $users = User::with('rol')->get();
         return response()->json($users);
+    }
+
+    public function updateUser(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        // Actualiza los campos necesarios
+        $user->rol_id = $request->input('rol_id');
+        $user->nombres = $request->input('nombres');
+        $user->apellidos = $request->input('apellidos');
+        $user->email = $request->input('email');
+        $user->estado = $request->input('estado');
+
+        try {
+            $user->save();
+            return response()->json(['message' => 'User updated successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error updating user', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function disableUser($id)
+    {
+        $user = User::find($id);
+        if ($user) {
+            $user->estado = 'Deshabilitado';
+            $user->save();
+
+            return response()->json($user);
+        } else {
+            return response()->json(['error' => 'User not found'], 404);
+        }
     }
 }
