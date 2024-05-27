@@ -24,10 +24,12 @@ const AjustarSolicitudes = () => {
     nroPeriodosLab: "",
     fecha1: "",
     fecha2: "",
+    maxContiguos: "",
   });
   const { theme } = useTheme();
   const [fecha1, setFecha1] = useState("");
   const [fecha2, setFecha2] = useState("");
+  const [maxContiguos, setMaxContiguos] = useState(2);
   const [nroPeriodosAula, setNroPeriodosAula] = useState("");
   const [nroPeriodosAuditorio, setNroPeriodosAuditorio] = useState("");
   const [nroPeriodosLaboratorio, setNroPeriodosLaboratorio] = useState("");
@@ -93,11 +95,11 @@ const AjustarSolicitudes = () => {
     if (value.match(pattern)) {
       if (value >= rango.min && value <= rango.max) {
         tipo(value);
-        if(tipo.name==='setNroPeriodosAuditorio'){
+        if (tipo.name === 'setNroPeriodosAuditorio') {
           setNroPeriodosAud(value);
-        }else if(tipo.name==='setNroPeriodosLaboratorio'){
+        } else if (tipo.name === 'setNroPeriodosLaboratorio') {
           setNroPeriodosLab(value);
-        }else{
+        } else {
           setNroPeriodosAul(value);
         }
         cambiarMensajeError(others => ({ ...others, nroPeriodos: "" }));
@@ -176,6 +178,39 @@ const AjustarSolicitudes = () => {
     }
   };
 
+  const validarMaxAulasContiguas = () => {
+    if (maxContiguos === "") {
+      cambiarMensajeError(previo => ({
+        ...previo,
+        maxContiguos: "Ingrese un número de aulas contiguas",
+      }));
+    } else {
+      cambiarMensajeError(previo => ({
+        ...previo,
+        maxContiguos: "",
+      }));
+    }
+  }
+
+  const manejarMaxAulasContiguas = (event, pattern, rango) => {
+    const { value } = event.target;
+    if (value.match(pattern)) {
+      if (value >= rango.min && value <= rango.max) {
+        setMaxContiguos(value);
+        cambiarMensajeError(others => ({ ...others, maxContiguos: "" }));
+      } else {
+        cambiarMensajeError(others => ({
+          ...others,
+          maxContiguos: `El número de aulas contiguas debe estar entre ${rango.min} y ${rango.max}`,
+        }));
+      }
+    } else {
+      cambiarMensajeError({
+        ...mensajeError,
+        maxContiguos: "Ingrese un número válido",
+      });
+    }
+  }
   const manejoDialogoCerrar = () => {
     setDialogoAbierto(false);
   }
@@ -234,7 +269,7 @@ const AjustarSolicitudes = () => {
                         max: 10,
                       }, setNroPeriodosAula)
                     }
-                    onBlur={()=> {validarNroPeriodos(nroPeriodosAula, "nroPeriodosAul")}}
+                    onBlur={() => { validarNroPeriodos(nroPeriodosAula, "nroPeriodosAul") }}
                     isRequired={true}
                     validationMessage={mensajeError.nroPeriodosAul}
                     pattern="^[0-9]*$"
@@ -261,76 +296,94 @@ const AjustarSolicitudes = () => {
                   />
                 </div>
               </RowPercentage>
-              </div>
-              <div>
-                  <TextInput
-                    label="Máximo nro. periodos laboratorio"
-                    fullWidth={true}
-                    onChange={(event) =>
-                      manejarNroPeriodos(event, "^[0-9]*$", {
-                        min: 1,
-                        max: 10,
-                      }, setNroPeriodosLaboratorio)
-                    }
-                    onBlur={() => validarNroPeriodos(nroPeriodosLaboratorio, "nroPeriodosLab")}
-                    isRequired={true}
-                    validationMessage={mensajeError.nroPeriodosLab}
-                    pattern="^[0-9]*$"
-                    rango={{ min: 1, max: 10 }}
-                    defaultValue={nroPeriodosLaboratorio}
+            </div>
+            <div>
+              <TextInput
+                label="Máximo nro. periodos laboratorio"
+                fullWidth={true}
+                onChange={(event) =>
+                  manejarNroPeriodos(event, "^[0-9]*$", {
+                    min: 1,
+                    max: 10,
+                  }, setNroPeriodosLaboratorio)
+                }
+                onBlur={() => validarNroPeriodos(nroPeriodosLaboratorio, "nroPeriodosLab")}
+                isRequired={true}
+                validationMessage={mensajeError.nroPeriodosLab}
+                pattern="^[0-9]*$"
+                rango={{ min: 1, max: 10 }}
+                defaultValue={nroPeriodosLaboratorio}
+              />
+            </div>
+            <div>
+              <TextInput
+                label="Máximo nro. aulas contiguas"
+                fullWidth={true}
+                onChange={(event) =>
+                  manejarMaxAulasContiguas(event, "^[0-9]*$", {
+                    min: 1,
+                    max: 5,
+                  })
+                }
+                onBlur={ validarMaxAulasContiguas }
+                isRequired={true}
+                validationMessage={mensajeError.maxContiguos}
+                pattern="^[0-9]*$"
+                rango={{ min: 1, max: 10 }}
+                defaultValue={maxContiguos}
+              />
+            </div>
+            <div style={defaultStyle.fechas}>
+              <StyledText>Delimitar fechas de solicitudes</StyledText>
+              <RowPercentage firstChildPercentage={50} gap="10px">
+                <div>
+                  <EntradaFecha
+                    etiqueta="Fecha inicio"
+                    enCambio={setFecha1}
+                    mensajeValidacion={mensajeError.fecha1}
+                    onBlur={validarFecha1}
+                    valorInicial={fecha1}
                   />
                 </div>
-              <div style={defaultStyle.fechas}>
-                <StyledText>Delimitar fechas de solicitudes</StyledText>
-                <RowPercentage firstChildPercentage={50} gap="10px">
-                  <div>
-                    <EntradaFecha
-                      etiqueta="Fecha inicio"
-                      enCambio={setFecha1}
-                      mensajeValidacion={mensajeError.fecha1}
-                      onBlur={validarFecha1}
-                      valorInicial={fecha1}
-                    />
-                  </div>
-                  <div>
-                    <EntradaFecha
-                      etiqueta="Fecha fin"
-                      enCambio={setFecha2}
-                      mensajeValidacion={mensajeError.fecha2}
-                      onBlur={validarFecha2}
-                      valorInicial={fecha2}
-                    />
-                  </div>
-                </RowPercentage>
-              </div>
-              <Button1 onClick={handleConfirm}>Guardar Cambios</Button1>
-              <div
-                style={{
-                  height: "10%",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              ></div>
-              <Dialog
-                open={dialogoAbierto}
-                onClose={manejoDialogoCerrar}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-              >
-                <DialogContent>
-                  <DialogContentText id="alert-dialog-description">
-                    {mostrarMensaje.mensajeNormal ? mensajeDialogo.mensajeNormal : mensajeDialogo.mensajeFechas}
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={manejoDialogoCerrar}>Cancelar</Button>
-                  <Button onClick={guardarTodo} autoFocus>
-                    Aceptar
-                  </Button>
-                </DialogActions>
-              </Dialog>
+                <div>
+                  <EntradaFecha
+                    etiqueta="Fecha fin"
+                    enCambio={setFecha2}
+                    mensajeValidacion={mensajeError.fecha2}
+                    onBlur={validarFecha2}
+                    valorInicial={fecha2}
+                  />
+                </div>
+              </RowPercentage>
             </div>
+            <Button1 onClick={handleConfirm}>Guardar Cambios</Button1>
+            <div
+              style={{
+                height: "10%",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            ></div>
+            <Dialog
+              open={dialogoAbierto}
+              onClose={manejoDialogoCerrar}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  {mostrarMensaje.mensajeNormal ? mensajeDialogo.mensajeNormal : mensajeDialogo.mensajeFechas}
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={manejoDialogoCerrar}>Cancelar</Button>
+                <Button onClick={guardarTodo} autoFocus>
+                  Aceptar
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </div>
         </Card>
       </div>
     </div>
