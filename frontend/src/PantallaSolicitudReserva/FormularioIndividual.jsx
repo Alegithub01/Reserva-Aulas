@@ -113,6 +113,7 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   }
 
   const validarSeleccionHora = () => {
+    setMensajeError(previo => ({ ...previo, hora: '' }));
     if (hora.length === 0) {
       setMensajeError(previo => ({ ...previo, hora: 'Seleccione una hora' }));
     } else {
@@ -129,7 +130,7 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
           contador++;
         }
       }
-      const nroPeriodosA = ambiente === "Aula" ? nroPeriodosAul : ambiente === "Auditorio" ? nroPeriodosAud : nroPeriodosLab;
+      const nroPeriodosA = ambiente === "Aula" ? nroPeriodosAul : ambiente === "Laboratorio" ? nroPeriodosLab: nroPeriodosAud;
       if (contador > parseInt(nroPeriodosA)) {
         setMensajeError(previo => ({ ...previo, hora: `Seleccione menos periodos de hora, este ambiente no lo permite` }));
       }
@@ -143,23 +144,6 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
       setMensajeError(previo => ({ ...previo, detalles: '' }));
     }
   }
-  const validarSeleccionAmbiente = () => {
-    if (ambiente.length === 0) {
-      setMensajeError(previo => ({ ...previo, ambiente: 'Seleccione un ambiente' }));
-    } else {
-      for (let i = 1; i < ambiente.length; i++) {
-        const before = ambiente[i - 1];
-        const current = ambiente[i];
-        console.log(before, current);
-        if (before.slice(0, 3) !== current.slice(0, 3)) {
-          setMensajeError(previo => ({ ...previo, ambiente: 'Seleccione ambientes contiguos' }));
-          break;
-        } else {
-          setMensajeError(previo => ({ ...previo, ambiente: '' }));
-        }
-      }
-    }
-  };
 
   const obtenerLabelsHora = (valores) => {
     return valores.map(valor => {

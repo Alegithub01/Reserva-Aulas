@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
@@ -38,6 +38,7 @@ function SelectorMultiple({ etiqueta, opciones, cambio, valorInicial = [], llena
       target: { value },
     } = event;
     cambio && cambio(typeof value === 'string' ? value.split(',') : value,);
+    console.log("he cambiado", value);
     cambiarValorSeleccionado(
       typeof value === 'string' ? value.split(',') : value,
     );
