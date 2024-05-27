@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RolController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HelloController;
@@ -43,8 +44,11 @@ Route::group ([
 });
 
 
-
+//usuario
+Route::get('/listaUsers', [UserController::class, 'index']);
 Route::get('users/{nombre}/id', [UserController::class, 'obtenerIdPorNombre']);
+Route::get('/listaRoles', [RolController::class, 'index']);
+
 
 //Rutas de los ambientes
 Route::get('/ambientes', [AmbienteController::class, 'index'])->name('ambientes.index');

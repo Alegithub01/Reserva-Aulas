@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import {
   DataGrid,
@@ -16,36 +16,63 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import Button from '@mui/material/Button';
+import axios from 'axios';
+import { URL_API } from '../services/const';
 
-const profesores = [
-  { id: 1, nombres: "Juan Carlos", apellidos: "Pérez Peredo", rol: "Docente", correo: "juan.perez@gmail.com" },
-  { id: 2, nombres: "Ana Luisa", apellidos: "Gómez Gonzales", rol: "Administrativo", correo: "ana.gomez@gmail.com" },
-  { id: 3, nombres: "Luis Alfredo", apellidos: "Martínez Mercedez", rol: "Docente", correo: "luis.martinez@gmail.com" },
-];
-
-const roles = [
-  { nombre: 'Docente', descripcion: 'Persona que enseña xD' },
-  { nombre: 'Administrativo', descripcion: '...' },
-  { nombre: 'Administrativo2', descripcion: '...' },
-];
-
-const DataGridEstilizado = styled(DataGrid)({
+const DataGridEstilizado = styled(DataGrid)(({ theme }) => ({
   '.MuiDataGrid-cell': {
     fontSize: '0.93rem',
     color: 'black',
   },
   '.MuiDataGrid-root': {
-    border: `3px solid pink`,
-    height: '100%', 
-    width: 'calc(100% - 20px)',
+    border: `3px solid ${theme.palette.primary.main}`,
   },
+}));
+
+const ContenedorTabla = styled(Caja)({
+  height: 'calc(100vh - 64px)', // Ajustar la altura según sea necesario
+  width: 'calc(100% - 40px)',
+  margin: '20px',
+  padding: '20px',
+  boxSizing: 'border-box',
+  overflow: 'auto',
+  backgroundColor: '#fff', // Fondo blanco para mejor contraste
+  boxShadow: '0 0 10px rgba(0,0,0,0.1)',
+  borderRadius: '8px',
 });
 
 function TablaProfesores() {
-  const [filas, setFilas] = useState(profesores);
+  const [filas, setFilas] = useState([]);
   const [modeloModoFila, setModeloModoFila] = useState({});
   const [dialogoAbierto, setDialogoAbierto] = useState(false);
   const [idAEliminar, setIdAEliminar] = useState(null);
+  const [roles, setRoles] = useState([]);
+
+  useEffect(() => {
+    axios.get(`${URL_API}/listaUsers`)
+      .then(response => {
+        console.log('Response data for users:', response.data);
+        setFilas(response.data.map(user => ({
+          id: user.id,
+          nombres: user.nombres,
+          apellidos: user.apellidos,
+          rol: user.rol ? user.rol.nombre : 'Sin rol',
+          email: user.email,
+        })));
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+
+    axios.get(`${URL_API}/listaRoles`)
+      .then(response => {
+        console.log('Response data for roles:', response.data);
+        setRoles(response.data.map(role => role.nombre));
+      })
+      .catch(error => {
+        console.error('Error fetching roles:', error);
+      });
+  }, []);
 
   const manejarClickEditar = (id) => () => {
     setModeloModoFila({ ...modeloModoFila, [id]: { mode: GridRowModes.Edit } });
@@ -89,9 +116,9 @@ function TablaProfesores() {
       minWidth: 130,
       editable: true,
       type: 'singleSelect',
-      valueOptions: roles.map(rol => rol.nombre),
+      valueOptions: roles,
     },
-    { field: 'correo', headerName: 'Correo', flex: 1, minWidth: 150, editable: true },
+    { field: 'email', headerName: 'Correo', flex: 1, minWidth: 150, editable: true },
     {
       field: 'acciones',
       type: 'actions',
@@ -135,30 +162,30 @@ function TablaProfesores() {
 
   return (
     <>
-    <Caja sx={{ height: '100%', width: '100%' }}>
-      <DataGridEstilizado
-        rows={filas}
-        columns={columnas}
-        editMode="row"
-        rowModesModel={modeloModoFila}
-        onRowModesModelChange={setModeloModoFila}
-        processRowUpdate={procesarActualizacionFila}
-        onRowEditStop={(params, event) => {
-          if (params.reason === GridRowEditStopReasons.rowFocusOut) {
-            event.defaultMuiPrevented = true;
-          }
-        }}
-        sx={{
-          '& .MuiDataGrid-root .MuiDataGrid-cell:focus': {
-            outline: 'none',
-          },
-        }}
-        components={{
-          NoRowsOverlay: () => <div>No hay profesores disponibles.</div>,
-        }}
-      />
-    </Caja>
-    <Dialog
+      <ContenedorTabla>
+        <DataGridEstilizado
+          rows={filas}
+          columns={columnas}
+          editMode="row"
+          rowModesModel={modeloModoFila}
+          onRowModesModelChange={setModeloModoFila}
+          processRowUpdate={procesarActualizacionFila}
+          onRowEditStop={(params, event) => {
+            if (params.reason === GridRowEditStopReasons.rowFocusOut) {
+              event.defaultMuiPrevented = true;
+            }
+          }}
+          sx={{
+            '& .MuiDataGrid-root .MuiDataGrid-cell:focus': {
+              outline: 'none',
+            },
+          }}
+          components={{
+            NoRowsOverlay: () => <div>No hay profesores disponibles.</div>,
+          }}
+        />
+      </ContenedorTabla>
+      <Dialog
         open={dialogoAbierto}
         onClose={() => setDialogoAbierto(false)}
         aria-describedby="alert-dialog-description"
@@ -175,7 +202,7 @@ function TablaProfesores() {
           </Button>
         </DialogActions>
       </Dialog>
-      </>
+    </>
   );
 }
 

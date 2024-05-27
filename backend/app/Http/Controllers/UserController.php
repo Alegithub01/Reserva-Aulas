@@ -27,4 +27,10 @@ class UserController extends Controller
             return response()->json(['error' => 'Usuario no encontrado'], 404);
         }
     }
+
+    public function index()
+    {
+        $users = User::with('rol')->get();
+        return response()->json($users);
+    }
 }
