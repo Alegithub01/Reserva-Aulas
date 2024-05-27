@@ -12,6 +12,7 @@ use App\Http\Controllers\MateriaDocenteController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SolicitudGrupalController;
 use App\Http\Controllers\MateriaController;
+use App\Http\Controllers\AdminSettingsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -98,3 +99,6 @@ Route::get('/materias/nombres', [MateriaController::class, 'getNombres']);
 Route::get('/materia-docente/grupos/{nombreMateria}', [MateriaDocenteController::class, 'gruposPorMateria']);
 
 Route::get('/materia-docente/info/{nombreMateria}', [MateriaDocenteController::class, 'obtenerInfoPorMateria']);
+
+// settings
+Route::post('admin/settings', [AdminSettingsController::class, 'store']);
