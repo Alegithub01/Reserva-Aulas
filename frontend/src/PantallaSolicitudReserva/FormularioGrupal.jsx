@@ -245,7 +245,7 @@ const FormularioGrupal = ({ aulaInicial, horaInicial }) => {
   useEffect(() => {
     const obtenerData = async () => {
     try{
-      const response = await axios.get(`${URL_API}/admin/settings);
+      const response = await axios.get(`${URL_API}/admin/settings`);
       setNroPeriodosAul(response.data.setting.nroMaxPeriodAula);
       setNroPeriodosAud(response.data.setting.nroMaxPeriodAuditorio);
       setNroPeriodosLab(response.data.setting.nroMaxPeriodLaboratorio);
