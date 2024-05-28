@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\SolicitudGrupal;
+use App\Models\Reserva;
 
 class SolicitudGrupalController extends Controller
 {
@@ -57,5 +58,25 @@ class SolicitudGrupalController extends Controller
     {
         $solicitudGrupal = SolicitudGrupal::destroy($id);
         return response()->json(['success' => $solicitudGrupal], 200);
+    }
+
+    public function aceptarGrupal($id)
+    {
+        $solicitud_g = SolicitudGrupal::findOrFail($id);
+
+        if ($solicitud_g->estado === 'aceptada') {
+            return response()->json(['error' => 'La solicitud ya ha sido aceptada'], 400);
+        }
+
+        $reserva = new Reserva();
+        $reserva->solicitable_id = $solicitud_g->id;
+        $reserva->solicitable_type = SolicitudGrupal::class;
+
+        $reserva->save();
+
+        $solicitud_g->estado = 'aceptada';
+        $solicitud_g->save();
+
+        return response()->json(['message' => 'Solicitud aceptada exitosamente'], 200);
     }
 }

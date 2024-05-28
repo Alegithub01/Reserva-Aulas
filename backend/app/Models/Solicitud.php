@@ -49,4 +49,11 @@ class Solicitud extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function reservas()
+    {
+        return $this->morphMany(Reserva::class, 'solicitable');
+    }
+
+    
 }

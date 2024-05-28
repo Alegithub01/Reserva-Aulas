@@ -2,23 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Reserva extends Model
 {
-    /**
-     * The table associated with the model.
-     *
-     * @var string
-     */
-    protected $table = 'reserva';
+    protected $table = 'reserva'; // Especifica la tabla personalizada si es necesario
 
-    use HasFactory;
+    protected $fillable = [
+        'solicitable_id',
+        'solicitable_type',
+        'aulas',
+    ];
 
-    public function solicitud()
+    // Relación polimórfica
+    public function solicitable()
     {
-        return $this->belongsTo(Solicitud::class);
+        return $this->morphTo();
     }
 }
-

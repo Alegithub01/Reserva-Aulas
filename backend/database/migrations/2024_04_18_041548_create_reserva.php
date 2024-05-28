@@ -15,11 +15,13 @@ class CreateReserva extends Migration
     {
         Schema::create('reserva', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('solicitud_id');
+            $table->unsignedBigInteger('solicitable_id');
+            $table->string('solicitable_type');
+            $table->json('aulas')->nullable();
             $table->timestamps();
 
-            // Definición de la clave foránea
-            $table->foreign('solicitud_id')->references('id')->on('solicitud');
+            // Definición de índice compuesto para la relación polimórfica
+            $table->index(['solicitable_id', 'solicitable_type']);
         });
     }
 

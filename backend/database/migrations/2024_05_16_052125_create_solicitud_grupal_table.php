@@ -14,7 +14,7 @@ class CreateSolicitudGrupalTable extends Migration
     public function up()
     {
         Schema::create('solicitud_grupal', function (Blueprint $table) {
-            $table->string('id')->primary();
+            $table->id()->startingValue(100001);
             $table->json('users_id');
             $table->json('grupos');
             $table->json('tipo_ambiente');
@@ -38,4 +38,3 @@ class CreateSolicitudGrupalTable extends Migration
         Schema::dropIfExists('solicitud_grupal');
     }
 }
-

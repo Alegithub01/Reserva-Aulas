@@ -25,14 +25,14 @@ class SolicitudGrupal extends Model
      *
      * @var bool
      */
-    public $incrementing = false;
+    public $incrementing = true;
 
     /**
      * The "type" of the auto-incrementing ID.
      *
      * @var string
      */
-    protected $keyType = 'string';
+    protected $keyType = 'int';
 
     /**
      * The attributes that are mass assignable.
@@ -40,7 +40,7 @@ class SolicitudGrupal extends Model
      * @var array
      */
     protected $fillable = [
-        'id', 'users_id', 'grupos', 'tipo_ambiente', 'materia', 'horas', 'servicios', 'detalle', 'fecha', 'estado'
+        'users_id', 'grupos', 'tipo_ambiente', 'materia', 'horas', 'servicios', 'detalle', 'fecha', 'estado'
     ];
 
     /**
@@ -65,23 +65,8 @@ class SolicitudGrupal extends Model
         'estado' => 'En espera',
     ];
 
-    /**
-     * Boot method for the model.
-     */
-    protected static function boot()
+    public function reservas()
     {
-        parent::boot();
-
-        static::creating(function ($solicitudGrupal) {
-            $lastSolicitud = SolicitudGrupal::orderBy('id', 'desc')->first();
-            $number = 1;
-
-            if ($lastSolicitud) {
-                $lastId = (int)str_replace('g', '', $lastSolicitud->id);
-                $number = $lastId + 1;
-            }
-
-            $solicitudGrupal->id = 'g' . $number;
-        });
+        return $this->morphMany(Reserva::class, 'solicitable');
     }
 }

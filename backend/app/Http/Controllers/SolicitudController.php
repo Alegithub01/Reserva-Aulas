@@ -82,7 +82,8 @@ class SolicitudController extends Controller
         }
 
         $reserva = new Reserva();
-        $reserva->solicitud_id = $solicitud->id;
+        $reserva->solicitable_id = $solicitud->id;
+        $reserva->solicitable_type = Solicitud::class;
 
         $reserva->save();
 

@@ -78,7 +78,7 @@ Route::post('/solicitudes', [SolicitudController::class, 'store'])->name('solici
 Route::get('/solicitudes/{id}', [SolicitudController::class, 'show'])->name('solicitudes.show');
 Route::put('/solicitudes/{id}', [SolicitudController::class, 'update'])->name('solicitudes.update');
 Route::delete('/solicitudes/{id}', [SolicitudController::class, 'destroy'])->name('solicitudes.destroy');
-
+Route::post('/aceptar/{id}', [SolicitudController::class, 'aceptar'])->name('solicitudes.aceptar');
 Route::get('/aceptadas', [SolicitudController::class, 'solicitudesAceptadas'])->name('solicitudes.aceptadas');
 
 
@@ -92,7 +92,7 @@ Route::post('/solicitudes-grupales', [SolicitudGrupalController::class, 'store']
 Route::get('/solicitudes-grupales/{id}', [SolicitudGrupalController::class, 'show'])->name('solicitudesGrupales.show');
 Route::put('/solicitudes-grupales/{id}', [SolicitudGrupalController::class, 'update'])->name('solicitudesGrupales.update');
 Route::delete('/solicitudes-grupales/{id}', [SolicitudGrupalController::class, 'destroy'])->name('solicitudesGrupales.destroy');
-
+Route::post('/aceptarGrupal/{id}', [SolicitudGrupalController::class, 'aceptarGrupal'])->name('solicitudesGrupales.aceptarGrupal');
 
 Route::get('/materias/nombres', [MateriaController::class, 'getNombres']);
 
