@@ -43,7 +43,6 @@ const AjustarSolicitudes = () => {
     mensajeFechas: false,
   });
   const navigate = useNavigate();
-  const { setFechaInicio, setFechaFin, setNroPeriodosAul, setNroPeriodosAud, setNroPeriodosLab } = useAjusteStore();
 
   const defaultStyle = {
     outerContainer: {
@@ -109,13 +108,6 @@ const AjustarSolicitudes = () => {
     if (value.match(pattern)) {
       if (value >= rango.min && value <= rango.max) {
         tipo(value);
-        if (tipo.name === 'setNroPeriodosAuditorio') {
-          setNroPeriodosAud(value);
-        } else if (tipo.name === 'setNroPeriodosLaboratorio') {
-          setNroPeriodosLab(value);
-        } else {
-          setNroPeriodosAul(value);
-        }
         cambiarMensajeError(others => ({ ...others, nroPeriodos: "" }));
       } else {
         cambiarMensajeError(others => ({
@@ -156,7 +148,6 @@ const AjustarSolicitudes = () => {
         ...previo,
         fecha1: "",
       }));
-      setFechaInicio(fecha1);
     }
   }
 
@@ -176,7 +167,6 @@ const AjustarSolicitudes = () => {
         ...previo,
         fecha2: "",
       }));
-      setFechaFin(fecha2);
     }
   }
 

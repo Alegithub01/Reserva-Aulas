@@ -7,15 +7,14 @@ import MensajeExito from "../Utils/MensajeExito";
 import EntradaFecha from "../Utils/EntradaFecha";
 import Button from "../Utils/Button";
 import CalendarioStore from "../Contexts/CalendarioStore"
-import useAjusteStore from "../Contexts/AjusteStore";
 import axios from "axios";
 import { URL_API } from "../services/const";
 
 const FormularioGrupal = ({ aulaInicial, horaInicial }) => {
   const { aula, dia, horario } = CalendarioStore();
-  const nroPeriodosAul = useAjusteStore((state) => state.nroPeriodosAul);
-  const nroPeriodosAud = useAjusteStore((state) => state.nroPeriodosAud);
-  const nroPeriodosLab = useAjusteStore((state) => state.nroPeriodosLab);
+  const [nroPeriodosAul, setNroPeriodosAul] = useState(0);
+  const [nroPeriodosAud, setNroPeriodosAud] = useState(0);
+  const [nroPeriodosLab, setNroPeriodosLab] = useState(0);
   const [materia, setMateria] = useState('');
   const [gruposDocentes, setGruposDocentes] = useState([]); // modo grupal
   const [docentes, setDocentes] = useState([]);
@@ -242,6 +241,19 @@ const FormularioGrupal = ({ aulaInicial, horaInicial }) => {
     }
 
   }
+
+  useEffect(() => {
+    const obtenerData = async () => {
+    try{
+      const response = await axios.get(`${URL_API}/admin/settings);
+      setNroPeriodosAul(response.data.setting.nroMaxPeriodAula);
+      setNroPeriodosAud(response.data.setting.nroMaxPeriodAuditorio);
+      setNroPeriodosLab(response.data.setting.nroMaxPeriodLaboratorio);
+    }catch (error) {
+      console.log(error);
+    }}
+    obtenerData();
+  },[]);
 
   useEffect(() => {
     obtenerMaterias();
