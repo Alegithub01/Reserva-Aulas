@@ -20,7 +20,7 @@ import useAjusteStore from "../Contexts/AjusteStore";
 const AjustarSolicitudes = () => {
   const [mensajeError, cambiarMensajeError] = useState({
     nroPeriodosAud: "",
-    nroPeriodosAul: "",
+    nroPeriodosAula: "",
     nroPeriodosLab: "",
     fecha1: "",
     fecha2: "",
@@ -72,22 +72,36 @@ const AjustarSolicitudes = () => {
     }
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     validarNroPeriodos();
     validarFecha1();
     validarFecha2();
     validarAmbasFechas();
-    const nPeriodos = nroPeriodosAula !== "" && nroPeriodosAula !== "" && nroPeriodosLaboratorio !== "";
-    const mensajePeriodos = mensajeError.nroPeriodosAud === "" && mensajeError.nroPeriodosAmb === "" && mensajeError.nroPeriodosLab === "";
-    if (nPeriodos && fecha1 !== "" && fecha2 !== ""
-      && mensajePeriodos && mensajeError.fecha1 === "" && mensajeError.fecha2 === ""
-    ) {
+  
+    const nPeriodos = nroPeriodosAula !== "" && nroPeriodosAuditorio !== "" && nroPeriodosLaboratorio !== "";
+    const mensajePeriodos = mensajeError.nroPeriodosAud === "" && mensajeError.nroPeriodosAula === "" && mensajeError.nroPeriodosLab === "";
+    if (nPeriodos && fecha1 !== "" && fecha2 !== "" && mensajePeriodos && mensajeError.fecha1 === "" && mensajeError.fecha2 === "") {
+      const data = {
+        nroMaxPeriodAuditorio: nroPeriodosAuditorio,
+        nroMaxPeriodAula: nroPeriodosAula,
+        nroMaxPeriodLaboratorio: nroPeriodosLaboratorio,
+        FechaIniSolicitudes: fecha1,
+        FechaFinSolicitudes: fecha2,
+        NroMaxAmbientContiguos: maxContiguos
+      };
       setDialogoAbierto(true);
-      //backend acaa o no
-    } else {
-      console.log("No se puede guardar cambios");
+    
+      try {
+        const response = await axios.post(`${URL_API}/admin/settings`, data);
+        if (response.status === 200) {
+          console.log("Cambios guardados");
+        }
+      } catch (error) {
+        console.error(error);
+      } 
+    }else{
+      console.log(mensajePeriodos);
     }
-
   };
 
   const manejarNroPeriodos = (event, pattern, rango, tipo) => {
