@@ -37,7 +37,8 @@ class UserController extends Controller
         // Verificar si el usuario existe
         if ($usuario) {
             // Retornar el nombre del usuario encontrado
-            return response()->json(['nombre' => $usuario->nombres], 200);
+            $nombre_completo = $usuario->nombres . ' ' . $usuario->apellidos;
+            return response()->json(['nombre' => $nombre_completo], 200);
         } else {
             // Retornar un error si el usuario no existe
             return response()->json(['error' => 'Usuario no encontrado'], 404);

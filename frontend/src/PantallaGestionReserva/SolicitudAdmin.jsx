@@ -68,15 +68,15 @@ const SolicitudAdmin = () => {
       console.log(dataRow.tipoDado);
       if (dataRow.tipoDado === "grupal") {
         const users = JSON.parse(dataRow.users_id);
-  
+
         try {
-          const userPromises = users.map(user => 
+          const userPromises = users.map(user =>
             axios.get(`${URL_API}/users/${user}/nombre`)
           );
-          
+
           const userResponses = await Promise.all(userPromises);
           const userNames = userResponses.map(response => ({ nombre: response.data.nombre }));
-  
+
           setUsersNombresGrupo(userNames);
           console.log("Usuarios:", userNames);
 
@@ -85,7 +85,7 @@ const SolicitudAdmin = () => {
         }
       }
     };
-    
+
     fetchAll();
   }, []);
 
@@ -233,8 +233,8 @@ const SolicitudAdmin = () => {
   }
 
   useEffect(() => {
-    
-    
+
+
   }, [usersNombresGrupo]);
 
   return (
@@ -305,30 +305,7 @@ const SolicitudAdmin = () => {
                     <StyledText style={defaultStyle.titles}>Solicitantes:</StyledText>
                   </div>
                   <div>
-                    {/* <RowPercentage firstChildPercentage={50} >
-                      <div>
-                        <StyledText >Leticia Blanco</StyledText>
-                      </div>
-                      <div>
-                        <StyledText >1, 2</StyledText>
-                      </div>
-                    </RowPercentage>
-                    <RowPercentage firstChildPercentage={50} >
-                      <div>
-                        <StyledText >Vladimir Costas</StyledText>
-                      </div>
-                      <div>
-                        <StyledText >10</StyledText>
-                      </div>
-                    </RowPercentage>
-                    <RowPercentage firstChildPercentage={50} >
-                      <div>
-                        <StyledText >Corina Flores</StyledText>
-                      </div>
-                      <div>
-                        <StyledText >4</StyledText>
-                      </div>
-                    </RowPercentage> */}
+
                     {dataRow.tipoDado === "individual" ? (
                       <RowPercentage firstChildPercentage={50} >
                         <div>
@@ -350,7 +327,15 @@ const SolicitudAdmin = () => {
 
                   </div>
                 </RowPercentage>
-
+                {dataRow.tipoDado === "grupal" &&
+                <RowPercentage firstChildPercentage={50} >
+                <div style={defaultStyle.textSubtitle}>
+                  <StyledText style={defaultStyle.titles}>Grupos:</StyledText>
+                </div>
+                <div>
+                    <StyledText >{JSON.parse(dataRow.grupos).join(', ')}</StyledText>
+                </div>
+              </RowPercentage>} 
                 <RowPercentage firstChildPercentage={50}  >
                   <div style={defaultStyle.textSubtitle}>
                     <StyledText style={defaultStyle.titles}>Servicios:</StyledText>
