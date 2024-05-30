@@ -14,7 +14,7 @@ const PantallaModulos = () => {
 
     useEffect(()=> {
         setRolActual(localStorage.getItem('rol'));   //falta que no sea null
-    }, []);
+    }, [rolActual]);
 
     const contenidoIzq = (
         <div

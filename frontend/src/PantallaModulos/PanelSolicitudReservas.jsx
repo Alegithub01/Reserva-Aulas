@@ -4,24 +4,31 @@ import Card from "./Modulo";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import HistoryIcon from '@mui/icons-material/History';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
-import { useNavigate } from 'react-router-dom';  
-import useAjusteStore from "../Contexts/AjusteStore";
-import { useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import axios from "axios";
 
 const PanelSolicitudReservas = () => {
     const navegar = useNavigate();
     const rol = localStorage.getItem('rol');
-    const fechaInicio = useAjusteStore((state) => state.fechaInicio);
-    const fechaFin = useAjusteStore((state) => state.fechaFin);
-    
-    const controlarFechaSolicitud = () => {
-        const today = new Date().toISOString().split('T')[0];
-        if(today >= fechaInicio && today <= fechaFin){
-            navegar('/Solicitud')
-        }else {
-            alert("No se puede solicitar reserva en este momento");
+
+    const controlarFechaSolicitud = async () => {
+        try {
+            const response = await axios.get('http://localhost:8000/api/admin/settings');
+            const fechaini =  response.data.setting.FechaIniSolicitudes;
+            const fechafin =  response.data.setting.FechaFinSolicitudes;
+            
+            const today = new Date().toISOString().split('T')[0];
+            if (today > fechaini && today < fechafin) {
+                navegar('/Solicitud')
+            } else {
+                alert("No se puede solicitar reserva en este momento");
+            }
+        } catch (error) {
+            console.log(error);
         }
-        
+
+
     };
     const contenidoIzq = (
         <div
@@ -59,18 +66,18 @@ const PanelSolicitudReservas = () => {
             >
                 <StyledText boldText>Solicitudes de Reservas</StyledText>
             </div>
-            <Card 
-                text="Solicitar Reserva" 
+            <Card
+                text="Solicitar Reserva"
                 Icon={AddCircleOutlineIcon}
                 onClick={controlarFechaSolicitud}
             />
-            <Card 
-                text="Ver Disponibilidad" 
+            <Card
+                text="Ver Disponibilidad"
                 Icon={EventAvailableIcon}
                 onClick={() => navegar('/Calendario')}
             />
-            <Card 
-                text="Mis Solicitudes" 
+            <Card
+                text="Mis Solicitudes"
                 Icon={HistoryIcon}
                 onClick={() => navegar('/Reservas')}
             />
@@ -93,10 +100,10 @@ const PanelSolicitudReservas = () => {
 
     return (
         <>
-        {rol === "2" &&
-            <SplitScreenLayout left={contenidoIzq} right={contenidoDer} />
-        }
-        s</>
+            {rol === "2" &&
+                <SplitScreenLayout left={contenidoIzq} right={contenidoDer} />
+            }
+            s</>
     );
 };
 

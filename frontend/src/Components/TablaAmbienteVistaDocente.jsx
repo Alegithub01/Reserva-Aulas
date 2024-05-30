@@ -6,6 +6,8 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { useTheme } from '../Contexts/ThemeContext';
 import useAmbienteStore from '../Contexts/AmbienteStore';
+import axios from 'axios';
+import { URL_API } from '../services/const';
 
 const StyledDataGrid = styled(DataGrid)`
   .MuiDataGrid-cell {
@@ -23,6 +25,7 @@ const StyledDataGrid = styled(DataGrid)`
 export default function TablaAmbienteVista({informacion}) {
   const [filas, setFilas] = useState([...informacion]);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [maxContiguosPosibles, setMaxContiguosPosibles] = useState(2);
   const setAmbientesSeleccionados = useAmbienteStore(state => state.setAmbientesSeleccionados);
 
   useEffect(() => {
@@ -33,11 +36,22 @@ export default function TablaAmbienteVista({informacion}) {
     setAmbientesSeleccionados([...selectedRows]);
   }, [selectedRows]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+    try{
+      const response = await axios.get(`${URL_API}/admin/settings`);
+      setMaxContiguosPosibles(response.data.setting.NroMaxAmbientContiguos);
+    } catch(error){
+      console.log("Error al obtener y filtrar ambientes:", error);
+    }}
+    fetchData();
+  },[maxContiguosPosibles]);
+
   const handleCheckboxClick = (row, isChecked) => {
     setSelectedRows(prev => {
-      if (isChecked && prev.length < 2) {
-        if (prev.length === 0 || (prev.length === 1 && prev[0].nombre.slice(0, 3) === row.nombre.slice(0, 3))) {
-          return [...prev, row];
+      if (isChecked && prev.length < maxContiguosPosibles) {
+        if (prev.length === 0 || prev.every(r => r.nombre.slice(0, 3) === row.nombre.slice(0, 3))) {
+           return [...prev, row];
         }
       } else if (!isChecked) {
         return prev.filter(r => r.id !== row.id);

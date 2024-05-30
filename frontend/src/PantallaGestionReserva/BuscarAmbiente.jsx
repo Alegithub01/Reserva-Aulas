@@ -82,6 +82,7 @@ const BusquedaAmbiente = () => {
       setFiltroFecha(fecha.toString());
     }
   }, [tipoAmbiente, capacidad, horario, servicios, fecha]);
+
         // El filtro que se construye para la consulta tiene esta forma:
         // capacidad:"200"
         // fecha:"2024-05-11"  // verificar que el ambiente este disponible en esta fecha (segun las solicitudes)
@@ -260,6 +261,7 @@ const BusquedaAmbiente = () => {
   };
 
   const verificaServicios = (ambientesSeleccionados, servicios) => {
+    console.log('ambientesSeleccionados', servicios);
     const serviciosRequeridos = servicios.split(',').map(servicio => servicio.trim());
     return ambientesSeleccionados.every(ambiente => {
       if (!ambiente.servicios) return false;
@@ -481,7 +483,7 @@ const BusquedaAmbiente = () => {
                   />
                   <Casilla2
                     label="Servicios"
-                    checked={servicios === "" || verificaServicios(ambientesSeleccionados, servicios)}
+                    checked={servicios === "" || servicios === null || verificaServicios(ambientesSeleccionados, servicios)}
                   />
                 </div>
               ) : (

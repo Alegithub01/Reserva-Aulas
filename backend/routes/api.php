@@ -102,3 +102,4 @@ Route::get('/materia-docente/info/{nombreMateria}', [MateriaDocenteController::c
 
 // settings
 Route::post('admin/settings', [AdminSettingsController::class, 'store']);
+Route::get('admin/settings', [AdminSettingsController::class, 'show']);
