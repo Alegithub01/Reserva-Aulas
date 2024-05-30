@@ -21,6 +21,8 @@ import { useLocation } from 'react-router-dom';
 import useAmbienteStore from "../Contexts/AmbienteStore";
 import Button from '@mui/material/Button';
 import useNavegacionStore from "../Contexts/NavegacionStore";
+import axios from "axios";
+import { URL_API } from "../services/const";
 
 const SolicitudAdmin = () => {
   const { theme } = useTheme();
@@ -28,7 +30,8 @@ const SolicitudAdmin = () => {
   const location = useLocation();
   const { dataRow } = location.state || {};
   console.log("DataRow:", dataRow);
-  const [nombreDocente, setNombreDocente] = useState('user'); //nombre del docente loggeado
+  const [nombreDocente, setNombreDocente] = useState(localStorage.getItem('nombre')); //nombre del docente loggeado
+  const [usersNombresGrupo, setUsersNombresGrupo] = useState([]);
   const [tipo, setTipo] = useState(dataRow.tipo_ambiente || "aula");
   const [sugerido, setSugerido] = useState({
     aceptar: false,
@@ -60,6 +63,30 @@ const SolicitudAdmin = () => {
       setSugerido({ aceptar: true, rechazar: false, cancelar: nClick === 0 });
     }
     console.log("Ambientes seleccionados:", ambientesSeleccionados);
+
+    const fetchAll = async () => {
+      console.log(dataRow.tipoDado);
+      if (dataRow.tipoDado === "grupal") {
+        const users = JSON.parse(dataRow.users_id);
+  
+        try {
+          const userPromises = users.map(user => 
+            axios.get(`${URL_API}/users/${user}/nombre`)
+          );
+          
+          const userResponses = await Promise.all(userPromises);
+          const userNames = userResponses.map(response => ({ nombre: response.data.nombre }));
+  
+          setUsersNombresGrupo(userNames);
+          console.log("Usuarios:", userNames);
+
+        } catch (error) {
+          console.error("Error al obtener los nombres de los usuarios:", error);
+        }
+      }
+    };
+    
+    fetchAll();
   }, []);
 
   const defaultStyle = {
@@ -205,6 +232,11 @@ const SolicitudAdmin = () => {
     }
   }
 
+  useEffect(() => {
+    
+    
+  }, [usersNombresGrupo]);
+
   return (
     <div style={defaultStyle.outerContainer}>
       <div style={defaultStyle.container}>
@@ -297,14 +329,25 @@ const SolicitudAdmin = () => {
                         <StyledText >4</StyledText>
                       </div>
                     </RowPercentage> */}
-                    <RowPercentage firstChildPercentage={50} >
-                      <div>
-                        <StyledText >{nombreDocente}</StyledText>
-                      </div>
-                      <div>
-                        <StyledText >{JSON.parse(dataRow.grupo).join(', ')}</StyledText>
-                      </div>
-                    </RowPercentage>
+                    {dataRow.tipoDado === "individual" ? (
+                      <RowPercentage firstChildPercentage={50} >
+                        <div>
+                          <StyledText >{nombreDocente}</StyledText>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                          <StyledText >{JSON.parse(dataRow.grupo).join(', ')}</StyledText>
+                        </div>
+                      </RowPercentage>
+                    ) :
+                      (usersNombresGrupo.map((user) => (
+                        <RowPercentage firstChildPercentage={50} key={user}>
+                          <div>
+                            <StyledText >{user.nombre}</StyledText>
+                          </div>
+                        </RowPercentage>
+                      ))
+                      )}
+
                   </div>
                 </RowPercentage>
 

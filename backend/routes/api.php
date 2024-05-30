@@ -53,6 +53,7 @@ Route::get('users/{nombre}/id', [UserController::class, 'obtenerIdPorNombre']);
 Route::get('/listaRoles', [RolController::class, 'index']);
 Route::put('/updateUser/{id}', [UserController::class, 'updateUser']);
 Route::put('/disableUser/{id}', [UserController::class, 'disableUser']);
+Route::get('/users/{id}/nombre', [UserController::class, 'obtenerNombrePorId']);
 
 //Rutas de los ambientes
 Route::get('/ambientes', [AmbienteController::class, 'index'])->name('ambientes.index');

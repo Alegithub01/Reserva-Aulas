@@ -18,13 +18,29 @@ const GestionReservas = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        let tipoDado = 'individual';
         const response = await axios.get(`${URL_API}/solicitudes`);
-        const data = response.data.map(item => ({
-          ...item,
+        const data = response.data.map(item => {
+          return {
+            ...item,
           horas: JSON.parse(item.horas), 
-          motivo: item.detalle 
-        }));
-        setReservas(data);
+          motivo: item.detalle,
+          tipoDado: tipoDado
+        }
+        });
+        tipoDado = 'grupal';
+        const response2 = await axios.get(`${URL_API}/solicitudes-grupales`);
+        const data2 = response2.data.map(item => {
+          return {
+            ...item,
+          horas: JSON.parse(item.horas), 
+          motivo: item.detalle,
+          tipoDado: tipoDado
+        }
+        });
+        const data3 = [...data, ...data2];
+        setReservas(data3);
+
       } catch (error) {
         console.error('Error al obtener las reservas:', error);
       }
@@ -32,6 +48,7 @@ const GestionReservas = () => {
 
     fetchData();
   }, []);
+
   useEffect(() => {
     const ordenarReservas = () => {
       switch (orden) {

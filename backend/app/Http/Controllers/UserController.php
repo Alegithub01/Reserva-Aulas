@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Controllers\RolController;
+
 class UserController extends Controller
 {
     /**
@@ -22,6 +23,21 @@ class UserController extends Controller
         if ($usuario) {
             // Retornar el ID del usuario encontrado
             return response()->json(['id' => $usuario->id], 200);
+        } else {
+            // Retornar un error si el usuario no existe
+            return response()->json(['error' => 'Usuario no encontrado'], 404);
+        }
+    }
+
+    public function obtenerNombrePorId($id)
+    {
+        // Buscar el usuario por su ID
+        $usuario = User::find($id);
+
+        // Verificar si el usuario existe
+        if ($usuario) {
+            // Retornar el nombre del usuario encontrado
+            return response()->json(['nombre' => $usuario->nombres], 200);
         } else {
             // Retornar un error si el usuario no existe
             return response()->json(['error' => 'Usuario no encontrado'], 404);
