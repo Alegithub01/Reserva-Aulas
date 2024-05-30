@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-key */
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Box from '@mui/material/Box';
 import { GridRowModes, GridActionsCellItem, GridRowEditStopReasons, DataGrid } from '@mui/x-data-grid';
 import styled from 'styled-components';
@@ -28,29 +28,29 @@ const StyledDataGrid = styled(DataGrid)`
     height: 100%; 
   }
 `;
-const prueba = [
-  { id: 1, nombre: 'Juan Perez', materia: 'Base de datos 1', grupo: '1', fecha: '2024-10-10', horario: '8:15-09:45, 09:45-11:15', servicios: 'Proyector', Motivo: 'Taller', estado: 'Pendiente', ambiente: '' },
-  { id: 2, nombre: 'Jose Perez', materia: 'Programación', grupo: '2', fecha: '2024-10-10', horario: '8:15-09:45', servicios: 'Proyector', Motivo: 'Examen parcial', estado: 'Aceptada', ambiente: '692H' },
-  { id: 3, nombre: 'Maria Perez', materia: 'Base de datos 1', grupo: '1', fecha: '2024-10-15', horario: '8:15-09:45', servicios: 'Proyector', Motivo: 'Examen final', estado: 'Rechazada', ambiente: '' },
-  { id: 4, nombre: 'Maria Perez', materia: 'Base de datos 2', grupo: '3', fecha: '2024-10-20', horario: '18:45-20:15', servicios: 'Wi-fi', Motivo: 'Taller', estado: 'Aceptada', ambiente: '690A, 690B' },
-];
+// const prueba = [
+//   { id: 1, nombre: 'Juan Perez', materia: 'Base de datos 1', grupo: '1', fecha: '2024-10-10', horario: '8:15-09:45, 09:45-11:15', servicios: 'Proyector', Motivo: 'Taller', estado: 'Pendiente', ambiente: '' },
+//   { id: 2, nombre: 'Jose Perez', materia: 'Programación', grupo: '2', fecha: '2024-10-10', horario: '8:15-09:45', servicios: 'Proyector', Motivo: 'Examen parcial', estado: 'Aceptada', ambiente: '692H' },
+//   { id: 3, nombre: 'Maria Perez', materia: 'Base de datos 1', grupo: '1', fecha: '2024-10-15', horario: '8:15-09:45', servicios: 'Proyector', Motivo: 'Examen final', estado: 'Rechazada', ambiente: '' },
+//   { id: 4, nombre: 'Maria Perez', materia: 'Base de datos 2', grupo: '3', fecha: '2024-10-20', horario: '18:45-20:15', servicios: 'Wi-fi', Motivo: 'Taller', estado: 'Aceptada', ambiente: '690A, 690B' },
+// ];
 
-/*
-const prueba = [];
 
-axios.get('http://localhost:8000/api/solicitudes-formato')
-  .then(response => {
-    // Assign the response data to prueba
-    prueba = response.data;
-    console.log(prueba);
-  })
-  .catch(error => {
-    console.error('Error fetching solicitudes:', error);
-  });
-*/
+// let prueba = [];
+
+// axios.get('http://localhost:8000/api/solicitudes-formato')
+//   .then(response => {
+//     // Assign the response data to prueba
+//     prueba = response.data;
+//     console.log(prueba);
+//   })
+//   .catch(error => {
+//     console.error('Error fetching solicitudes:', error);
+//   });
+
 
 const TablaSolicitudes = () => {
-  const [filas, setFilas] = useState(prueba);
+  const [filas, setFilas] = useState([]);
   const [filasModificadas, setFilasModificadas] = useState({});
   const [dialogoAbierto, setDialogoAbierto] = useState({
     eliminar: false,
@@ -64,9 +64,20 @@ const TablaSolicitudes = () => {
   });
   const [idATratar, setidATratar] = useState(null);
 
-  // useEffect(() => {
-  //   setFilas(informacion);
-  // }, [informacion]);
+   useEffect(() => {
+    const datita = async () => {
+      await axios.get('http://localhost:8000/api/solicitudes-formato')
+      .then(response => {
+        // Assign the response data to prueba
+        console.log(response.data);
+        setFilas(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching solicitudes:', error);
+      });
+    }
+    datita();
+   }, []);
 
   const manejoEdicionParar = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
@@ -144,7 +155,7 @@ const TablaSolicitudes = () => {
   const manejoConfirmarEliminar = async () => {
     try {
       // PARA BACKEND ----------************-**----------------------
-      // await axios.delete(`http://127.0.0.1:8000/api/solicitudes/${idATratar}`); //cambiar url
+      await axios.delete(`http://127.0.0.1:8000/api/solicitudes/${idATratar}`); //cambiar url
       setFilas((filasAnteriores) => filasAnteriores.filter((fila) => fila.id !== idATratar));
       setDialogoAbierto(false);
       setidATratar(null);
