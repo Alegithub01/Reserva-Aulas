@@ -30,4 +30,13 @@ class AdminSettingsController extends Controller
             'setting' => $setting
         ], 201);
     }
+
+    public function show()
+    {
+        // Obtener la configuración de la base de datos
+        $setting = AdminSetting::first();
+
+        // Retornar una respuesta JSON
+        return response()->json(['setting' => $setting], 200);
+    }
 }
