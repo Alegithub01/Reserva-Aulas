@@ -23,6 +23,7 @@ class CreateSolicitudGrupalTable extends Migration
             $table->string('servicios', 255)->nullable();
             $table->string('detalle', 255)->nullable();
             $table->date('fecha');
+            $table->integer('capacidad');
             $table->string('estado', 255)->default('En espera');
             $table->timestamps(); // This line includes both created_at and updated_at columns
         });

@@ -40,7 +40,7 @@ class SolicitudGrupal extends Model
      * @var array
      */
     protected $fillable = [
-        'users_id', 'grupos', 'tipo_ambiente', 'materia', 'horas', 'servicios', 'detalle', 'fecha', 'estado'
+        'users_id', 'grupos', 'tipo_ambiente', 'materia', 'horas', 'servicios', 'detalle', 'fecha', 'estado', 'capacidad'
     ];
 
     /**

@@ -25,6 +25,7 @@ class SolicitudGrupalController extends Controller
         $solicitudGrupal->servicios = $request->servicios;
         $solicitudGrupal->detalle = $request->detalle;
         $solicitudGrupal->fecha = $request->fecha;
+        $solicitudGrupal->capacidad = $request->capacidad;
         $solicitudGrupal->estado = $request->estado ?? 'En espera'; // Default to 'En espera' if not provided
         $solicitudGrupal->save();
 
@@ -48,6 +49,7 @@ class SolicitudGrupalController extends Controller
         $solicitudGrupal->servicios = $request->servicios;
         $solicitudGrupal->detalle = $request->detalle;
         $solicitudGrupal->fecha = $request->fecha;
+        $solicitudGrupal->capacidad = $request->capacidad;
         $solicitudGrupal->estado = $request->estado ?? $solicitudGrupal->estado; // Keep current state if not provided
         $solicitudGrupal->save();
 
