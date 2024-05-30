@@ -170,7 +170,8 @@ const FormularioGrupal = ({ aulaInicial, horaInicial }) => {
 
   const obtenerMaterias = async () => {
     const nombreDocente = localStorage.getItem("nombre");
-    const docenteId = await obtenerDocenteId(nombreDocente.split(' ')[0]);
+    const nombre =  nombreDocente.split(' ');
+    const docenteId = await obtenerDocenteId(nombre.slice(0,-2).join(' '));
     if (docenteId) {
       obtenerMateriasDesdeBackend(docenteId);
     } else {
@@ -181,7 +182,6 @@ const FormularioGrupal = ({ aulaInicial, horaInicial }) => {
     try {
       if (docenteId === null) {
         const response = await axios.get(`${URL_API}/users/${nombreDocente}/id`);
-        setDocenteId(response.data.id);
         return response.data.id;
       } else {
         return docenteId;

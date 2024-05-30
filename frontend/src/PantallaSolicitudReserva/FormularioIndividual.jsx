@@ -230,7 +230,8 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   };
 
   const obtenerMaterias = async () => {
-    const docenteId = await obtenerDocenteId(nombreDocente.split(' ')[0]);
+    const nombre =  nombreDocente.split(' ');
+    const docenteId = await obtenerDocenteId(nombre.slice(0,-2).join(' '));
     console.log(docenteId)
     if (docenteId) {
       obtenerMateriasDesdeBackend(docenteId);
