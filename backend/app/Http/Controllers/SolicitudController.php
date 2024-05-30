@@ -99,4 +99,53 @@ class SolicitudController extends Controller
         return $solicitudes;
     }
 
+    public function getSolicitudesFormatted()
+    {
+        $solicitudes = Solicitud::with(['user', 'reservas'])->get();
+        $formattedSolicitudes = $solicitudes->map(function ($solicitud) {
+            $ambientes = $solicitud->reservas->pluck('aula')->implode(', ');
+
+            // Decode the 'horas' JSON string to an array if it's not already an array
+            $horas = is_array($solicitud->horas) ? $solicitud->horas : json_decode($solicitud->horas, true);
+
+            return [
+                'id' => $solicitud->id,
+                'nombre' => $solicitud->user->nombres . ' ' . $solicitud->user->apellidos,
+                'materia' => $solicitud->materia,
+                'grupo' => is_array($solicitud->grupo) ? implode(', ', $solicitud->grupo) : $solicitud->grupo,
+                'fecha' => $solicitud->fecha->format('Y-m-d'),
+                'horario' => $this->formatearHoras($horas),
+                'servicios' => $solicitud->servicios,
+                'Motivo' => $solicitud->detalle,
+                'estado' => ucfirst($solicitud->estado),
+                'ambiente' => $ambientes,
+            ];
+        });
+
+        return response()->json($formattedSolicitudes, 200);
+    }
+
+    private function formatearHoras($horas)
+    {
+        $horarios = [
+            "10" => "06:45-08:15",
+            "20" => "08:15-09:45",
+            "30" => "09:45-11:15",
+            "40" => "11:15-12:45",
+            "50" => "12:45-14:15",
+            "60" => "14:15-15:45",
+            "70" => "15:45-17:15",
+            "80" => "17:15-18:45",
+            "90" => "18:45-20:15",
+            "100" => "20:15-21:45",
+        ];
+
+        return implode(', ', array_map(function($hora) use ($horarios) {
+            return $horarios[$hora] ?? $hora;
+        }, $horas));
+    }
+
+
+
+
 }

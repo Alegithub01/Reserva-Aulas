@@ -13,6 +13,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
+import axios from 'axios';
 
 const StyledDataGrid = styled(DataGrid)`
   .MuiDataGrid-cell {
@@ -32,6 +33,20 @@ const prueba = [
   { id: 3, nombre: 'Maria Perez', materia: 'Base de datos 1', grupo: '1', fecha: '2024-10-15', horario: '8:15-09:45', servicios: 'Proyector', Motivo: 'Examen final', estado: 'Rechazada', ambiente: '' },
   { id: 4, nombre: 'Maria Perez', materia: 'Base de datos 2', grupo: '3', fecha: '2024-10-20', horario: '18:45-20:15', servicios: 'Wi-fi', Motivo: 'Taller', estado: 'Aceptada', ambiente: '690A, 690B' },
 ];
+
+/*
+const prueba = [];
+
+axios.get('http://localhost:8000/api/solicitudes-formato')
+  .then(response => {
+    // Assign the response data to prueba
+    prueba = response.data;
+    console.log(prueba);
+  })
+  .catch(error => {
+    console.error('Error fetching solicitudes:', error);
+  });
+*/
 
 const TablaSolicitudes = () => {
   const [filas, setFilas] = useState(prueba);
