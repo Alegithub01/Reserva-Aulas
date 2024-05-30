@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 import { useState, useCallback } from "react";
 import Box from '@mui/material/Box';
 import { GridRowModes, GridActionsCellItem, GridRowEditStopReasons, DataGrid } from '@mui/x-data-grid';
@@ -36,8 +37,17 @@ const prueba = [
 const TablaSolicitudes = () => {
   const [filas, setFilas] = useState(prueba);
   const [filasModificadas, setFilasModificadas] = useState({});
-  const [dialogoAbierto, setDialogoAbierto] = useState(false);
-  const [idAEliminar, setIdAEliminar] = useState(null);
+  const [dialogoAbierto, setDialogoAbierto] = useState({
+    eliminar: false,
+    aceptar: false,
+    rechazar: false,
+  });
+  const [mensajeDialogo, setMensajeDialogo] = useState({
+    eliminando: '¿Estás seguro de que deseas eliminar esta solicitud?',
+    aceptando: '¿Estás seguro de que deseas aceptar esta oferta de ambientes?',
+    rechazando: '¿Estás seguro de que deseas rechazar esta oferta de ambientes?',
+  });
+  const [idATratar, setidATratar] = useState(null);
 
   // useEffect(() => {
   //   setFilas(informacion);
@@ -97,8 +107,8 @@ const TablaSolicitudes = () => {
   }, [filas, filasModificadas, setFilasModificadas]);
 
   const abrirDialogoEliminar = (id) => () => {
-    setIdAEliminar(id);
-    setDialogoAbierto(true);
+    setidATratar(id);
+    setDialogoAbierto({ aceptar: false, eliminar: true, rechazar: false });
   };
 
   const manejoCancelar = (id) => () => {
@@ -119,10 +129,10 @@ const TablaSolicitudes = () => {
   const manejoConfirmarEliminar = async () => {
     try {
       // PARA BACKEND ----------************-**----------------------
-      // await axios.delete(`http://127.0.0.1:8000/api/solicitudes/${idAEliminar}`); //cambiar url
-      setFilas((filasAnteriores) => filasAnteriores.filter((fila) => fila.id !== idAEliminar));
+      // await axios.delete(`http://127.0.0.1:8000/api/solicitudes/${idATratar}`); //cambiar url
+      setFilas((filasAnteriores) => filasAnteriores.filter((fila) => fila.id !== idATratar));
       setDialogoAbierto(false);
-      setIdAEliminar(null);
+      setidATratar(null);
     } catch (error) {
       console.error('Error al eliminar la fila.', error);
     }
@@ -130,7 +140,7 @@ const TablaSolicitudes = () => {
 
   const manejoCancelarEliminacion = () => {
     setDialogoAbierto(false);
-    setIdAEliminar(null);
+    setidATratar(null);
   };
   const procesarFilasModificadas = (nuevaFila) => {
     const filaModificada = { ...nuevaFila, isNew: false };
@@ -140,13 +150,27 @@ const TablaSolicitudes = () => {
   };
 
   const manejoAceptarOferta = (id) => () => {
+    setidATratar(id);
+    setDialogoAbierto({ aceptar: true, eliminar: false, rechazar: false });
+  }
+
+  const manejarAceptarOfertaBackend = () => () => {
     console.log('Se aceptó la solicitud');
-      // PARA BACKEND ----------************-**----------------------
+    // PARA BACKEND ----------************-**----------------------
+    setDialogoAbierto(false);
+    setidATratar(null);
   }
 
   const manejoRechazarOferta = (id) => () => {
-    console.log('Se rechazó la solicitud');
-      // PARA BACKEND ----------************-**----------------------
+    setidATratar(id);
+    setDialogoAbierto({ aceptar: false, eliminar: false, rechazar: true });
+  }
+
+  const manejarRechazarOfertaBackend = () => () => {
+    console.log('Se rechazó la solicitud', idATratar);
+    // PARA BACKEND ----------************-**----------------------
+    setDialogoAbierto(false);
+    setidATratar(null);
   }
   const columnas = [
     {
@@ -352,19 +376,29 @@ const TablaSolicitudes = () => {
         }}
       />
       <Dialog
-        open={dialogoAbierto}
+        open={dialogoAbierto.aceptar || dialogoAbierto.eliminar || dialogoAbierto.rechazar}
         onClose={manejoCancelarEliminacion}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            ¿Estás seguro de que deseas eliminar esta solicitud?
+            {dialogoAbierto.aceptar && mensajeDialogo.aceptando}
+            {dialogoAbierto.eliminar && mensajeDialogo.eliminando}
+            {dialogoAbierto.rechazar && mensajeDialogo.rechazando}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={manejoCancelarEliminacion}>Cancelar</Button>
-          <Button onClick={manejoConfirmarEliminar} autoFocus>
+          <Button onClick={()=>{
+            if (dialogoAbierto.aceptar){
+              manejarAceptarOfertaBackend()();
+            }else if(dialogoAbierto.rechazar){
+              manejarRechazarOfertaBackend()();
+            }else{
+              manejoConfirmarEliminar();
+            }
+          }} autoFocus>
             Aceptar
           </Button>
         </DialogActions>

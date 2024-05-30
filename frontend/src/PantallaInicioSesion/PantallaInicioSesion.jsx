@@ -64,12 +64,12 @@ const PantallaInicioSesionProfesor = () => {
         email: correoElectronico,
         password: contrasena,
       })
-      .then((response) => {
+      .then(async (response) => {
         if (response.data.access_token) {
           console.log("Token recibido:", response.data.access_token);
           localStorage.setItem("access_token", response.data.access_token);
           // Después de iniciar sesión con éxito, obtén el rol del usuario
-          obtenerRolUsuario();
+          await obtenerRolUsuario();
         } else {
           console.error("No se recibió token");
           setSnackbarMessage("Inicio de sesión fallido");
@@ -105,21 +105,11 @@ const PantallaInicioSesionProfesor = () => {
         console.log("Respuesta del servidor:", response.data);
         const nombreRol = response.data.role_name;
         console.log("Nombre del rol:", nombreRol);
-        // Redirige según el rol del usuario
-        if (nombreRol === "Administrador") {
-          console.log("Redirigiendo a ModulosAdmin...");
-          navegar("/ModulosAdmin");
-        } else {
-          console.log("Redirigiendo a Panel-Solicitud-Reservas...");
-          navegar("/Panel-Solicitud-Reservas");
-        }
         await obtenerDatosUsuario();
         navegar("/ModulosAdmin");
       })
       .catch((error) => {
         console.error("Error al obtener el rol del usuario:", error);
-        // Si hay un error al obtener el rol, redirige a una página de error o maneja de otra forma
-        //navegar("/error");
       });
       
   };
