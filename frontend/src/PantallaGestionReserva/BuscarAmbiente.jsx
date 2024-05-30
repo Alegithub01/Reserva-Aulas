@@ -61,7 +61,6 @@ const BusquedaAmbiente = () => {
   );
   const [informacionFinal, setInformacionFinal] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [maxContiguosPosibles, setMaxContiguosPosibles] = useState(2);
   const setAmbientesSeleccionados = useAmbienteStore(
     (state) => state.setAmbientesSeleccionados
   );
@@ -84,16 +83,6 @@ const BusquedaAmbiente = () => {
     }
   }, [tipoAmbiente, capacidad, horario, servicios, fecha]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-    try{
-      const response = await axios.get(`${URL_API}/admin/settings`);
-      setMaxContiguosPosibles(response.data.setting.NroMaxAmbientContiguos);
-    } catch(error){
-      console.log("Error al obtener y filtrar ambientes:", error);
-    }}
-    fetchData();
-  },[]);
         // El filtro que se construye para la consulta tiene esta forma:
         // capacidad:"200"
         // fecha:"2024-05-11"  // verificar que el ambiente este disponible en esta fecha (segun las solicitudes)
@@ -135,7 +124,7 @@ const BusquedaAmbiente = () => {
               data = retryResponse.data;
         
               // Verificar si hay menos de 2 ambientes
-              if (data.length < maxContiguosPosibles) {
+              if (data.length < 2) {
                 setMensajeNoResultados("No se encontraron ambientes que cumplan con las especificaciones.");
                 setLoading(false);
                 return;
@@ -272,6 +261,7 @@ const BusquedaAmbiente = () => {
   };
 
   const verificaServicios = (ambientesSeleccionados, servicios) => {
+    console.log('ambientesSeleccionados', servicios);
     const serviciosRequeridos = servicios.split(',').map(servicio => servicio.trim());
     return ambientesSeleccionados.every(ambiente => {
       if (!ambiente.servicios) return false;
@@ -493,7 +483,7 @@ const BusquedaAmbiente = () => {
                   />
                   <Casilla2
                     label="Servicios"
-                    checked={servicios === "" || verificaServicios(ambientesSeleccionados, servicios)}
+                    checked={servicios === "" || servicios === null || verificaServicios(ambientesSeleccionados, servicios)}
                   />
                 </div>
               ) : (

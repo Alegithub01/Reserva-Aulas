@@ -27,6 +27,7 @@ const SolicitudAdmin = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { dataRow } = location.state || {};
+  console.log("DataRow:", dataRow);
   const [nombreDocente, setNombreDocente] = useState('user'); //nombre del docente loggeado
   const [tipo, setTipo] = useState(dataRow.tipo_ambiente || "aula");
   const [sugerido, setSugerido] = useState({
@@ -35,7 +36,7 @@ const SolicitudAdmin = () => {
     cancelar: false,
   });
   const nClick = useNavegacionStore((state) => state).nClick;
-  const {setClicks} = useNavegacionStore();
+  const { setClicks } = useNavegacionStore();
   const ambientesSeleccionados = useAmbienteStore(state => state.ambientesSeleccionados);
   const setAmbientesSeleccionados = useAmbienteStore(state => state.setAmbientesSeleccionados);
   const [ambienteSeleccionado, setAmbienteSeleccionado] = useState(
@@ -46,15 +47,18 @@ const SolicitudAdmin = () => {
     rechazar: false,
   });
 
+  const dateFinal = new Date(dataRow.fecha).toISOString().split('T')[0];
+  console.log("Fecha final:", dateFinal);
+
   useEffect(() => {
     setAmbienteSeleccionado(ambientesSeleccionados.map(amb => amb.nombre).join(', '));
     console.log("Ambientes recibidos:", ambientesSeleccionados);
     setAmbientesSeleccionados([]);
-    if(ambienteSeleccionado.trim() === "") {
-      setSugerido({aceptar: false, rechazar: nClick!==0, cancelar: nClick===0});
-    }else{
-      setSugerido({aceptar: true, rechazar: false, cancelar: nClick===0});
-    }    
+    if (ambienteSeleccionado.trim() === "") {
+      setSugerido({ aceptar: false, rechazar: nClick !== 0, cancelar: nClick === 0 });
+    } else {
+      setSugerido({ aceptar: true, rechazar: false, cancelar: nClick === 0 });
+    }
     console.log("Ambientes seleccionados:", ambientesSeleccionados);
   }, []);
 
@@ -117,7 +121,7 @@ const SolicitudAdmin = () => {
       fontSize: '16px',
       letterSpacing: '1px',
       color: 'rgb(255, 255, 255)',
-      backgroundColor:  sugerido.aceptar?theme.green:theme.disabled,
+      backgroundColor: sugerido.aceptar ? theme.green : theme.disabled,
       border: 'none',
       borderRadius: '15px',
       transition: 'all 0.3s ease 0s',
@@ -129,7 +133,7 @@ const SolicitudAdmin = () => {
       fontSize: '16px',
       letterSpacing: '1px',
       color: 'rgb(255, 255, 255)',
-      backgroundColor: sugerido.rechazar?theme.red:theme.disabled,
+      backgroundColor: sugerido.rechazar ? theme.red : theme.disabled,
       border: 'none',
       borderRadius: '15px',
       transition: 'all 0.3s ease 0s',
@@ -141,7 +145,7 @@ const SolicitudAdmin = () => {
       fontSize: '16px',
       letterSpacing: '1px',
       color: 'rgb(255, 255, 255)',
-      backgroundColor: sugerido.cancelar?theme.highlight:theme.disabled,
+      backgroundColor: sugerido.cancelar ? theme.highlight : theme.disabled,
       border: 'none',
       borderRadius: '15px',
       transition: 'all 0.3s ease 0s',
@@ -153,36 +157,36 @@ const SolicitudAdmin = () => {
   const navegarPreload = () => {
     setClicks(nClick + 1);
     const dataToSend = {
-        seleccion: true,
-        fecha: dataRow.fecha,
-        capacidad: dataRow.capacidad,
-        horario: dataRow.horas,
-        servicios: dataRow.servicios,
-        tipoAmbiente: dataRow.tipo_ambiente
+      seleccion: true,
+      fecha: dateFinal,
+      capacidad: dataRow.capacidad,
+      horario: dataRow.horas,
+      servicios: dataRow.servicios,
+      tipoAmbiente: dataRow.tipo_ambiente
     };
 
     navigate('/Buscar-Ambiente', { state: dataToSend });
-};
-  const manejoConfirmarAceptar =() => {
+  };
+  const manejoConfirmarAceptar = () => {
     console.log("se confirma");
-    setDialogoAbierto({...dialogoAbierto, aceptar: false});
+    setDialogoAbierto({ ...dialogoAbierto, aceptar: false });
     //backend acaa
     navigate('/Solicitudes');
   }
 
-  const manejoCancelarAceptar =() => {
-    setDialogoAbierto({...dialogoAbierto, aceptar: false})
+  const manejoCancelarAceptar = () => {
+    setDialogoAbierto({ ...dialogoAbierto, aceptar: false })
   }
 
-  const manejoConfirmarRechazar =() => {
+  const manejoConfirmarRechazar = () => {
     console.log("se rechaza");
-    setDialogoAbierto({...dialogoAbierto, rechazar: false});
+    setDialogoAbierto({ ...dialogoAbierto, rechazar: false });
     //backend acaa
     navigate('/Solicitudes');
   }
 
-  const manejoCancelarRechazar =() => {
-    setDialogoAbierto({...dialogoAbierto, rechazar: false})
+  const manejoCancelarRechazar = () => {
+    setDialogoAbierto({ ...dialogoAbierto, rechazar: false })
   }
 
   const navegarBuscar = () => {
@@ -190,14 +194,14 @@ const SolicitudAdmin = () => {
   }
 
   const manipularBotonAceptar = () => {
-    if(sugerido.aceptar){
-      setDialogoAbierto({...dialogoAbierto, aceptar: true})
+    if (sugerido.aceptar) {
+      setDialogoAbierto({ ...dialogoAbierto, aceptar: true })
     }
   }
 
   const manipularBotonRechazar = () => {
-    if(sugerido.rechazar){
-      setDialogoAbierto({...dialogoAbierto, rechazar: true})
+    if (sugerido.rechazar) {
+      setDialogoAbierto({ ...dialogoAbierto, rechazar: true })
     }
   }
 
@@ -251,7 +255,7 @@ const SolicitudAdmin = () => {
                     <StyledText style={defaultStyle.titles}>Fecha:</StyledText>
                   </div>
                   <div>
-                    <StyledText >{dataRow.fecha}</StyledText>
+                    <StyledText >{dateFinal}</StyledText>
                   </div>
                 </RowPercentage>
 
@@ -260,7 +264,7 @@ const SolicitudAdmin = () => {
                     <StyledText style={defaultStyle.titles}>Horario:</StyledText>
                   </div>
                   <div>
-                      <StyledText>{dataRow.horas.join(', ')}</StyledText>
+                    <StyledText>{dataRow.horas.join(', ')}</StyledText>
                   </div>
                 </RowPercentage>
 
@@ -298,7 +302,7 @@ const SolicitudAdmin = () => {
                         <StyledText >{nombreDocente}</StyledText>
                       </div>
                       <div>
-                        <StyledText >{dataRow.grupo.join(', ')}</StyledText>
+                        <StyledText >{JSON.parse(dataRow.grupo).join(', ')}</StyledText>
                       </div>
                     </RowPercentage>
                   </div>
@@ -347,8 +351,8 @@ const SolicitudAdmin = () => {
                         value={ambienteSeleccionado}
                         onChange={e => setAmbienteSeleccionado(e.target.value)}
                         defaultValue=" "
-                        // isRequired={true}
-                        // validationMessage=""
+                      // isRequired={true}
+                      // validationMessage=""
                       />
                     </div>
                     <div style={defaultStyle.iconContainer} onClick={() => { }}>
@@ -364,7 +368,7 @@ const SolicitudAdmin = () => {
             <div style={defaultStyle.buttonsContainer}>
               <Button1 onClick={manipularBotonAceptar} style={defaultStyle.botonConfirmar}>Aceptar</Button1>
               <Button1 onClick={manipularBotonRechazar} style={defaultStyle.botonRechazar}>Rechazar</Button1>
-              <Button1 onClick={navegarBuscar}  style={defaultStyle.botonCancelar}>Cancelar</Button1>
+              <Button1 onClick={navegarBuscar} style={defaultStyle.botonCancelar}>Cancelar</Button1>
             </div>
             <Dialog
               open={dialogoAbierto.aceptar}
