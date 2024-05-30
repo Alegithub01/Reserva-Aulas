@@ -17,7 +17,8 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   const [nroPeriodosLab, setNroPeriodosLab] = useState(0);
   const [materia, setMateria] = useState('');
   const nombre = localStorage.getItem('nombre');
-  const [nombreDocente, setNombreDocente] = useState(nombre); //nombre del docente loggeado
+  const nombreProceso =  nombre.split(' ');
+  const [nombreDocente, setNombreDocente] = useState(nombreProceso.slice(0,-2).join(' ')); //nombre del docente loggeado
   const [grupoDocente, setGrupoDocente] = useState(''); //grupo del docente loggeado
   const [capacidad, setCapacidad] = useState(0); //capacidad del aula
   const [ambiente, setAmbiente] = useState('');
@@ -230,8 +231,8 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
   };
 
   const obtenerMaterias = async () => {
-    const nombre =  nombreDocente.split(' ');
-    const docenteId = await obtenerDocenteId(nombre.slice(0,-2).join(' '));
+    
+    const docenteId = await obtenerDocenteId(nombreDocente);
     console.log(docenteId)
     if (docenteId) {
       obtenerMateriasDesdeBackend(docenteId);
