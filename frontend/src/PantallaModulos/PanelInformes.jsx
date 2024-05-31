@@ -1,21 +1,13 @@
 import SplitScreenLayout from "../Components/SplitScreenLayout";
 import StyledText from "../StyledText";
 import Card from "./Modulo";
-import IconoPersonas from '@mui/icons-material/PeopleAlt';
-import IconoAmbientes from '@mui/icons-material/RoomPreferences';
-import IconoReservas from '@mui/icons-material/EventNote';
-import BookOnlineIcon from '@mui/icons-material/BookOnline';
+import IconoAmbientesSolicitados from '@mui/icons-material/TrendingUp';
+import IconoFechasDemandadas from '@mui/icons-material/DateRange';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from "react";
 
-const PantallaModulos = () => {
-    const [rolActual, setRolActual] = useState("1");
+const PanelInformes = () => {
     const navegar = useNavigate();
-
-    useEffect(()=> {
-        setRolActual(localStorage.getItem('rol'));   //falta que no sea null
-    }, []);
-
+    const rol = localStorage.getItem('rol');
     const contenidoIzq = (
         <div
             style={{
@@ -47,41 +39,21 @@ const PantallaModulos = () => {
                     justifyContent: "center",
                     alignItems: "center",
                     margin: "15px 0",
+                    height: "15%",
                 }}
             >
-                <StyledText boldText>Módulos</StyledText>
+                <StyledText boldText>Panel de Informes</StyledText>
             </div>
-            {rolActual === "1" && 
-            <>
             <Card 
-                text="Gestión de Usuarios" 
-                Icon={IconoPersonas}
-                onClick={() => navegar('/Panel-Gestion-Usuarios')}
+                text="Ambientes Más y Menos Solicitados" 
+                Icon={IconoAmbientesSolicitados}
+                onClick={() => navegar('/Ambientes-Solicitados')}
             />
             <Card 
-                text="Gestión de Ambientes" 
-                Icon={IconoAmbientes}
-                onClick={() => navegar('/Panel-Gestion-Ambientes')}
+                text="Fechas Más y Menos Demandadas" 
+                Icon={IconoFechasDemandadas}
+                onClick={() => navegar('/Fechas-Demandadas')}
             />
-            <Card 
-                text="Gestión de Reservas" 
-                Icon={IconoReservas}
-                onClick={() => navegar('/Panel-Gestion-Reservas')}
-            />
-            <Card 
-                text="Informes" 
-                Icon={IconoReservas}
-                onClick={() => navegar('/Panel-Informes')}
-            />
-            </> }
-            {rolActual === "2" &&
-            <>
-            <Card 
-                text="Solicitud de Reservas" 
-                Icon={BookOnlineIcon}
-                onClick={() => navegar('/Panel-Solicitud-Reservas')}
-            />
-            </>}
             <div
                 style={{
                     display: "flex",
@@ -95,16 +67,17 @@ const PantallaModulos = () => {
                 onMouseOver={(e) => (e.target.style.color = "#3661EB")}
                 onMouseOut={(e) => (e.target.style.color = "black")}
             >
-                <StyledText enlaceText> Cerrar sesión </StyledText>
             </div>
         </div>
     );
 
     return (
         <>
+        {rol === "1" &&
             <SplitScreenLayout left={contenidoIzq} right={contenidoDer} />
+        }
         </>
     );
 };
 
-export default PantallaModulos;
+export default PanelInformes;
