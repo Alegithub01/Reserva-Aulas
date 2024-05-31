@@ -14,7 +14,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import TextInput from "../Utils/TextInput";
 import SearchIcon from '@mui/icons-material/Search';
-import { IconButton } from "@mui/material";
+import { DialogTitle, IconButton, TextField } from "@mui/material";
 import Button1 from "../Utils/Button";
 import { Dialog, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import { useLocation } from 'react-router-dom';
@@ -30,7 +30,7 @@ const SolicitudAdmin = () => {
   const location = useLocation();
   const { dataRow } = location.state || {};
   console.log("DataRow:", dataRow);
-  const [nombreDocente, setNombreDocente] = useState(localStorage.getItem('nombre')); //nombre del docente loggeado
+  const [nombreDocente, setNombreDocente] = useState(''); //nombre del docente loggeado
   const [usersNombresGrupo, setUsersNombresGrupo] = useState([]);
   const [tipo, setTipo] = useState(dataRow.tipo_ambiente || "aula");
   const [sugerido, setSugerido] = useState({
@@ -66,6 +66,14 @@ const SolicitudAdmin = () => {
 
     const fetchAll = async () => {
       console.log(dataRow.tipoDado);
+      if (dataRow.tipoDado === "individual") {
+        try {
+          const response = await axios.get(`${URL_API}/users/${dataRow.user_id}/nombre`);
+          setNombreDocente(response.data.nombre);
+        } catch (error) {
+          console.error("Error al obtener el nombre del docente:", error);
+        }
+      }
       if (dataRow.tipoDado === "grupal") {
         const users = JSON.parse(dataRow.users_id);
 
@@ -73,12 +81,9 @@ const SolicitudAdmin = () => {
           const userPromises = users.map(user =>
             axios.get(`${URL_API}/users/${user}/nombre`)
           );
-
           const userResponses = await Promise.all(userPromises);
           const userNames = userResponses.map(response => ({ nombre: response.data.nombre }));
-
           setUsersNombresGrupo(userNames);
-          console.log("Usuarios:", userNames);
 
         } catch (error) {
           console.error("Error al obtener los nombres de los usuarios:", error);
@@ -423,16 +428,38 @@ const SolicitudAdmin = () => {
               onClose={manejoCancelarRechazar}
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
+              PaperProps={{
+                component: 'form',
+                onSubmit: (e) => {
+                  e.preventDefault();
+                  //manejoConfirmarRechazar();
+                  const formData = new FormData(e.currentTarget);
+                  const formJson = Object.fromEntries(formData.entries());
+                  const text = formJson.text;
+                  console.log("Texto:", text);
+                  manejoCancelarRechazar();   //es como un handleClose
+                }
+              }}
             >
+              <DialogTitle>Rechazar solicitud</DialogTitle> 
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  ¿Estás seguro de que deseas rechazar esta solicitud?
                   Se enviará un correo a los solicitantes.
-                </DialogContentText>
+                  Razones por las cuales se rechaza la solicitud:
+                </DialogContentText> 
+                <div style={{margin:20}}></div>
+                <TextInput
+                  label="Especificaciones"
+                  fullWidth={true}
+                  onChange={()=> {}}
+                  onBlur={()=> {}}
+                  isRequired={true}
+                  validationMessage=""
+                />
               </DialogContent>
               <DialogActions>
                 <Button onClick={manejoCancelarRechazar}>Cancelar</Button>
-                <Button onClick={manejoConfirmarRechazar} autoFocus>
+                <Button onClick={manejoConfirmarRechazar} autoFocus type="submit">
                   Aceptar
                 </Button>
               </DialogActions>
