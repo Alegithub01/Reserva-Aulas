@@ -23,6 +23,7 @@ import Button from '@mui/material/Button';
 import useNavegacionStore from "../Contexts/NavegacionStore";
 import axios from "axios";
 import { URL_API } from "../services/const";
+import SelectorChip from "../Utils/SelectorChip";
 
 const SolicitudAdmin = () => {
   const { theme } = useTheme();
@@ -52,6 +53,12 @@ const SolicitudAdmin = () => {
 
   const dateFinal = new Date(dataRow.fecha).toISOString().split('T')[0];
   console.log("Fecha final:", dateFinal);
+  const [razones, setRazones] = useState([]);
+  const [especificaciones, setEspecificaciones] = useState('');
+  const [mensajeError, setMensajeError] = useState({
+    razones: '',
+    especificaciones: '',
+  });
 
   useEffect(() => {
     setAmbienteSeleccionado(ambientesSeleccionados.map(amb => amb.nombre).join(', '));
@@ -212,9 +219,20 @@ const SolicitudAdmin = () => {
 
   const manejoConfirmarRechazar = () => {
     console.log("se rechaza");
-    setDialogoAbierto({ ...dialogoAbierto, rechazar: false });
-    //backend acaa
-    navigate('/Solicitudes');
+    console.log("Razones:", razones);
+    console.log("Especificaciones:", especificaciones);
+    
+    validarRazones();
+    if(mensajeError.razones === ''){
+      setDialogoAbierto({ ...dialogoAbierto, rechazar: false });
+      //backend acaa
+      navigate('/Solicitudes');
+    }else{
+      console.log("Error en razones:", mensajeError.razones);
+      setDialogoAbierto({ ...dialogoAbierto, rechazar: true });
+    }
+    
+    
   }
 
   const manejoCancelarRechazar = () => {
@@ -237,10 +255,13 @@ const SolicitudAdmin = () => {
     }
   }
 
-  useEffect(() => {
-
-
-  }, [usersNombresGrupo]);
+  const validarRazones = () => {
+    if (razones.length === 0) {
+      setMensajeError(message => ({ ...message, razones: 'Seleccione las razones generales' }));
+    }else{
+      setMensajeError(message => ({ ...message, razones: '' }));
+    }
+  }
 
   return (
     <div style={defaultStyle.outerContainer}>
@@ -445,21 +466,32 @@ const SolicitudAdmin = () => {
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
                   Se enviará un correo a los solicitantes.
-                  Razones por las cuales se rechaza la solicitud:
+                  Mencione las razones por las cuales se rechaza la solicitud:
                 </DialogContentText> 
+                <div style={{margin:20}}></div>
+                <SelectorChip 
+                  options= {[
+                    'No existen ambientes para la fecha solicitada',
+                    'No existen ambientes para el horario seleccionado',
+                    'No existen ambientes para la capacidad solicitada',
+                  ]}
+                  label="Razones generales"
+                  changeValor={setRazones}
+                  llenado={validarRazones}
+                  mensajeValidacion={mensajeError.razones}
+                />
                 <div style={{margin:20}}></div>
                 <TextInput
                   label="Especificaciones"
                   fullWidth={true}
-                  onChange={()=> {}}
-                  onBlur={()=> {}}
-                  isRequired={true}
-                  validationMessage=""
+                  onChange={(event) => setEspecificaciones(event.target.value)}
+                  pattern="^.{0,10}$"
+                  validationMessage={mensajeError.especificaciones}
                 />
               </DialogContent>
               <DialogActions>
                 <Button onClick={manejoCancelarRechazar}>Cancelar</Button>
-                <Button onClick={manejoConfirmarRechazar} autoFocus type="submit">
+                <Button onClick={manejoConfirmarRechazar}>
                   Aceptar
                 </Button>
               </DialogActions>
