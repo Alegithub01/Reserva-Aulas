@@ -106,7 +106,7 @@ const EntradaFecha = ({etiqueta, enCambio, onBlur = null, mensajeValidacion, val
           height: 'auto',
           overflow: 'hidden'
         }}>
-          Seleccione una fecha próxima a la actual
+          {/* Seleccione una fecha próxima a la actual */}
         </div>
       
       )}

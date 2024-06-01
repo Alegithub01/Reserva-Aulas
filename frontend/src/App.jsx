@@ -25,6 +25,8 @@ import PanelGestionReservas from "./PantallaModulos/PanelGestionReservas";
 import AdministrarSolicitudes from "./PantallaGestionReserva/AdministrarSolicitudes"
 import SolicitudAdmin from "./PantallaGestionReserva/SolicitudAdmin";
 import AjustarSolicitudes from "./PantallaGestionReserva/AjustarSolicitudes";
+import PanelInformes from "./PantallaModulos/PanelInformes"
+import AmbientesAsignados from "./Informes/AmbientesAsignados"
 
 function App() {
   return (
@@ -381,6 +383,36 @@ function App() {
                   }}
                 >
                   <AjustarSolicitudes />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/Panel-Informes"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100%",
+                  }}
+                >
+                  <PanelInformes />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/Ambientes-Solicitados"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100%",
+                  }}
+                >
+                  <AmbientesAsignados />
                 </div>
               </Layout>
             }
