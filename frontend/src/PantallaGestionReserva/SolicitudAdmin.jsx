@@ -14,7 +14,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import TextInput from "../Utils/TextInput";
 import SearchIcon from '@mui/icons-material/Search';
-import { IconButton } from "@mui/material";
+import { DialogTitle, IconButton, TextField } from "@mui/material";
 import Button1 from "../Utils/Button";
 import { Dialog, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import { useLocation } from 'react-router-dom';
@@ -23,6 +23,7 @@ import Button from '@mui/material/Button';
 import useNavegacionStore from "../Contexts/NavegacionStore";
 import axios from "axios";
 import { URL_API } from "../services/const";
+import SelectorChip from "../Utils/SelectorChip";
 
 const SolicitudAdmin = () => {
   const { theme } = useTheme();
@@ -30,7 +31,7 @@ const SolicitudAdmin = () => {
   const location = useLocation();
   const { dataRow } = location.state || {};
   console.log("DataRow:", dataRow);
-  const [nombreDocente, setNombreDocente] = useState(localStorage.getItem('nombre')); //nombre del docente loggeado
+  const [nombreDocente, setNombreDocente] = useState(''); //nombre del docente loggeado
   const [usersNombresGrupo, setUsersNombresGrupo] = useState([]);
   const [tipo, setTipo] = useState(dataRow.tipo_ambiente || "aula");
   const [sugerido, setSugerido] = useState({
@@ -52,6 +53,12 @@ const SolicitudAdmin = () => {
 
   const dateFinal = new Date(dataRow.fecha).toISOString().split('T')[0];
   console.log("Fecha final:", dateFinal);
+  const [razones, setRazones] = useState([]);
+  const [especificaciones, setEspecificaciones] = useState('');
+  const [mensajeError, setMensajeError] = useState({
+    razones: '',
+    especificaciones: '',
+  });
 
   useEffect(() => {
     setAmbienteSeleccionado(ambientesSeleccionados.map(amb => amb.nombre).join(', '));
@@ -66,6 +73,14 @@ const SolicitudAdmin = () => {
 
     const fetchAll = async () => {
       console.log(dataRow.tipoDado);
+      if (dataRow.tipoDado === "individual") {
+        try {
+          const response = await axios.get(`${URL_API}/users/${dataRow.user_id}/nombre`);
+          setNombreDocente(response.data.nombre);
+        } catch (error) {
+          console.error("Error al obtener el nombre del docente:", error);
+        }
+      }
       if (dataRow.tipoDado === "grupal") {
         const users = JSON.parse(dataRow.users_id);
 
@@ -73,12 +88,9 @@ const SolicitudAdmin = () => {
           const userPromises = users.map(user =>
             axios.get(`${URL_API}/users/${user}/nombre`)
           );
-
           const userResponses = await Promise.all(userPromises);
           const userNames = userResponses.map(response => ({ nombre: response.data.nombre }));
-
           setUsersNombresGrupo(userNames);
-          console.log("Usuarios:", userNames);
 
         } catch (error) {
           console.error("Error al obtener los nombres de los usuarios:", error);
@@ -207,9 +219,20 @@ const SolicitudAdmin = () => {
 
   const manejoConfirmarRechazar = () => {
     console.log("se rechaza");
-    setDialogoAbierto({ ...dialogoAbierto, rechazar: false });
-    //backend acaa
-    navigate('/Solicitudes');
+    console.log("Razones:", razones);
+    console.log("Especificaciones:", especificaciones);
+    
+    validarRazones();
+    if(mensajeError.razones === ''){
+      setDialogoAbierto({ ...dialogoAbierto, rechazar: false });
+      //backend acaa
+      navigate('/Solicitudes');
+    }else{
+      console.log("Error en razones:", mensajeError.razones);
+      setDialogoAbierto({ ...dialogoAbierto, rechazar: true });
+    }
+    
+    
   }
 
   const manejoCancelarRechazar = () => {
@@ -232,10 +255,13 @@ const SolicitudAdmin = () => {
     }
   }
 
-  useEffect(() => {
-
-
-  }, [usersNombresGrupo]);
+  const validarRazones = () => {
+    if (razones.length === 0) {
+      setMensajeError(message => ({ ...message, razones: 'Seleccione las razones generales' }));
+    }else{
+      setMensajeError(message => ({ ...message, razones: '' }));
+    }
+  }
 
   return (
     <div style={defaultStyle.outerContainer}>
@@ -423,16 +449,49 @@ const SolicitudAdmin = () => {
               onClose={manejoCancelarRechazar}
               aria-labelledby="alert-dialog-title"
               aria-describedby="alert-dialog-description"
+              PaperProps={{
+                component: 'form',
+                onSubmit: (e) => {
+                  e.preventDefault();
+                  //manejoConfirmarRechazar();
+                  const formData = new FormData(e.currentTarget);
+                  const formJson = Object.fromEntries(formData.entries());
+                  const text = formJson.text;
+                  console.log("Texto:", text);
+                  manejoCancelarRechazar();   //es como un handleClose
+                }
+              }}
             >
+              <DialogTitle>Rechazar solicitud</DialogTitle> 
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                  ¿Estás seguro de que deseas rechazar esta solicitud?
                   Se enviará un correo a los solicitantes.
-                </DialogContentText>
+                  Mencione las razones por las cuales se rechaza la solicitud:
+                </DialogContentText> 
+                <div style={{margin:20}}></div>
+                <SelectorChip 
+                  options= {[
+                    'No existen ambientes para la fecha solicitada',
+                    'No existen ambientes para el horario seleccionado',
+                    'No existen ambientes para la capacidad solicitada',
+                  ]}
+                  label="Razones generales"
+                  changeValor={setRazones}
+                  llenado={validarRazones}
+                  mensajeValidacion={mensajeError.razones}
+                />
+                <div style={{margin:20}}></div>
+                <TextInput
+                  label="Especificaciones"
+                  fullWidth={true}
+                  onChange={(event) => setEspecificaciones(event.target.value)}
+                  pattern="^.{0,10}$"
+                  validationMessage={mensajeError.especificaciones}
+                />
               </DialogContent>
               <DialogActions>
                 <Button onClick={manejoCancelarRechazar}>Cancelar</Button>
-                <Button onClick={manejoConfirmarRechazar} autoFocus>
+                <Button onClick={manejoConfirmarRechazar}>
                   Aceptar
                 </Button>
               </DialogActions>
