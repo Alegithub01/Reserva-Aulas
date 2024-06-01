@@ -26,7 +26,7 @@ import AdministrarSolicitudes from "./PantallaGestionReserva/AdministrarSolicitu
 import SolicitudAdmin from "./PantallaGestionReserva/SolicitudAdmin";
 import AjustarSolicitudes from "./PantallaGestionReserva/AjustarSolicitudes";
 import PanelInformes from "./PantallaModulos/PanelInformes"
-import AmbientesSolicitados from "./Informes/AmbientesSolicitados"
+import AmbientesAsignados from "./Informes/AmbientesAsignados"
 
 function App() {
   return (
@@ -412,7 +412,7 @@ function App() {
                     height: "100%",
                   }}
                 >
-                  <AmbientesSolicitados />
+                  <AmbientesAsignados />
                 </div>
               </Layout>
             }

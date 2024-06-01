@@ -31,7 +31,7 @@ ChartJS.register(
   ArcElement
 );
 
-const AmbientesSolicitados = () => {
+const AmbientesAsignados = () => {
   const navigate = useNavigate();
   const { theme } = useTheme();
   const [fechaInicio, setFechaInicio] = useState("");
@@ -39,30 +39,30 @@ const AmbientesSolicitados = () => {
   const [tipoAmbiente, setTipoAmbiente] = useState("Todos");
   const [informacionFinal, setInformacionFinal] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [solicitudesIndividuales, setSolicitudesIndividuales] = useState([]);
-  const [solicitudesGrupales, setSolicitudesGrupales] = useState([]);
+  const [asignacionesIndividuales, setAsignacionesIndividuales] = useState([]);
+  const [asignacionesGrupales, setAsignacionesGrupales] = useState([]);
   const [ambientes, setAmbientes] = useState([]);
 
   useEffect(() => {
-    const fetchSolicitudesIndividuales = async () => {
+    const fetchAsignacionesIndividuales = async () => {
       try {
         const response = await axios.get(
           "https://my-json-server.typicode.com/WilliamCallao/Fake-api/solicitudes_individuales"
         );
-        setSolicitudesIndividuales(response.data);
+        setAsignacionesIndividuales(response.data);
       } catch (error) {
-        console.error("Error fetching solicitudes individuales:", error);
+        console.error("Error fetching asignaciones individuales:", error);
       }
     };
 
-    const fetchSolicitudesGrupales = async () => {
+    const fetchAsignacionesGrupales = async () => {
       try {
         const response = await axios.get(
           "https://my-json-server.typicode.com/WilliamCallao/Fake-api/solicitudes_grupales"
         );
-        setSolicitudesGrupales(response.data);
+        setAsignacionesGrupales(response.data);
       } catch (error) {
-        console.error("Error fetching solicitudes grupales:", error);
+        console.error("Error fetching asignaciones grupales:", error);
       }
     };
 
@@ -77,32 +77,32 @@ const AmbientesSolicitados = () => {
       }
     };
 
-    fetchSolicitudesIndividuales();
-    fetchSolicitudesGrupales();
+    fetchAsignacionesIndividuales();
+    fetchAsignacionesGrupales();
     fetchAmbientes();
   }, []);
 
   useEffect(() => {
     buscarAmbientes();
-  }, [solicitudesIndividuales, solicitudesGrupales, ambientes]);
+  }, [asignacionesIndividuales, asignacionesGrupales, ambientes]);
 
   const buscarAmbientes = () => {
     setLoading(true);
-    const todasSolicitudes = [...solicitudesIndividuales, ...solicitudesGrupales];
-    const filtradas = todasSolicitudes.filter((solicitud) => {
-      const fechaSolicitud = new Date(solicitud.fecha);
+    const todasAsignaciones = [...asignacionesIndividuales, ...asignacionesGrupales];
+    const filtradas = todasAsignaciones.filter((asignacion) => {
+      const fechaAsignacion = new Date(asignacion.fecha);
       const fechaInicioDate = fechaInicio ? new Date(fechaInicio) : null;
       const fechaFinDate = fechaFin ? new Date(fechaFin) : null;
-      const ambiente = ambientes.find((a) => a.nombre === solicitud.nombre_ambiente.nombre);
-      const tipoSolicitud = ambiente?.tipo || solicitud.nombre_ambiente.nombre;
+      const ambiente = ambientes.find((a) => a.nombre === asignacion.nombre_ambiente.nombre);
+      const tipoAsignacion = ambiente?.tipo || asignacion.nombre_ambiente.nombre;
 
       const cumpleFecha =
-        (!fechaInicioDate || fechaSolicitud >= fechaInicioDate) &&
-        (!fechaFinDate || fechaSolicitud <= fechaFinDate);
+        (!fechaInicioDate || fechaAsignacion >= fechaInicioDate) &&
+        (!fechaFinDate || fechaAsignacion <= fechaFinDate);
 
       const cumpleTipo =
         tipoAmbiente === "Todos" ||
-        tipoSolicitud.toLowerCase() === tipoAmbiente.toLowerCase();
+        tipoAsignacion.toLowerCase() === tipoAmbiente.toLowerCase();
 
       return cumpleFecha && cumpleTipo;
     });
@@ -119,11 +119,11 @@ const AmbientesSolicitados = () => {
           planta: ambiente ? ambiente.planta : "Desconocido",
           ubicacion: ambiente ? ambiente.ubicacion : "Desconocido",
           servicios: ambiente ? ambiente.servicios || "Ninguno" : "Ninguno",
-          vecesSolicitadas: 0,
+          vecesAsignadas: 0,
           horas: []
         };
       }
-      acc[ambienteNombre].vecesSolicitadas += 1;
+      acc[ambienteNombre].vecesAsignadas += 1;
       acc[ambienteNombre].horas = acc[ambienteNombre].horas.concat(curr.horas);
       return acc;
     }, {});
@@ -179,8 +179,8 @@ const AmbientesSolicitados = () => {
     labels: informacionFinal.map(info => info.nombre),
     datasets: [
       {
-        label: 'Veces solicitadas',
-        data: informacionFinal.map(info => info.vecesSolicitadas),
+        label: 'Veces asignadas',
+        data: informacionFinal.map(info => info.vecesAsignadas),
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         borderColor: 'rgba(75, 192, 192, 1)',
         borderWidth: 1,
@@ -253,15 +253,15 @@ const AmbientesSolicitados = () => {
     ],
   };
 
-  const ambientesNoSolicitados = ambientes.filter(ambiente =>
+  const ambientesNoAsignados = ambientes.filter(ambiente =>
     !informacionFinal.some(info => info.nombre === ambiente.nombre)
   );
 
-  const topAmbientesNoSolicitados = ambientesNoSolicitados.length > 0
-    ? ambientesNoSolicitados.map(ambiente => ({ ...ambiente, vecesSolicitadas: 0 }))
-    : informacionFinal.sort((a, b) => a.vecesSolicitadas - b.vecesSolicitadas).slice(0, 5);
+  const topAmbientesNoAsignados = ambientesNoAsignados.length > 0
+    ? ambientesNoAsignados.map(ambiente => ({ ...ambiente, vecesAsignadas: 0 }))
+    : informacionFinal.sort((a, b) => a.vecesAsignadas - b.vecesAsignadas).slice(0, 5);
 
-  const horarioMasSolicitado = Object.entries(frecuenciaHoras).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const horarioMasAsignado = Object.entries(frecuenciaHoras).sort((a, b) => b[1] - a[1]).slice(0, 5);
 
   return (
     <div style={defaultStyle.outerContainer}>
@@ -300,7 +300,7 @@ const AmbientesSolicitados = () => {
                 alignItems: "center",
               }}
             >
-              <StyledText boldText>Ambientes Solicitados</StyledText>
+              <StyledText boldText>Ambientes Asignados</StyledText>
             </div>
 
             <RowPercentage firstChildPercentage={80} gap="10px">
@@ -353,7 +353,7 @@ const AmbientesSolicitados = () => {
                   <th style={defaultStyle.tableCell}>Planta</th>
                   <th style={defaultStyle.tableCell}>Ubicación</th>
                   <th style={defaultStyle.tableCell}>Servicios</th>
-                  <th style={defaultStyle.tableCell}>Veces solicitadas</th>
+                  <th style={defaultStyle.tableCell}>Veces asignadas</th>
                 </tr>
               </thead>
               <tbody>
@@ -365,7 +365,7 @@ const AmbientesSolicitados = () => {
                     <td style={defaultStyle.tableCell}>{info.planta}</td>
                     <td style={defaultStyle.tableCell}>{info.ubicacion}</td>
                     <td style={defaultStyle.tableCell}>{info.servicios}</td>
-                    <td style={defaultStyle.tableCell}>{info.vecesSolicitadas}</td>
+                    <td style={defaultStyle.tableCell}>{info.vecesAsignadas}</td>
                   </tr>
                 ))}
               </tbody>
@@ -392,23 +392,23 @@ const AmbientesSolicitados = () => {
                   <p><strong>Ambientes más utilizados:</strong></p>
                   <ul>
                     {informacionFinal.slice(0, 5).map((info, index) => (
-                      <li key={index}>{info.nombre} - {info.vecesSolicitadas} veces solicitadas</li>
+                      <li key={index}>{info.nombre} - {info.vecesAsignadas} veces asignadas</li>
                     ))}
                   </ul>
                 </div>
                 <div style={{ flex: "1 1 30%", minWidth: "200px", margin: "10px" }}>
-                  <p><strong>Horarios más solicitados:</strong></p>
+                  <p><strong>Horarios más asignados:</strong></p>
                   <ul>
-                    {horarioMasSolicitado.map((horario, index) => (
-                      <li key={index}>{horario[0]} - {horario[1]} solicitudes</li>
+                    {horarioMasAsignado.map((horario, index) => (
+                      <li key={index}>{horario[0]} - {horario[1]} asignaciones</li>
                     ))}
                   </ul>
                 </div>
                 <div style={{ flex: "1 1 30%", minWidth: "200px", margin: "10px" }}>
                   <p><strong>Ambientes menos utilizados:</strong></p>
                   <ul>
-                    {topAmbientesNoSolicitados.map((info, index) => (
-                      <li key={index}>{info.nombre} - {info.vecesSolicitadas} veces solicitadas</li>
+                    {topAmbientesNoAsignados.map((info, index) => (
+                      <li key={index}>{info.nombre} - {info.vecesAsignadas} veces asignadas</li>
                     ))}
                   </ul>
                 </div>
@@ -421,4 +421,4 @@ const AmbientesSolicitados = () => {
   );
 };
 
-export default AmbientesSolicitados;
+export default AmbientesAsignados;

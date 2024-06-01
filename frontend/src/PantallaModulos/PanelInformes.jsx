@@ -45,7 +45,7 @@ const PanelInformes = () => {
                 <StyledText boldText>Panel de Informes</StyledText>
             </div>
             <Card 
-                text="Ambientes Más y Menos Solicitados" 
+                text="Ambientes Más y Menos Asignados" 
                 Icon={IconoAmbientesSolicitados}
                 onClick={() => navegar('/Ambientes-Solicitados')}
             />
