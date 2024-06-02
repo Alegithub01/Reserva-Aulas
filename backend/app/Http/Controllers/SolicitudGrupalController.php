@@ -75,4 +75,20 @@ class SolicitudGrupalController extends Controller
 
         return response()->json(['message' => 'Solicitud aceptada'], 200);
     }
+    public function rechazarGrupal($id)
+    {
+        $solicitud_g = SolicitudGrupal::findOrFail($id);
+        $solicitud_g->estado = 'Rechazada';
+        $solicitud_g->save();
+
+        return response()->json(['message' => 'Solicitud rechazada'], 200);
+    }
+
+    public function noAceptarAsignacionGrupal($id)
+    {
+        $solicitud_g = SolicitudGrupal::findOrFail($id);
+        $solicitud_g->estado = 'Asignación rechazada';
+        $solicitud_g->save();
+        return response()->json(['message' => 'Asignación rechazada por el docente'], 200);
+    }
 }

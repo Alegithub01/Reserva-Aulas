@@ -139,7 +139,23 @@ class SolicitudController extends Controller
         }, $horas));
     }
 
+    public function rechazar($id)
+    {
+        $solicitud = Solicitud::findOrFail($id);
 
+        $solicitud->estado = 'Rechazada';
+        $solicitud->save();
 
+        return response()->json(['message' => 'Solicitud rechazada'], 200);
+    }
 
+    public function noAceptarAsignacion($id)
+    {
+        $solicitud = Solicitud::findOrFail($id);
+
+        $solicitud->estado = 'Asignación rechazada';
+        $solicitud->save();
+
+        return response()->json(['message' => 'Asignación rechazada por el docente'], 200);
+    }
 }
