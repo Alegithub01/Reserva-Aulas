@@ -70,15 +70,9 @@ class SolicitudGrupalController extends Controller
             return response()->json(['error' => 'La solicitud ya ha sido aceptada'], 400);
         }
 
-        $reserva = new Reserva();
-        $reserva->solicitable_id = $solicitud_g->id;
-        $reserva->solicitable_type = SolicitudGrupal::class;
-
-        $reserva->save();
-
-        $solicitud_g->estado = 'aceptada';
+        $solicitud_g->estado = 'Aceptada';
         $solicitud_g->save();
 
-        return response()->json(['message' => 'Solicitud aceptada exitosamente'], 200);
+        return response()->json(['message' => 'Solicitud aceptada'], 200);
     }
 }

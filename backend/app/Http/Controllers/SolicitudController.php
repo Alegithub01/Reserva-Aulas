@@ -77,20 +77,14 @@ class SolicitudController extends Controller
     {
         $solicitud = Solicitud::findOrFail($id);
 
-        if ($solicitud->estado === 'aceptada') {
+        if ($solicitud->estado === 'Aceptada') {
             return response()->json(['error' => 'La solicitud ya ha sido aceptada'], 400);
         }
 
-        $reserva = new Reserva();
-        $reserva->solicitable_id = $solicitud->id;
-        $reserva->solicitable_type = Solicitud::class;
-
-        $reserva->save();
-
-        $solicitud->estado = 'aceptada';
+        $solicitud->estado = 'Aceptada';
         $solicitud->save();
 
-        return response()->json(['message' => 'Solicitud aceptada exitosamente'], 200);
+        return response()->json(['message' => 'Solicitud aceptada'], 200);
     }
 
     public function solicitudesAceptadas()

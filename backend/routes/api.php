@@ -13,6 +13,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\SolicitudGrupalController;
 use App\Http\Controllers\MateriaController;
 use App\Http\Controllers\AdminSettingsController;
+use App\Http\Controllers\ReservaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -104,3 +105,8 @@ Route::get('/materia-docente/info/{nombreMateria}', [MateriaDocenteController::c
 // settings
 Route::post('admin/settings', [AdminSettingsController::class, 'store']);
 Route::get('admin/settings', [AdminSettingsController::class, 'show']);
+
+
+//Rutas Reserva
+Route::post('/asignarIndividual', [ReservaController::class, 'asignarIndividual']);
+Route::post('/asignarGrupal', [ReservaController::class, 'asignarGrupal']);
