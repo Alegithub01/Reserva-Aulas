@@ -107,6 +107,16 @@ Route::post('admin/settings', [AdminSettingsController::class, 'store']);
 Route::get('admin/settings', [AdminSettingsController::class, 'show']);
 
 
-//Rutas Reserva
+//Rutas Reserva asignar aulas
 Route::post('/asignarIndividual', [ReservaController::class, 'asignarIndividual']);
 Route::post('/asignarGrupal', [ReservaController::class, 'asignarGrupal']);
+
+//Rechazar solicitud 
+
+Route::post('/rechazarIndividual/{id}', [SolicitudController::class, 'rechazar']);
+Route::post('/rechazarGrupal/{id}', [SolicitudGrupalController::class, 'rechazarGrupal']);
+
+//No aceptar la asignacion por parte del docente
+
+Route::post('/noAceptar/{id}', [SolicitudController::class, 'noAceptarAsignacion']);
+Route::post('/noAceptarGrupal/{id}', [SolicitudGrupalController::class, 'noAceptarAsignacionGrupal']);
