@@ -27,6 +27,7 @@ import SolicitudAdmin from "./PantallaGestionReserva/SolicitudAdmin";
 import AjustarSolicitudes from "./PantallaGestionReserva/AjustarSolicitudes";
 import PanelInformes from "./PantallaModulos/PanelInformes"
 import AmbientesAsignados from "./Informes/AmbientesAsignados"
+import FechasDemandadas from "./Informes/FechasDemandadas"
 
 function App() {
   return (
@@ -413,6 +414,21 @@ function App() {
                   }}
                 >
                   <AmbientesAsignados />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/Fechas-Demandadas"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100%",
+                  }}
+                >
+                  <FechasDemandadas />
                 </div>
               </Layout>
             }
