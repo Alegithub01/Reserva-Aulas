@@ -8,31 +8,31 @@ import EntradaFecha from "../Utils/EntradaFecha";
 import { IconButton, Button } from "@mui/material";
 import axios from "axios";
 import Dropdown from "../Utils/Dropdown";
-import { Bar, Pie } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  BarElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
-  ArcElement,
+  PointElement,
 } from "chart.js";
 
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  BarElement,
+  LineElement,
   Title,
   Tooltip,
   Legend,
-  ArcElement
+  PointElement
 );
 
-const AmbientesAsignados = () => {
+const FechasDemandadas = () => {
   const { theme } = useTheme();
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
@@ -84,10 +84,10 @@ const AmbientesAsignados = () => {
   }, []);
 
   useEffect(() => {
-    buscarAmbientes();
+    buscarFechasSolicitadas();
   }, [asignacionesIndividuales, asignacionesGrupales, ambientes]);
 
-  const buscarAmbientes = () => {
+  const buscarFechasSolicitadas = () => {
     setLoading(true);
     const todasAsignaciones = [
       ...asignacionesIndividuales,
@@ -115,23 +115,20 @@ const AmbientesAsignados = () => {
     });
 
     const agrupadas = filtradas.reduce((acc, curr) => {
-      const ambienteNombre = curr.nombre_ambiente.nombre;
-      const ambiente = ambientes.find((a) => a.nombre === ambienteNombre);
-
-      if (!acc[ambienteNombre]) {
-        acc[ambienteNombre] = {
-          nombre: ambienteNombre,
-          capacidad: ambiente ? ambiente.capacidad : 0,
-          tipo: ambiente ? ambiente.tipo : "Desconocido",
-          planta: ambiente ? ambiente.planta : "Desconocido",
-          ubicacion: ambiente ? ambiente.ubicacion : "Desconocido",
-          servicios: ambiente ? ambiente.servicios || "Ninguno" : "Ninguno",
-          vecesAsignadas: 0,
+      const fecha = curr.fecha;
+      if (!acc[fecha]) {
+        acc[fecha] = {
+          fecha,
+          cantidad: 0,
           horas: [],
+          ambientes: [],
+          materias: [],
         };
       }
-      acc[ambienteNombre].vecesAsignadas += 1;
-      acc[ambienteNombre].horas = acc[ambienteNombre].horas.concat(curr.horas);
+      acc[fecha].cantidad += 1;
+      acc[fecha].horas.push(...curr.horas);
+      acc[fecha].ambientes.push(curr.nombre_ambiente.nombre);
+      acc[fecha].materias.push(curr.materia);
       return acc;
     }, {});
 
@@ -182,20 +179,20 @@ const AmbientesAsignados = () => {
     },
   };
 
-  const dataBar = {
-    labels: informacionFinal.map((info) => info.nombre),
+  const dataLine = {
+    labels: informacionFinal.map((info) => info.fecha),
     datasets: [
       {
-        label: "Veces asignadas",
-        data: informacionFinal.map((info) => info.vecesAsignadas),
-        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        label: "Reservas por día",
+        data: informacionFinal.map((info) => info.cantidad),
+        fill: false,
         borderColor: "rgba(75, 192, 192, 1)",
-        borderWidth: 1,
+        tension: 0.1,
       },
     ],
   };
 
-  const calcularHorarioFrecuencia = () => {
+  const calcularFrecuenciaHoras = () => {
     const horarios = [
       "06:45-08:15",
       "08:15-09:45",
@@ -225,73 +222,31 @@ const AmbientesAsignados = () => {
     return frecuenciaHoras;
   };
 
-  const frecuenciaHoras = calcularHorarioFrecuencia();
+  const frecuenciaHoras = calcularFrecuenciaHoras();
 
-  const dataPie = {
-    labels: Object.keys(frecuenciaHoras),
-    datasets: [
-      {
-        data: Object.values(frecuenciaHoras),
-        backgroundColor: [
-          "#FF6384",
-          "#36A2EB",
-          "#FFCE56",
-          "#FF5733",
-          "#C70039",
-          "#FFC300",
-          "#DAF7A6",
-          "#900C3F",
-          "#581845",
-          "#2ECC71",
-        ],
-        hoverBackgroundColor: [
-          "#FF6384",
-          "#36A2EB",
-          "#FFCE56",
-          "#FF5733",
-          "#C70039",
-          "#FFC300",
-          "#DAF7A6",
-          "#900C3F",
-          "#581845",
-          "#2ECC71",
-        ],
-      },
-    ],
-  };
-
-  const ambientesNoAsignados = ambientes.filter(
-    (ambiente) =>
-      !informacionFinal.some((info) => info.nombre === ambiente.nombre)
-  );
-
-  const topAmbientesNoAsignados =
-    ambientesNoAsignados.length > 0
-      ? ambientesNoAsignados.map((ambiente) => ({
-          ...ambiente,
-          vecesAsignadas: 0,
-        }))
-      : informacionFinal
-          .sort((a, b) => a.vecesAsignadas - b.vecesAsignadas)
-          .slice(0, 5);
-
-  const horarioMasAsignado = Object.entries(frecuenciaHoras)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5);
+  const topAmbientesUtilizados = informacionFinal.reduce((acc, info) => {
+    info.ambientes.forEach((ambiente) => {
+      if (!acc[ambiente]) {
+        acc[ambiente] = 0;
+      }
+      acc[ambiente] += 1;
+    });
+    return acc;
+  }, {});
 
   const exportPDF = () => {
     setTimeout(() => {
       const doc = new jsPDF("portrait", "pt", "a4");
       const margin = 20;
       const scale = 2;
-  
+
       html2canvas(reportRef.current, { scale }).then((canvas) => {
         const imgData = canvas.toDataURL("image/png");
         const imgWidth = doc.internal.pageSize.getWidth() - 2 * margin;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  
+
         doc.addImage(imgData, "PNG", margin, margin, imgWidth, imgHeight);
-        doc.save("informe.pdf");
+        doc.save("informe_fechas_demandadas.pdf");
       });
     }, 1000);
   };
@@ -334,59 +289,59 @@ const AmbientesAsignados = () => {
                 alignItems: "center",
               }}
             >
-              <StyledText boldText>Ambientes Asignados</StyledText>
+              <StyledText boldText>Fechas Demandadas</StyledText>
             </div>
 
-            <RowPercentage firstChildPercentage={70} gap="10px">
-              <RowPercentage firstChildPercentage={90} gap="10px">
-                <Button
-                  variant="contained"
-                  onClick={exportPDF}
-                  style={{
-                    backgroundColor: "white",
-                    borderRadius: "15px",
-                    color: "gray",
-                    border: "2px solid lightgray",
-                    boxShadow: "none",
-                    height: "100%",
-                  }}
-                >
-                  PDF
-                </Button>
-                <RowPercentage firstChildPercentage={50} gap="10px">
-                  <div>
-                    <EntradaFecha
-                      etiqueta="Fecha Inicio"
-                      enCambio={setFechaInicio}
-                      // mensajeValidacion=" "
-                    />
-                  </div>
-                  <div>
-                    <EntradaFecha
-                      etiqueta="Fecha Fin"
-                      enCambio={setFechaFin}
-                      mensajeValidacion=""
-                    />
-                  </div>
-                </RowPercentage>
-              </RowPercentage>
-              <RowPercentage firstChildPercentage={10} gap="10px">
+            <RowPercentage firstChildPercentage={80} gap="10px">
+              
+              <Button 
+                variant="contained" 
+                onClick={exportPDF} 
+                style={{ 
+                  backgroundColor: 'white', 
+                  borderRadius: '20px', 
+                  color: 'gray', 
+                  border: '2px solid lightgray', 
+                  boxShadow: 'none'
+                }}
+              >
+                PDF
+              </Button>
+              <RowPercentage firstChildPercentage={50} gap="10px">
                 <div>
-                  <Dropdown
-                    etiqueta="Tipo de Ambiente"
-                    opciones={[
-                      { value: "Todos", label: "Todos" },
-                      { value: "Aula", label: "Aula" },
-                      { value: "Laboratorio", label: "Laboratorio" },
-                      { value: "Auditorio", label: "Auditorio" },
-                    ]}
-                    valorInicial={tipoAmbiente}
-                    cambio={setTipoAmbiente}
+                  <EntradaFecha
+                    etiqueta="Fecha Inicio"
+                    enCambio={setFechaInicio}
                   />
                 </div>
                 <div>
+                  <EntradaFecha
+                    etiqueta="Fecha Fin"
+                    enCambio={setFechaFin}
+                    mensajeValidacion=""
+                  />
+                </div>
+              </RowPercentage>
+
+              <RowPercentage firstChildPercentage={10} gap="10px">
+                <RowPercentage firstChildPercentage={30} gap="10px">
+                  <div>
+                    <Dropdown
+                      etiqueta="Tipo de Ambiente"
+                      opciones={[
+                        { value: "Todos", label: "Todos" },
+                        { value: "Aula", label: "Aula" },
+                        { value: "Laboratorio", label: "Laboratorio" },
+                        { value: "Auditorio", label: "Auditorio" },
+                      ]}
+                      valorInicial={tipoAmbiente}
+                      cambio={setTipoAmbiente}
+                    />
+                  </div>
+                </RowPercentage>
+                <div>
                   <IconButton
-                    onClick={buscarAmbientes}
+                    onClick={buscarFechasSolicitadas}
                     style={{ color: "black" }}
                   >
                     <SearchIcon
@@ -400,27 +355,19 @@ const AmbientesAsignados = () => {
             <table style={defaultStyle.tableStyle}>
               <thead style={defaultStyle.tableHeader}>
                 <tr>
-                  <th style={defaultStyle.tableCell}>Nombre</th>
-                  <th style={defaultStyle.tableCell}>Capacidad</th>
-                  <th style={defaultStyle.tableCell}>Tipo</th>
-                  <th style={defaultStyle.tableCell}>Planta</th>
-                  <th style={defaultStyle.tableCell}>Ubicación</th>
-                  <th style={defaultStyle.tableCell}>Servicios</th>
-                  <th style={defaultStyle.tableCell}>Veces asignadas</th>
+                  <th style={defaultStyle.tableCell}>Fecha</th>
+                  <th style={defaultStyle.tableCell}>Hora</th>
+                  <th style={defaultStyle.tableCell}>Ambiente</th>
+                  <th style={defaultStyle.tableCell}>Materia</th>
                 </tr>
               </thead>
               <tbody>
                 {informacionFinal.map((info, index) => (
                   <tr key={index}>
-                    <td style={defaultStyle.tableCell}>{info.nombre}</td>
-                    <td style={defaultStyle.tableCell}>{info.capacidad}</td>
-                    <td style={defaultStyle.tableCell}>{info.tipo}</td>
-                    <td style={defaultStyle.tableCell}>{info.planta}</td>
-                    <td style={defaultStyle.tableCell}>{info.ubicacion}</td>
-                    <td style={defaultStyle.tableCell}>{info.servicios}</td>
-                    <td style={defaultStyle.tableCell}>
-                      {info.vecesAsignadas}
-                    </td>
+                    <td style={defaultStyle.tableCell}>{info.fecha}</td>
+                    <td style={defaultStyle.tableCell}>{info.horas.join(", ")}</td>
+                    <td style={defaultStyle.tableCell}>{info.ambientes.join(", ")}</td>
+                    <td style={defaultStyle.tableCell}>{info.materias.join(", ")}</td>
                   </tr>
                 ))}
               </tbody>
@@ -433,11 +380,8 @@ const AmbientesAsignados = () => {
                 height: "300px",
               }}
             >
-              <div style={{ width: "45%", height: "100%" }}>
-                <Bar data={dataBar} options={{ maintainAspectRatio: false }} />
-              </div>
-              <div style={{ width: "45%", height: "100%" }}>
-                <Pie data={dataPie} options={{ maintainAspectRatio: false }} />
+              <div style={{ width: "100%", height: "100%" }}>
+                <Line data={dataLine} options={{ maintainAspectRatio: false }} />
               </div>
             </div>
 
@@ -453,13 +397,11 @@ const AmbientesAsignados = () => {
                   style={{ flex: "1 1 30%", minWidth: "200px", margin: "10px" }}
                 >
                   <p>
-                    <strong>Ambientes más utilizados:</strong>
+                    <strong>Horarios más Solicitados:</strong>
                   </p>
                   <ul>
-                    {informacionFinal.slice(0, 5).map((info, index) => (
-                      <li key={index}>
-                        {info.nombre} - {info.vecesAsignadas} veces asignadas
-                      </li>
+                    {Object.entries(frecuenciaHoras).sort((a, b) => b[1] - a[1]).slice(0, 5).map((horario, index) => (
+                      <li key={index}>{horario[0]} - {horario[1]} asignaciones</li>
                     ))}
                   </ul>
                 </div>
@@ -467,27 +409,11 @@ const AmbientesAsignados = () => {
                   style={{ flex: "1 1 30%", minWidth: "200px", margin: "10px" }}
                 >
                   <p>
-                    <strong>Horarios más asignados:</strong>
+                    <strong>Ambientes más Utilizados:</strong>
                   </p>
                   <ul>
-                    {horarioMasAsignado.map((horario, index) => (
-                      <li key={index}>
-                        {horario[0]} - {horario[1]} asignaciones
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div
-                  style={{ flex: "1 1 30%", minWidth: "200px", margin: "10px" }}
-                >
-                  <p>
-                    <strong>Ambientes menos utilizados:</strong>
-                  </p>
-                  <ul>
-                    {topAmbientesNoAsignados.map((info, index) => (
-                      <li key={index}>
-                        {info.nombre} - {info.vecesAsignadas} veces asignadas
-                      </li>
+                    {Object.entries(topAmbientesUtilizados).sort((a, b) => b[1] - a[1]).slice(0, 5).map((ambiente, index) => (
+                      <li key={index}>{ambiente[0]} - {ambiente[1]} veces asignadas</li>
                     ))}
                   </ul>
                 </div>
@@ -500,4 +426,4 @@ const AmbientesAsignados = () => {
   );
 };
 
-export default AmbientesAsignados;
+export default FechasDemandadas;

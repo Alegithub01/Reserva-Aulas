@@ -45,12 +45,12 @@ const PanelInformes = () => {
                 <StyledText boldText>Panel de Informes</StyledText>
             </div>
             <Card 
-                text="Ambientes Más y Menos Asignados" 
+                text="Informe de ambientes" 
                 Icon={IconoAmbientesSolicitados}
                 onClick={() => navegar('/Ambientes-Solicitados')}
             />
             <Card 
-                text="Fechas Más y Menos Demandadas" 
+                text="Informe de fechas" 
                 Icon={IconoFechasDemandadas}
                 onClick={() => navegar('/Fechas-Demandadas')}
             />
