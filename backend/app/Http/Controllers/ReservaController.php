@@ -19,7 +19,7 @@ class ReservaController extends Controller
         $reserva->aulas = json_encode($request->aulas);
 
         $reserva->save();
-        $solicitud->estado = 'Asignado';
+        $solicitud->estado = 'Asignada';
         $solicitud->save();
 
         return response(['message' => 'Aulas asignadas a las reservas'], 200);
@@ -35,7 +35,7 @@ class ReservaController extends Controller
         $reserva->aulas = json_encode($request->aulas);
 
         $reserva->save();
-        $solicitud->estado = 'Asignado';
+        $solicitud->estado = 'Asignada';
         $solicitud->save();
 
         return response(['message' => 'Aulas asignadas a las reservas'], 200);
