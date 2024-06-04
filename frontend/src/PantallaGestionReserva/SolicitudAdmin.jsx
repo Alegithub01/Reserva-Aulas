@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Card from "../Utils/Card";
 import StyledText from "../StyledText";
 import { useTheme } from '../Contexts/ThemeContext';
@@ -209,7 +209,23 @@ const SolicitudAdmin = () => {
   const manejoConfirmarAceptar = () => {
     console.log("se confirma");
     setDialogoAbierto({ ...dialogoAbierto, aceptar: false });
-    //backend acaa
+
+    const ambientesFormato = ambienteSeleccionado.split(', ');
+    try{
+      if(dataRow.tipoDado === "individual"){
+        axios.post(`${URL_API}/asignarIndividual`, {
+          id: dataRow.id,
+          aulas: ambientesFormato,
+        });
+      }else{
+        axios.post(`${URL_API}/asignarGrupal`, {
+          id: dataRow.id,
+          aulas: ambientesFormato,
+        });
+      }
+    }catch(error){
+      console.error("Error al aceptar la solicitud:", error);
+    }
     navigate('/Solicitudes');
   }
 
@@ -226,6 +242,15 @@ const SolicitudAdmin = () => {
     if(mensajeError.razones === ''){
       setDialogoAbierto({ ...dialogoAbierto, rechazar: false });
       //backend acaa
+      try{
+        if(dataRow.tipoDado === "individual"){
+          axios.post(`${URL_API}/rechazarIndividual/${dataRow.id}`);
+        }else{
+          axios.post(`${URL_API}/rechazarGrupal/${dataRow.id}`);
+        }
+      }catch(error){
+        console.error("Error al rechazar la solicitud:", error);
+      }
       navigate('/Solicitudes');
     }else{
       console.log("Error en razones:", mensajeError.razones);

@@ -15,6 +15,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
 import axios from 'axios';
+import { URL_API } from "../services/const";
 
 const StyledDataGrid = styled(DataGrid)`
   .MuiDataGrid-cell {
@@ -183,6 +184,7 @@ const TablaSolicitudes = () => {
   const manejarAceptarOfertaBackend = () => () => {
     console.log('Se aceptó la solicitud');
     // PARA BACKEND ----------************-**----------------------
+    
     setDialogoAbierto(false);
     setidATratar(null);
   }
@@ -194,7 +196,16 @@ const TablaSolicitudes = () => {
 
   const manejarRechazarOfertaBackend = () => () => {
     console.log('Se rechazó la solicitud', idATratar);
-    // PARA BACKEND ----------************-**----------------------
+
+    try{
+      if(idATratar < 1000){
+        axios.post(`${URL_API}/noAceptar/${idATratar}`);
+      }else{
+        axios.post(`${URL_API}/noAceptarGrupal/${idATratar}`);
+      }
+    }catch(error){
+      console.error('Error al aceptar la solicitud.', error);
+    }
     setDialogoAbierto(false);
     setidATratar(null);
   }
