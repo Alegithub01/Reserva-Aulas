@@ -91,4 +91,10 @@ class SolicitudGrupalController extends Controller
         $solicitud_g->save();
         return response()->json(['message' => 'Asignación rechazada por el docente'], 200);
     }
+
+    public function solicitudesAceptadasGrupal()
+    {
+        $solicitudes = SolicitudGrupal::where('estado', 'Aceptada')->get();
+        return $solicitudes;
+    }
 }

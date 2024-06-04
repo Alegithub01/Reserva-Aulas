@@ -89,7 +89,7 @@ class SolicitudController extends Controller
 
     public function solicitudesAceptadas()
     {
-        $solicitudes = Solicitud::where('estado', 'aceptada')->get();
+        $solicitudes = Solicitud::where('estado', 'Aceptada')->get();
         return $solicitudes;
     }
 
@@ -97,7 +97,7 @@ class SolicitudController extends Controller
     {
         $solicitudes = Solicitud::with(['user', 'reservas'])->get();
         $formattedSolicitudes = $solicitudes->map(function ($solicitud) {
-            $ambientes = $solicitud->reservas->pluck('aula')->implode(', ');
+            $ambientes = $solicitud->reservas->pluck('aulas')->implode(', ');
 
             // Decode the 'horas' JSON string to an array if it's not already an array
             $horas = is_array($solicitud->horas) ? $solicitud->horas : json_decode($solicitud->horas, true);
