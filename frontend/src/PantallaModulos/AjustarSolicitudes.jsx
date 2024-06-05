@@ -1,13 +1,13 @@
 import SplitScreenLayout from "../Components/SplitScreenLayout";
 import StyledText from "../StyledText";
 import Card from "./Modulo";
-import { useNavigate } from 'react-router-dom';
-import SearchIcon from '@mui/icons-material/Search';   
+import { useNavigate } from 'react-router-dom'; 
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import MoreTimeIcon from '@mui/icons-material/MoreTime';
 import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
 
-const PanelGestionReservas = () => {
-    const rol = localStorage.getItem('rol');
-    const navegar = useNavigate();
+const AjustarSolicitudes = () => {
+  const navegar = useNavigate();
     const contenidoIzq = (
         <div
             style={{
@@ -19,7 +19,7 @@ const PanelGestionReservas = () => {
             }}
         >
             <StyledText boldWhiteText>Sistema</StyledText>
-            <StyledText boldWhiteText>Reserva de Ambientes</StyledText>
+            <StyledText boldWhiteText>Ajustar Solicitudes</StyledText>
         </div>
     );
 
@@ -42,18 +42,23 @@ const PanelGestionReservas = () => {
                     height: "10%",
                 }}
             >
-                <StyledText boldText>Gestión de Reservas</StyledText>
+                <StyledText boldText>Configuración</StyledText>
             </div>
             
             <Card 
-                text="Buscar Ambientes" 
-                Icon={SearchIcon}
-                onClick={() => navegar('/Buscar-Ambiente')}
+                text="Ajustar Periodos" 
+                Icon={MoreTimeIcon}
+                onClick={() => navegar('/Ajustar-periodos')}
             />
             <Card 
-                text="Administrar Solicitudes" 
+                text="Delimitar fechas" 
+                Icon={DateRangeIcon}
+                onClick={() => navegar('/Delimitar-fechas')}
+            />
+            <Card 
+                text="Ajustar Contiguos" 
                 Icon={DisplaySettingsIcon}
-                onClick={() => navegar('/Solicitudes')}
+                onClick={() => navegar('/Ajustar-Contiguos')}
             />
             <div
                 style={{
@@ -74,11 +79,10 @@ const PanelGestionReservas = () => {
 
     return (
         <>
-        {rol === "1" &&
-            <SplitScreenLayout left={contenidoIzq} right={contenidoDer} />
-        }   
+          <SplitScreenLayout left={contenidoIzq} right={contenidoDer} />
         </>
     );
 };
 
-export default PanelGestionReservas;
+
+export default AjustarSolicitudes;
