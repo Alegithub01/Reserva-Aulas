@@ -31,6 +31,31 @@ class AdminSettingsController extends Controller
         ], 201);
     }
 
+    public function update(Request $request)
+    {
+        // Encuentra la configuración existente por ID
+        $setting = AdminSetting::findOrFail(1);
+
+        // Valida los datos de la solicitud
+        $validatedData = $request->validate([
+            'nroMaxPeriodAuditorio' => 'sometimes|integer',
+            'nroMaxPeriodAula' => 'sometimes|integer',
+            'nroMaxPeriodLaboratorio' => 'sometimes|integer',
+            'FechaIniSolicitudes' => 'sometimes|date',
+            'FechaFinSolicitudes' => 'sometimes|date',
+            'NroMaxAmbientContiguos' => 'sometimes|integer',
+        ]);
+
+        // Actualiza la configuración existente con los datos validados
+        $setting->update($validatedData);
+
+        // Retornar una respuesta JSON
+        return response()->json([
+            'message' => 'Configuración actualizada exitosamente.',
+            'setting' => $setting
+        ], 200);
+    }
+
     public function show()
     {
         // Obtener la configuración de la base de datos

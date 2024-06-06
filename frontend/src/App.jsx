@@ -24,10 +24,13 @@ import PantallaReglas from "./PantallaAmbientes/PantallaReglas";
 import PanelGestionReservas from "./PantallaModulos/PanelGestionReservas";
 import AdministrarSolicitudes from "./PantallaGestionReserva/AdministrarSolicitudes"
 import SolicitudAdmin from "./PantallaGestionReserva/SolicitudAdmin";
-import AjustarSolicitudes from "./PantallaGestionReserva/AjustarSolicitudes";
+import AjustarSolicitudes from "./PantallaModulos/AjustarSolicitudes";
 import PanelInformes from "./PantallaModulos/PanelInformes"
 import AmbientesAsignados from "./Informes/AmbientesAsignados"
 import FechasDemandadas from "./Informes/FechasDemandadas"
+import AjustarPeriodos from "./PantallaAjustes/AjustarPeriodos";
+import AjustarContiguos from "./PantallaAjustes/AjustarContiguos";
+import DeterminarFechas from "./PantallaAjustes/DeterminarFechas";
 
 function App() {
   return (
@@ -429,6 +432,51 @@ function App() {
                   }}
                 >
                   <FechasDemandadas />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/Ajustar-Periodos"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100%",
+                  }}
+                >
+                  <AjustarPeriodos />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/Ajustar-Contiguos"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100%",
+                  }}
+                >
+                  <AjustarContiguos />
+                </div>
+              </Layout>
+            }
+          />
+          <Route
+            path="/Delimitar-Fechas"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100%",
+                  }}
+                >
+                  <DeterminarFechas />
                 </div>
               </Layout>
             }

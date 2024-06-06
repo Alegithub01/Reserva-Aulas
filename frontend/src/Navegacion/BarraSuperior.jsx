@@ -14,6 +14,7 @@ import {
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const BarraSuperior = () => {
   const [anchorElPerfil, setAnchorElPerfil] = useState(null);
@@ -66,6 +67,15 @@ const BarraSuperior = () => {
           }}
         >
         </Box>
+        {localStorage.getItem('rol') === '1' && (
+          <Box sx={{display: "flex"}}>
+            <Tooltip title="Configuración">
+              <IconButton style={{ color: 'white' }} size="large" onClick={() => navigate('/Ajustar-Solicitudes')}>
+                <SettingsIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        )}
         <Box sx={{ display: "flex" }}>
           <Tooltip title="Notificaciones">
             <IconButton style={{ color: 'white' }} size="large" onClick={manejarAperturaNotificaciones}>

@@ -31,7 +31,7 @@ function getStyles(name, valorName, theme) {
   };
 }
 
-function SelectorChip({ options, changeValor, label, mensajeValidacion = "", llenado }) {
+function SelectorChip({ options, changeValor, label, mensajeValidacion = "", llenado}) {
   const theme = useTheme();
   const [valorName, setvalorName] = useState([]);
 
