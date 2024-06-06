@@ -50,4 +50,50 @@ class CorreoController extends Controller
         }
     }
 
+    // recibiré un json con un arreglo de correos electrónicos y un mensaje
+    public function notificarSolicitud(Request $request){
+        $request->validate([
+            'subject' => 'required|string',
+            'content' => 'required|string',
+            'receptores' => 'required|array'
+        ]);
+
+        $datos = $request->only(['subject', 'content', 'receptores']);
+        $emails = $this->getEmailsFromReceptores($datos['receptores']);
+        $datos2 = [
+            'subject' => $datos['subject'],
+            'body' => $datos['content']
+        ];
+
+        try {
+            foreach ($emails as $email) {
+                Mail::to($email)->send(new MailNotify($datos2));
+            }
+
+            return response()->json(['message' => 'Correo enviado a los usuarios seleccionados'], 200);
+        } catch (\Exception $e) {
+            return $e;
+        }
+
+    }
+
+    private function getEmailsFromReceptores(array $receptores)
+    {
+        $emails = [];
+
+        foreach ($receptores as $receptor) {
+            $nombreCompleto = explode(' ', $receptor);
+            $apellidos = array_slice($nombreCompleto, -2, 2);// arryslice corta el array desde la -2 posicon dos posiciones
+            $nombres = array_slice($nombreCompleto, 0, count($nombreCompleto) - 2);// corta el array desde la posicion 0 hasta la cantidad de elementos -2
+            $nombres = implode(' ', $nombres); // implode convierte un array en un string
+            $apellidos = implode(' ', $apellidos); // implode convierte un array en un string
+
+            $user = User::where('nombres', $nombres)->where('apellidos', $apellidos)->first();
+            if ($user) {
+                $emails[] = $user->email;
+            }
+        }
+
+        return $emails;
+    }
 }
