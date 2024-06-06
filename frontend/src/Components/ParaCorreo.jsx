@@ -8,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import RowPercentage from "../Responsive/RowPercentage";
 import TextArea from "../Utils/TextArea";
 import axios from "axios";
+import { URL_API } from "../services/const";
+
 const ParaCorreo = ({ dialogoAbiertoThere, cerrarDialogoThere, docentes, especificaciones, razones, aceptado }) => {
   const navigate = useNavigate();
   const [receptores, setReceptores] = useState([]);
