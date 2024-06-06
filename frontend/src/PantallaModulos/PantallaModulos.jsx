@@ -5,7 +5,8 @@ import IconoPersonas from '@mui/icons-material/PeopleAlt';
 import IconoAmbientes from '@mui/icons-material/RoomPreferences';
 import IconoReservas from '@mui/icons-material/EventNote';
 import BookOnlineIcon from '@mui/icons-material/BookOnline';
-import AssessmentIcon from '@mui/icons-material/Assessment';
+import AssessmentIcon from '@mui/icons-material/Assessment'; 
+import SettingsIcon from '@mui/icons-material/Settings';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
 
