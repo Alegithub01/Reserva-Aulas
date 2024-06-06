@@ -24,6 +24,8 @@ import useNavegacionStore from "../Contexts/NavegacionStore";
 import axios from "axios";
 import { URL_API } from "../services/const";
 import SelectorChip from "../Utils/SelectorChip";
+import ParaCorreo from "../Components/ParaCorreo";
+import { set } from "date-fns";
 
 const SolicitudAdmin = () => {
   const { theme } = useTheme();
@@ -59,6 +61,8 @@ const SolicitudAdmin = () => {
     razones: '',
     especificaciones: '',
   });
+  const [mostrarPasoCorreo, setMostrarPasoCorreo] = useState(false);
+  const [seAceptoSolicitud, setSeAceptoSolicitud] = useState(false);
 
   useEffect(() => {
     setAmbienteSeleccionado(ambientesSeleccionados.map(amb => amb.nombre).join(', '));
@@ -223,10 +227,12 @@ const SolicitudAdmin = () => {
           aulas: ambientesFormato,
         });
       }
+      setSeAceptoSolicitud(true);
+      setMostrarPasoCorreo(true);
     }catch(error){
       console.error("Error al aceptar la solicitud:", error);
     }
-    navigate('/Solicitudes');
+    //navigate('/Solicitudes');
   }
 
   const manejoCancelarAceptar = () => {
@@ -251,7 +257,7 @@ const SolicitudAdmin = () => {
       }catch(error){
         console.error("Error al rechazar la solicitud:", error);
       }
-      navigate('/Solicitudes');
+      setMostrarPasoCorreo(true);
     }else{
       console.log("Error en razones:", mensajeError.razones);
       setDialogoAbierto({ ...dialogoAbierto, rechazar: true });
@@ -494,6 +500,7 @@ const SolicitudAdmin = () => {
                   Mencione las razones por las cuales se rechaza la solicitud:
                 </DialogContentText> 
                 <div style={{margin:20}}></div>
+                <div>
                 <SelectorChip 
                   options= {[
                     'No existen ambientes para la fecha solicitada',
@@ -505,14 +512,18 @@ const SolicitudAdmin = () => {
                   llenado={validarRazones}
                   mensajeValidacion={mensajeError.razones}
                 />
+                </div>
+                
                 <div style={{margin:20}}></div>
-                <TextInput
+                <div>
+                  <TextInput
                   label="Especificaciones"
                   fullWidth={true}
                   onChange={(event) => setEspecificaciones(event.target.value)}
-                  pattern="^.{0,10}$"
+                  pattern="^.{0,}$"
                   validationMessage={mensajeError.especificaciones}
                 />
+                </div>
               </DialogContent>
               <DialogActions>
                 <Button onClick={manejoCancelarRechazar}>Cancelar</Button>
@@ -521,6 +532,14 @@ const SolicitudAdmin = () => {
                 </Button>
               </DialogActions>
             </Dialog>
+            <ParaCorreo
+              dialogoAbiertoThere={mostrarPasoCorreo}
+              cerrarDialogoThere={() => setMostrarPasoCorreo(false)}
+              especificaciones={especificaciones}
+              razones={razones}
+              docentes={dataRow.tipoDado === "individual" ? [nombreDocente] : usersNombresGrupo.map(user => user.nombre)}
+              aceptado={seAceptoSolicitud}
+            />
             <div
               style={{
                 height: "0%",
