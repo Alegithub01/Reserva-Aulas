@@ -7,8 +7,8 @@
     <title>Sigan Viendo</title>
 </head>
 <body>
-    <h3>Buenos dias!</h3>
-    <p>{{ $data['body'] }}</p>
+    <h3>Buenos días!</h3>
+    <p>{!! nl2br($data['body']) !!}</p>
 
     <p>Saludos</p>
     <h4>Eureka Solutions</h4>
