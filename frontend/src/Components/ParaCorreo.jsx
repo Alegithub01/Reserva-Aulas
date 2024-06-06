@@ -7,7 +7,7 @@ import TextInput from "../Utils/TextInput";
 import { useNavigate } from "react-router-dom";
 import RowPercentage from "../Responsive/RowPercentage";
 import TextArea from "../Utils/TextArea";
-
+import axios from "axios";
 const ParaCorreo = ({ dialogoAbiertoThere, cerrarDialogoThere, docentes, especificaciones, razones, aceptado }) => {
   const navigate = useNavigate();
   const [receptores, setReceptores] = useState([]);
@@ -18,9 +18,18 @@ const ParaCorreo = ({ dialogoAbiertoThere, cerrarDialogoThere, docentes, especif
   });
 
 
-  const manejoConfirmar = () => {
-    //BACKEND
-    navigate("/Solicitudes");//si todo esta bien
+  const manejoConfirmar = async () => {
+    try{
+      await axios.post(`${URL_API}/enviar-correo-solicitud`, {
+        subject: "Actualización de Solicitud de Reserva de Aula",
+        content : mensaje,
+        receptores: receptores,
+      });
+      navigate("/Solicitudes");//si todo esta bien
+    } catch (error) {
+      console.log(error);
+    }
+
   }
 
   const validarReceptores = () => {
