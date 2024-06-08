@@ -18,6 +18,7 @@ import {
 import styled from 'styled-components';
 import { useTheme } from '../Contexts/ThemeContext';
 import axios from 'axios';
+import { URL_API } from '../services/const';
 
 //const informacion = [
 //  { id: 1, nombre: "691A", capacidad: 100, tipo: "Aula", planta: "1", servicios: 'Data display', dia: "Lunes", periodos: "08:00-10:00, 15:45-17:15" },
@@ -58,7 +59,7 @@ export default function GridTablaCrud() {
   useEffect(() => {
     const obtenerAmbientes = async () => {
       try {
-          const response = await axios.get('http://127.0.0.1:8000/api/ambientes');
+          const response = await axios.get(`${URL_API}/ambientes`);
           const ambientes = response.data.map(ambiente => ({
               ...ambiente,
               horas: JSON.parse(ambiente.horas) 
@@ -116,7 +117,7 @@ export default function GridTablaCrud() {
         const filaAModificar = filasModificadas[id] || filas.find((fila) => fila.id === id);
   
         // Realizar la solicitud PUT al backend con los cambios
-        const response = await axios.put(`http://127.0.0.1:8000/api/ambientes/${id}`, filaAModificar);
+        const response = await axios.put(`${URL_API}/ambientes/${id}`, filaAModificar);
   
         // Verificar si la solicitud PUT fue exitosa
         if (response.status === 200) {
@@ -180,7 +181,7 @@ export default function GridTablaCrud() {
 
   const manejoConfirmarEliminar = async () => {
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/ambientes/${idAEliminar}`);
+      await axios.delete(`${URL_API}/ambientes/${idAEliminar}`);
       setFilas((filasAnteriores) => filasAnteriores.filter((fila) => fila.id !== idAEliminar));
       setDialogoAbierto(false);
       setIdAEliminar(null);

@@ -3,12 +3,11 @@ import { Dialog, DialogContent, DialogTitle, DialogContentText, DialogActions } 
 import SelectorChip from "../Utils/SelectorChip";
 import Button from "../Utils/Button";
 import PropTypes from "prop-types";
-import TextInput from "../Utils/TextInput";
 import { useNavigate } from "react-router-dom";
 import RowPercentage from "../Responsive/RowPercentage";
 import TextArea from "../Utils/TextArea";
 
-const ParaCorreo = ({ dialogoAbiertoThere, cerrarDialogoThere, docentes, especificaciones, razones, aceptado }) => {
+const ParaCorreo = ({ dialogoAbiertoThere, cerrarDialogoThere, docentes, mensajeDefault, tipoCorreo }) => {
   const navigate = useNavigate();
   const [receptores, setReceptores] = useState([]);
   const [mensaje, setMensaje] = useState("");
@@ -55,7 +54,7 @@ const ParaCorreo = ({ dialogoAbiertoThere, cerrarDialogoThere, docentes, especif
                 onChange={(event) => setMensaje(event.target.value)}
                 pattern="."
                 validationMessage={mensajeError.mensaje}
-                defaultValue={aceptado?`Buen día \n\n Se le informa que su solicitud ha sido aceptada `:`Buen día \n\nSe le informa que su solicitud ha sido rechazada por las siguientes razones: \n\n${razones}\n\n${especificaciones}`}
+                defaultValue={mensajeDefault}
               />
             </div>
 
@@ -85,6 +84,9 @@ const ParaCorreo = ({ dialogoAbiertoThere, cerrarDialogoThere, docentes, especif
 
 ParaCorreo.propTypes = {
   docentes: PropTypes.array.isRequired,
+  dialogoAbiertoThere: PropTypes.bool.isRequired,
+  cerrarDialogoThere: PropTypes.func.isRequired,
+  mensajeDefault: PropTypes.string,
 };
 
 export default ParaCorreo;

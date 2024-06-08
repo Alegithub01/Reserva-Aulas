@@ -76,7 +76,7 @@ class AmbienteController extends Controller
 
         foreach ($registrosImportados as $registroImportado) {
 
-            if (isset($registroImportado['nombre'], $registroImportado['capacidad'], $registroImportado['tipo'], $registroImportado['planta'])) {
+            if (isset($registroImportado['nombre'], $registroImportado['capacidad'], $registroImportado['tipo'])) {
                 $ambienteData = [
                     'nombre' => $registroImportado['nombre'],
                     'capacidad' => $registroImportado['capacidad'],
@@ -89,7 +89,11 @@ class AmbienteController extends Controller
                 ];
 
 
-                Ambiente::create(array_filter($ambienteData));
+                $filteredAmbienteData = array_filter($ambienteData, function($value, $key) {
+                    return $value !== null || $key === 'planta';
+                }, ARRAY_FILTER_USE_BOTH);
+    
+                Ambiente::create($filteredAmbienteData);
             }
         }
 
