@@ -8,10 +8,6 @@ import auditorio from '../assets/imgs/auditorio.jpg';
 import laboratorio from '../assets/imgs/laboratorio.jpg';
 
 import { useNavigate } from 'react-router-dom';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
 import TextInput from "../Utils/TextInput";
 import SearchIcon from '@mui/icons-material/Search';
 import { DialogTitle, IconButton, TextField } from "@mui/material";
@@ -25,7 +21,6 @@ import axios from "axios";
 import { URL_API } from "../services/const";
 import SelectorChip from "../Utils/SelectorChip";
 import ParaCorreo from "../Components/ParaCorreo";
-import { set } from "date-fns";
 
 const SolicitudAdmin = () => {
   const { theme } = useTheme();
@@ -63,6 +58,7 @@ const SolicitudAdmin = () => {
   });
   const [mostrarPasoCorreo, setMostrarPasoCorreo] = useState(false);
   const [seAceptoSolicitud, setSeAceptoSolicitud] = useState(false);
+  const [mensajeCorreo, setMensajeCorreo] = useState('');
 
   useEffect(() => {
     setAmbienteSeleccionado(ambientesSeleccionados.map(amb => amb.nombre).join(', '));
@@ -213,7 +209,7 @@ const SolicitudAdmin = () => {
   const manejoConfirmarAceptar = () => {
     console.log("se confirma");
     setDialogoAbierto({ ...dialogoAbierto, aceptar: false });
-
+    console.log("Ambientes seleccionados:", ambienteSeleccionado);
     const ambientesFormato = ambienteSeleccionado.split(', ');
     try{
       if(dataRow.tipoDado === "individual"){
@@ -229,6 +225,11 @@ const SolicitudAdmin = () => {
       }
       setSeAceptoSolicitud(true);
       setMostrarPasoCorreo(true);
+      if(ambientesFormato.length > 1){
+        setMensajeCorreo(`Se le informa que su solicitud ha sido aceptada. Los ambientes asignados son: ${ambientesFormato.join(', ')}, por favor indique si acepta o no esta oferta de ambientes.\n\nLos horarios elegidos son: ${dataRow.horas.join(', ')}. con fecha ${dateFinal} para la materia ${dataRow.materia} con capacidad de ${dataRow.capacidad} estudiantes.\n\nServicios solicitados: ${dataRow.servicios}.`);
+      }else{
+        setMensajeCorreo(`Se le informa que su solicitud ha sido aceptada. El ambiente asignado es: ${ambientesFormato.join(', ')}.\n\nLos horarios elegidos son: ${dataRow.horas.join(', ')}, con fecha ${dateFinal} para la materia ${dataRow.materia} con capacidad de ${dataRow.capacidad} estudiantes.\n\nServicios solicitados: ${dataRow.servicios}.`);
+      }
     }catch(error){
       console.error("Error al aceptar la solicitud:", error);
     }
@@ -258,6 +259,7 @@ const SolicitudAdmin = () => {
         console.error("Error al rechazar la solicitud:", error);
       }
       setMostrarPasoCorreo(true);
+      setMensajeCorreo(`Se le informa que su solicitud ha sido rechazada por las siguientes razones: \n\n${razones}\n\n. ${especificaciones}`)
     }else{
       console.log("Error en razones:", mensajeError.razones);
       setDialogoAbierto({ ...dialogoAbierto, rechazar: true });
@@ -416,16 +418,7 @@ const SolicitudAdmin = () => {
               </div>
               <RowPercentage firstChildPercentage={40} gap={10}>
                 <div style={{ marginBlock: '40px' }}>
-                  <FormControl component="fieldset">
-                    <RadioGroup
-                      aria-labelledby="demo-radio-buttons-group-label"
-                      defaultValue="Sin verificar"
-                      name="radio-buttons-group"
-                    >
-                      <FormControlLabel value="Verificado" control={<Radio />} label="Verificado" />
-                      <FormControlLabel value="Sin verificar" control={<Radio />} label="Sin verificar" />
-                    </RadioGroup>
-                  </FormControl>
+                  
                 </div>
                 <div style={{ marginBlock: '40px' }}>
                   <RowPercentage firstChildPercentage={10} gap="10px">
@@ -535,10 +528,8 @@ const SolicitudAdmin = () => {
             <ParaCorreo
               dialogoAbiertoThere={mostrarPasoCorreo}
               cerrarDialogoThere={() => setMostrarPasoCorreo(false)}
-              especificaciones={especificaciones}
-              razones={razones}
               docentes={dataRow.tipoDado === "individual" ? [nombreDocente] : usersNombresGrupo.map(user => user.nombre)}
-              aceptado={seAceptoSolicitud}
+              mensajeDefault={mensajeCorreo}
             />
             <div
               style={{
