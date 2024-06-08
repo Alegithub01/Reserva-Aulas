@@ -59,6 +59,7 @@ const SolicitudAdmin = () => {
   const [mostrarPasoCorreo, setMostrarPasoCorreo] = useState(false);
   const [seAceptoSolicitud, setSeAceptoSolicitud] = useState(false);
   const [mensajeCorreo, setMensajeCorreo] = useState('');
+  const [tipoCorreo, setTipoCorreo] = useState('')
 
   useEffect(() => {
     setAmbienteSeleccionado(ambientesSeleccionados.map(amb => amb.nombre).join(', '));
@@ -226,8 +227,10 @@ const SolicitudAdmin = () => {
       setSeAceptoSolicitud(true);
       setMostrarPasoCorreo(true);
       if(ambientesFormato.length > 1){
+        setTipoCorreo('oferta');
         setMensajeCorreo(`Se le informa que su solicitud ha sido aceptada. Los ambientes asignados son: ${ambientesFormato.join(', ')}, por favor indique si acepta o no esta oferta de ambientes.\n\nLos horarios elegidos son: ${dataRow.horas.join(', ')}. con fecha ${dateFinal} para la materia ${dataRow.materia} con capacidad de ${dataRow.capacidad} estudiantes.\n\nServicios solicitados: ${dataRow.servicios}.`);
       }else{
+        setTipoCorreo('confirmacionDirecta');
         setMensajeCorreo(`Se le informa que su solicitud ha sido aceptada. El ambiente asignado es: ${ambientesFormato.join(', ')}.\n\nLos horarios elegidos son: ${dataRow.horas.join(', ')}, con fecha ${dateFinal} para la materia ${dataRow.materia} con capacidad de ${dataRow.capacidad} estudiantes.\n\nServicios solicitados: ${dataRow.servicios}.`);
       }
     }catch(error){
@@ -259,13 +262,12 @@ const SolicitudAdmin = () => {
         console.error("Error al rechazar la solicitud:", error);
       }
       setMostrarPasoCorreo(true);
+      setTipoCorreo('rechazo');
       setMensajeCorreo(`Se le informa que su solicitud ha sido rechazada por las siguientes razones: \n\n${razones}\n\n. ${especificaciones}`)
     }else{
       console.log("Error en razones:", mensajeError.razones);
       setDialogoAbierto({ ...dialogoAbierto, rechazar: true });
     }
-    
-    
   }
 
   const manejoCancelarRechazar = () => {
@@ -530,6 +532,7 @@ const SolicitudAdmin = () => {
               cerrarDialogoThere={() => setMostrarPasoCorreo(false)}
               docentes={dataRow.tipoDado === "individual" ? [nombreDocente] : usersNombresGrupo.map(user => user.nombre)}
               mensajeDefault={mensajeCorreo}
+              tipoCorreo={tipoCorreo}
             />
             <div
               style={{

@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import RowPercentage from "../Responsive/RowPercentage";
 import TextArea from "../Utils/TextArea";
 
-const ParaCorreo = ({ dialogoAbiertoThere, cerrarDialogoThere, docentes, mensajeDefault }) => {
+const ParaCorreo = ({ dialogoAbiertoThere, cerrarDialogoThere, docentes, mensajeDefault, tipoCorreo }) => {
   const navigate = useNavigate();
   const [receptores, setReceptores] = useState([]);
   const [mensaje, setMensaje] = useState("");
