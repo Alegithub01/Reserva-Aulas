@@ -7,6 +7,7 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import CircularProgress from '@mui/material/CircularProgress';
 import axios from 'axios';
+import { URL_API } from '../services/const';
 
 const RegistroMasivoBoton = () => {
   const [documento, setDocumento] = useState(null);
@@ -30,6 +31,7 @@ const RegistroMasivoBoton = () => {
     transition: 'opacity 0.3s ease',
     overflow: 'hidden',
   };
+
   const handleCloseSnackbarSuccess = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -44,21 +46,26 @@ const RegistroMasivoBoton = () => {
     setSnackbarOpenError(false);
   };
 
-  const manejoDocumentoCambio = (e, valor) => {
-    setDocumento(valor ? e.target.files[0] : null);
+  const manejoDocumentoCambio = (e) => {
+    const archivo = e.target.files[0];
+    setDocumento(archivo);
     setDetallesArchivo({
-      nombre: valor ? e.target.files[0].name : "",
-      tamano: valor ? (e.target.files[0].size / 1024).toFixed(2) + " KB" : "",
+      nombre: archivo ? archivo.name : "",
+      tamano: archivo ? (archivo.size / 1024).toFixed(2) + " KB" : "",
       registros: 0,
     });
-  }
+  };
 
   const manejoDocumentoSubido = () => {
     if (documento) {
       const leerArchivo = new FileReader();
       leerArchivo.onload = (e) => {
         const texto = e.target.result;
-        if (texto.includes('horas', 'dia', 'servicios', 'ubicacion', 'planta', 'tipo', 'capacidad', 'nombre')) {
+        const validHeaders = ['Periodos', 'Dia', 'Servicios', 'Ubicacion', 'Planta', 'Tipo', 'Capacidad', 'Nombre'];
+        const headersValidos = validHeaders.every(header => texto.includes(header));
+        console.log(texto);
+        if (headersValidos) {
+          console.log('si entre');
           const lineas = texto.split('\n').slice(1);
           const registros = lineas.map((linea) => {
             let campos = linea.split(',');
@@ -66,8 +73,8 @@ const RegistroMasivoBoton = () => {
               campos[7] = campos.slice(7).join(',');
               campos = campos.slice(0, 8);
             }
-            campos[7] = campos[7] ? campos[7].split(',') : []; 
-            campos[7] = campos[7].map((hora) => hora.replace(/^\"|\"\r$/g, '')); 
+            campos[7] = campos[7] ? campos[7].split(',') : [];
+            campos[7] = campos[7].map((hora) => hora.replace(/^\"|\"\r$/g, ''));
             return {
               nombre: campos[0],
               capacidad: parseInt(campos[1]),
@@ -79,16 +86,15 @@ const RegistroMasivoBoton = () => {
               horas: campos[7],
             };
           });
-  
+
           console.log(registros);
           localStorage.setItem('registros', JSON.stringify(registros));
-  
-          
+
           enviarDatosAlBackend({ registros });
-  
+
           setDatosJson(registros);
           setDetallesArchivo((detalles) => ({ ...detalles, registros: registros.length }));
-  
+
           cambiarMostrarMensaje(false);
         } else {
           cambiarMostrarMensaje(true);
@@ -99,8 +105,6 @@ const RegistroMasivoBoton = () => {
       cambiarMostrarMensaje(true);
     }
   };
-  
-  
 
   const manejoCancelacion = () => {
     setDocumento(null);
@@ -113,20 +117,18 @@ const RegistroMasivoBoton = () => {
   };
 
   const enviarDatosAlBackend = async (registros) => {
-    console.log(registros)
+    console.log(registros);
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/importar-ambientes', registros, {
+      const response = await axios.post(`${URL_API}/importar-ambientes`, registros, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-  
-      
+
       setMostrarMensajeExito('Datos registrados exitosamente');
       setSnackbarOpenSuccess(true);
     } catch (error) {
       console.error('Error al enviar los datos al backend:', error);
-      
       cambiarMostrarMensajeError(true);
     }
   };
@@ -158,7 +160,7 @@ const RegistroMasivoBoton = () => {
           <CircularProgress />
         </div>
       )}
-      <div style={{display:'flex', justifyContent: 'space-between'}}>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div>
           <span style={{ color: documento ? 'black' : '#888' }}>Nombre del archivo: {documento ? detallesArchivo.nombre : 'No disponible'}</span>
         </div>
@@ -167,7 +169,6 @@ const RegistroMasivoBoton = () => {
             onClick={manejoCancelacion}
             style={{
               cursor: 'pointer',
-
               color: 'black',
             }}
           />
@@ -177,10 +178,10 @@ const RegistroMasivoBoton = () => {
       <div>
         <span style={{ color: documento ? 'black' : '#888' }}>Cantidad de registros: {documento ? detallesArchivo.registros : 'No disponible'}</span>
       </div>
-      <div >
-        <EntradaArchivo onChange={e => manejoDocumentoCambio(e, true)} accept=".csv" />
+      <div>
+        <EntradaArchivo onChange={manejoDocumentoCambio} accept=".csv" />
       </div>
-      <div >
+      <div>
         <Button onClick={manejoDocumentoSubido} fullWidth>
           Procesar
         </Button>

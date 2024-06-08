@@ -156,7 +156,7 @@ const TablaSolicitudes = () => {
   const manejoConfirmarEliminar = async () => {
     try {
       // PARA BACKEND ----------************-**----------------------
-      await axios.delete(`http://127.0.0.1:8000/api/solicitudes/${idATratar}`); //cambiar url
+      await axios.delete(`${URL_API}/solicitudes/${idATratar}`); //cambiar url
       setFilas((filasAnteriores) => filasAnteriores.filter((fila) => fila.id !== idATratar));
       setDialogoAbierto(false);
       setidATratar(null);
