@@ -63,11 +63,13 @@ Route::get('/ambientes/{ambiente}', [AmbienteController::class, 'show'])->name('
 Route::put('/ambientes/{ambiente}', [AmbienteController::class, 'update'])->name('ambientes.update');
 Route::delete('/ambientes/{ambiente}', [AmbienteController::class, 'destroy'])->name('ambientes.destroy');
 Route::post('/importar-ambientes', [AmbienteController::class, 'importar']);
-Route::get('/enviar-correo', [CorreoController::class, 'index']);
-Route::get('/enviar-correo-notificacion', [CorreoController::class, 'notificarCambioReglas']);
 Route::post('/agregar-regla', [AmbienteController::class, 'addRule']);
 Route::get('/reglas', [AmbienteController::class, 'getRules']);
 Route::post('/ambientes-filtrar', [AmbienteController::class, 'filtrar']);
+// envio de correo
+Route::get('/enviar-correo', [CorreoController::class, 'index']);//
+Route::get('/enviar-correo-notificacion', [CorreoController::class, 'notificarCambioReglas']);
+Route::post('/enviar-correo-solicitud', [CorreoController::class, 'notificarSolicitud']);// aceptar o rechazar solicitud
 
 
 Route::post('/ambientes/obtener-id-por-nombre', [AmbienteController::class, 'obtenerIdPorNombre'])->name('ambientes.obtenerIdPorNombre');
@@ -111,7 +113,7 @@ Route::patch('admin/settings1', [AdminSettingsController::class, 'update']);
 Route::post('/asignarIndividual', [ReservaController::class, 'asignarIndividual']);
 Route::post('/asignarGrupal', [ReservaController::class, 'asignarGrupal']);
 
-//Rechazar solicitud 
+//Rechazar solicitud
 
 Route::post('/rechazarIndividual/{id}', [SolicitudController::class, 'rechazar']);
 Route::post('/rechazarGrupal/{id}', [SolicitudGrupalController::class, 'rechazarGrupal']);
