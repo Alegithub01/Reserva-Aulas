@@ -533,6 +533,7 @@ const SolicitudAdmin = () => {
               docentes={dataRow.tipoDado === "individual" ? [nombreDocente] : usersNombresGrupo.map(user => user.nombre)}
               mensajeDefault={mensajeCorreo}
               tipoCorreo={tipoCorreo}
+              idSolicitud={dataRow.id}
             />
             <div
               style={{

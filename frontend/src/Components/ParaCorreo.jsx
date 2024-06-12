@@ -9,7 +9,7 @@ import TextArea from "../Utils/TextArea";
 import axios from "axios";
 import { URL_API } from "../services/const";
 
-const ParaCorreo = ({ dialogoAbiertoThere, cerrarDialogoThere, docentes, mensajeDefault, tipoCorreo }) => {
+const ParaCorreo = ({ dialogoAbiertoThere, cerrarDialogoThere, docentes, mensajeDefault, tipoCorreo, idSolicitud }) => {
   const navigate = useNavigate();
   const [receptores, setReceptores] = useState([]);
   const [mensaje, setMensaje] = useState("");
@@ -25,6 +25,8 @@ const ParaCorreo = ({ dialogoAbiertoThere, cerrarDialogoThere, docentes, mensaje
         subject: "Actualización de Solicitud de Reserva de Aula",
         content : mensaje,
         receptores: receptores,
+        tipoCorreo: tipoCorreo,
+        idSolicitud: idSolicitud,
       });
       navigate("/Solicitudes");//si todo esta bien
     } catch (error) {
