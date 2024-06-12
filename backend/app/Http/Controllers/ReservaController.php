@@ -10,18 +10,33 @@ use App\Models\Reserva;
 class ReservaController extends Controller
 {
     public function asignarIndividual(Request $request)
-    {   
+    {
+        // Buscar la solicitud por su ID
         $solicitud = Solicitud::findOrFail($request->id);
 
-        $reserva = new Reserva();
-        $reserva->solicitable_id = $request->id;
-        $reserva->solicitable_type = Solicitud::class;
-        $reserva->aulas = json_encode($request->aulas);
+        // Buscar si ya existe una reserva para esta solicitud
+        $reservaExistente = Reserva::where('solicitable_id', $request->id)
+                                ->where('solicitable_type', Solicitud::class)
+                                ->first();
 
-        $reserva->save();
+        if ($reservaExistente) {
+            // Si la reserva ya existe, actualizar la asignación de aulas
+            $reservaExistente->aulas = json_encode($request->aulas);
+            $reservaExistente->save();
+        } else {
+            // Si la reserva no existe, crear una nueva reserva
+            $reserva = new Reserva();
+            $reserva->solicitable_id = $request->id;
+            $reserva->solicitable_type = Solicitud::class;
+            $reserva->aulas = json_encode($request->aulas);
+            $reserva->save();
+        }
+
+        // Actualizar el estado de la solicitud
         $solicitud->estado = 'Asignada';
         $solicitud->save();
 
+        // Devolver una respuesta exitosa
         return response(['message' => 'Aulas asignadas a las reservas'], 200);
     }
 

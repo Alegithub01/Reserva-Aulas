@@ -89,8 +89,29 @@ class SolicitudController extends Controller
 
     public function solicitudesAceptadas()
     {
+        // Obtener todas las solicitudes aceptadas
         $solicitudes = Solicitud::where('estado', 'Aceptada')->get();
-        return $solicitudes;
+
+        // Preparar un array para almacenar la información formateada
+        $resultado = [];
+
+        foreach ($solicitudes as $solicitud) {
+            // Buscar la reserva correspondiente a la solicitud
+            $reserva = Reserva::where('solicitable_id', $solicitud->id)
+                            ->where('solicitable_type', Solicitud::class)
+                            ->first();
+
+            // Añadir la información de la solicitud y la reserva al array de resultados
+            $resultado[] = [
+                'fecha' => $solicitud->fecha->format('Y-m-d'),
+                'horario' => $solicitud->horas, // Asumiendo que la solicitud tiene un campo 'horas'
+                'ambiente' => $solicitud->tipo_ambiente,
+                'aulas' => $reserva ? json_decode($reserva->aulas) : null, // Decodificar las aulas si hay reserva
+            ];
+        }
+
+        // Devolver la información formateada
+        return response()->json($resultado, 200);
     }
 
     public function getSolicitudesFormatted()
