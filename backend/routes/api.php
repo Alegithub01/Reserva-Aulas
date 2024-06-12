@@ -84,7 +84,7 @@ Route::put('/solicitudes/{id}', [SolicitudController::class, 'update'])->name('s
 Route::delete('/solicitudes/{id}', [SolicitudController::class, 'destroy'])->name('solicitudes.destroy');
 Route::post('/aceptar/{id}', [SolicitudController::class, 'aceptar'])->name('solicitudes.aceptar');
 Route::get('/aceptadas', [SolicitudController::class, 'solicitudesAceptadas'])->name('solicitudes.aceptadas');
-Route::get('/solicitudes-formato', [SolicitudController::class, 'getSolicitudesFormatted'])->name('solicitudes.getSolicitudesFormatted');
+Route::get('/solicitudes-formato/{userId}', [SolicitudController::class, 'getSolicitudesFormatted'])->name('solicitudes.getSolicitudesFormatted');
 
 Route::get('/docentes/{idDocente}/materias', [MateriaDocenteController::class, 'obtenerMateriasPorIdDocente']);
 

@@ -114,9 +114,14 @@ class SolicitudController extends Controller
         return response()->json($resultado, 200);
     }
 
-    public function getSolicitudesFormatted()
+    public function getSolicitudesFormatted($userId)
     {
-        $solicitudes = Solicitud::with(['user', 'reservas'])->get();
+        // Obtener las solicitudes del usuario especificado
+        $solicitudes = Solicitud::with(['user', 'reservas'])
+                                ->where('user_id', $userId)
+                                ->get();
+        
+        // Formatear las solicitudes
         $formattedSolicitudes = $solicitudes->map(function ($solicitud) {
             $ambientes = $solicitud->reservas->pluck('aulas')->implode(', ');
 
@@ -137,6 +142,7 @@ class SolicitudController extends Controller
             ];
         });
 
+        // Devolver la respuesta en formato JSON
         return response()->json($formattedSolicitudes, 200);
     }
 
