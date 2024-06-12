@@ -7,6 +7,7 @@ import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import { useNavigate } from 'react-router-dom';
 import { useState } from "react";
 import axios from "axios";
+import { URL_API } from "../services/const";
 
 const PanelSolicitudReservas = () => {
     const navegar = useNavigate();
@@ -14,7 +15,7 @@ const PanelSolicitudReservas = () => {
 
     const controlarFechaSolicitud = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/api/admin/settings');
+            const response = await axios.get(`${URL_API}/admin/settings`);
             const fechaini =  response.data.setting.FechaIniSolicitudes;
             const fechafin =  response.data.setting.FechaFinSolicitudes;
             

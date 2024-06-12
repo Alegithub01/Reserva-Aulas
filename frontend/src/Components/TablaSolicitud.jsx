@@ -65,6 +65,14 @@ const TablaSolicitudes = () => {
   });
   const [idATratar, setidATratar] = useState(null);
 
+  const transformarDatos = (datos) => {
+    return datos.map((item) => ({
+      ...item,
+      ambiente: JSON.parse(item.ambiente).join(', '),
+      grupo: JSON.parse(item.grupo).join(', '),
+    }));
+  };
+  
    useEffect(() => {
     const datita = async () => {
       const dataUser = await axios.post(`${URL_API}/auth/me`,{}, {
@@ -78,7 +86,8 @@ const TablaSolicitudes = () => {
       .then(response => {
         // Assign the response data to prueba
         console.log(response.data);
-        setFilas(response.data);
+        const datosTransformados = transformarDatos(response.data);
+        setFilas(datosTransformados);
       })
       .catch(error => {
         console.error('Error fetching solicitudes:', error);

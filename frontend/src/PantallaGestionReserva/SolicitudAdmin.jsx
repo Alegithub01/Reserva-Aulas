@@ -210,19 +210,32 @@ const SolicitudAdmin = () => {
   const manejoConfirmarAceptar = () => {
     console.log("se confirma");
     setDialogoAbierto({ ...dialogoAbierto, aceptar: false });
-    console.log("Ambientes seleccionados:", ambienteSeleccionado);
     const ambientesFormato = ambienteSeleccionado.split(', ');
     try{
       if(dataRow.tipoDado === "individual"){
+        if(ambientesFormato.length > 1){
         axios.post(`${URL_API}/asignarIndividual`, {
           id: dataRow.id,
           aulas: ambientesFormato,
-        });
+        });}
+        else{
+          axios.post(`${URL_API}/aceptar/${dataRow.id}`, {
+            id: dataRow.id,
+            aulas: ambientesFormato,
+          });
+        }
       }else{
+        if(ambientesFormato.length > 1){
         axios.post(`${URL_API}/asignarGrupal`, {
           id: dataRow.id,
           aulas: ambientesFormato,
         });
+        }else {
+          axios.post(`${URL_API}/aceptarGrupal/${dataRow.id}`, {
+            id: dataRow.id,
+            aulas: ambientesFormato,
+          });
+        }
       }
       setSeAceptoSolicitud(true);
       setMostrarPasoCorreo(true);
