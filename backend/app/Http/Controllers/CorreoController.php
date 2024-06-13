@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailNotify;
 use App\Models\User;
+use App\Models\Solicitud;
 
 class CorreoController extends Controller
 {
@@ -55,9 +56,18 @@ class CorreoController extends Controller
         $request->validate([
             'subject' => 'required|string',
             'content' => 'required|string',
-            'receptores' => 'required|array'
+            'receptores' => 'required|array',
+            'tipoCorreo' => 'required|string',
+            'idSolicitud' => 'required|integer'
         ]);
-
+        $tipo = $request->tipoCorreo;
+        $idSoli = $request->idSolicitud;
+        // ahora buscar la Soliciutd segun el id
+        $solicitud = Solicitud::findOrFail($idSoli);
+        // actualizar estado en la base de datos
+        $solicitud->estado = $tipo;
+        $solicitud->save();
+        return $solicitud;
         $datos = $request->only(['subject', 'content', 'receptores']);
         $emails = $this->getEmailsFromReceptores($datos['receptores']);
         $datos2 = [
