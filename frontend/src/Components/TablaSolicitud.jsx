@@ -68,8 +68,8 @@ const TablaSolicitudes = () => {
   const transformarDatos = (datos) => {
     return datos.map((item) => ({
       ...item,
-      ambiente: JSON.parse(item.ambiente).join(', '),
-      grupo: JSON.parse(item.grupo).join(', '),
+      ambiente: item.ambiente?JSON.parse(item.ambiente).join(', '):'',
+      grupo: item.grupo?JSON.parse(item.grupo).join(', '):'',
     }));
   };
   
