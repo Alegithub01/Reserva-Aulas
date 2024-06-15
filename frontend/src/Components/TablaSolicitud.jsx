@@ -65,13 +65,29 @@ const TablaSolicitudes = () => {
   });
   const [idATratar, setidATratar] = useState(null);
 
+  const transformarDatos = (datos) => {
+    return datos.map((item) => ({
+      ...item,
+      ambiente: item.ambiente?JSON.parse(item.ambiente).join(', '):'',
+      grupo: item.grupo?JSON.parse(item.grupo).join(', '):'',
+    }));
+  };
+  
    useEffect(() => {
     const datita = async () => {
-      await axios.get('http://localhost:8000/api/solicitudes-formato')
+      const dataUser = await axios.post(`${URL_API}/auth/me`,{}, {
+        headers:
+        {
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
+      const id = dataUser.data.id;
+      await axios.get(`${URL_API}/solicitudes-formato/${id}`)
       .then(response => {
         // Assign the response data to prueba
         console.log(response.data);
-        setFilas(response.data);
+        const datosTransformados = transformarDatos(response.data);
+        setFilas(datosTransformados);
       })
       .catch(error => {
         console.error('Error fetching solicitudes:', error);
@@ -310,8 +326,11 @@ const TablaSolicitudes = () => {
       cellClassName: 'actions',
       getActions: (params) => {
         const ambiente = params.row.ambiente;
+        const estado = params.row.estado;
         if (ambiente && ambiente.split(',').length === 1){
           return [];
+        }else if(estado === 'Asignación rechazada' || estado === 'Asignación aceptada'){
+          return []; 
         }else if (ambiente && ambiente.split(',').length > 1){
           return [
             <GridActionsCellItem

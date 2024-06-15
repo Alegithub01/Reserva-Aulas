@@ -113,7 +113,7 @@ Route::patch('admin/settings1', [AdminSettingsController::class, 'update']);
 Route::post('/asignarIndividual', [ReservaController::class, 'asignarIndividual']);
 Route::post('/asignarGrupal', [ReservaController::class, 'asignarGrupal']);
 
-//Rechazar solicitud
+//Rechazar solicitud por administrador
 
 Route::post('/rechazarIndividual/{id}', [SolicitudController::class, 'rechazar']);
 Route::post('/rechazarGrupal/{id}', [SolicitudGrupalController::class, 'rechazarGrupal']);
