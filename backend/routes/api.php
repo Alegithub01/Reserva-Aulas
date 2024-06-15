@@ -99,7 +99,7 @@ Route::delete('/solicitudes-grupales/{id}', [SolicitudGrupalController::class, '
 Route::post('/aceptarGrupal/{id}', [SolicitudGrupalController::class, 'aceptarGrupal'])->name('solicitudesGrupales.aceptarGrupal');
 Route::get('/aceptadasGrupales', [SolicitudGrupalController::class, 'solicitudesAceptadasGrupal']);
 Route::get('/materias/nombres', [MateriaController::class, 'getNombres']);
-
+Route::get('/solicitudes-grupales/formatted/{userId}', [SolicitudGrupalController::class, 'getSolicitudesGrupalesFormatted']);
 Route::get('/materia-docente/grupos/{nombreMateria}', [MateriaDocenteController::class, 'gruposPorMateria']);
 
 Route::get('/materia-docente/info/{nombreMateria}', [MateriaDocenteController::class, 'obtenerInfoPorMateria']);

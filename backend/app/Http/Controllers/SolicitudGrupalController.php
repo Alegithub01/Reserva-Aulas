@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\SolicitudGrupal;
 use App\Models\Reserva;
+use Illuminate\Support\Facades\DB;
 
 class SolicitudGrupalController extends Controller
 {
@@ -17,7 +18,7 @@ class SolicitudGrupalController extends Controller
     public function store(Request $request)
     {
         $solicitudGrupal = new SolicitudGrupal();
-        $solicitudGrupal->users_id = json_encode($request->users_id);
+        $solicitudGrupal->users_id = $request->users_id;
         $solicitudGrupal->grupos = json_encode($request->grupos);
         $solicitudGrupal->tipo_ambiente = $request->tipo_ambiente;
         $solicitudGrupal->materia = $request->materia;
@@ -41,7 +42,7 @@ class SolicitudGrupalController extends Controller
     public function update(Request $request, $id)
     {
         $solicitudGrupal = SolicitudGrupal::findOrFail($id);
-        $solicitudGrupal->users_id = json_encode($request->users_id);
+        $solicitudGrupal->users_id = $request->users_id;
         $solicitudGrupal->grupos = json_encode($request->grupos);
         $solicitudGrupal->tipo_ambiente = $request->tipo_ambiente;
         $solicitudGrupal->materia = $request->materia;
@@ -94,10 +95,7 @@ class SolicitudGrupalController extends Controller
 
     public function solicitudesAceptadasGrupal()
     {
-        // Obtener todas las solicitudes aceptadas
         $solicitudes = SolicitudGrupal::where('estado', 'Aceptada')->get();
-
-        // Preparar un array para almacenar la información formateada
         $resultado = [];
 
         foreach ($solicitudes as $solicitud) {
@@ -117,5 +115,57 @@ class SolicitudGrupalController extends Controller
 
         // Devolver la información formateada
         return response()->json($resultado, 200);
+    }
+
+    public function getSolicitudesGrupalesFormatted($numero)
+    {
+        
+        $solicitudes = SolicitudGrupal::with('reservas')
+                        ->whereRaw("CONCAT('-', users_id, '-') LIKE '%-$numero-%'")
+                        ->get();
+
+        // Formatear las solicitudes
+        $formattedSolicitudes = $solicitudes->map(function ($solicitud) {
+            $ambientes = $solicitud->reservas->pluck('aulas')->implode(', ');
+
+            // Decodificar el JSON 'horas' a un array si no es ya un array
+            $horas = is_array($solicitud->horas) ? $solicitud->horas : json_decode($solicitud->horas, true);
+
+            return [
+                'id' => $solicitud->id,
+                'nombre' => 'Solicitud Grupal',
+                'materia' => $solicitud->materia,
+                'grupos' => is_array($solicitud->grupos) ? implode(', ', $solicitud->grupos) : $solicitud->grupos,
+                'fecha' => $solicitud->fecha->format('Y-m-d'),
+                'horario' => $this->formatearHoras($horas),
+                'servicios' => $solicitud->servicios,
+                'Motivo' => $solicitud->detalle,
+                'estado' => ucfirst($solicitud->estado),
+                'ambiente' => $ambientes,
+            ];
+        });
+
+        // Devolver la respuesta en formato JSON
+        return response()->json($formattedSolicitudes, 200);
+    }
+
+    private function formatearHoras($horas)
+    {
+        $horarios = [
+            "10" => "06:45-08:15",
+            "20" => "08:15-09:45",
+            "30" => "09:45-11:15",
+            "40" => "11:15-12:45",
+            "50" => "12:45-14:15",
+            "60" => "14:15-15:45",
+            "70" => "15:45-17:15",
+            "80" => "17:15-18:45",
+            "90" => "18:45-20:15",
+            "100" => "20:15-21:45",
+        ];
+
+        return implode(', ', array_map(function($hora) use ($horarios) {
+            return $horarios[$hora] ?? $hora;
+        }, $horas));
     }
 }

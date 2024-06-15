@@ -49,7 +49,7 @@ class SolicitudGrupal extends Model
      * @var array
      */
     protected $casts = [
-        'users_id' => 'array',
+        
         'grupos' => 'array',
         'tipo_ambiente' => 'array',
         'horas' => 'array',
