@@ -143,9 +143,12 @@ const FormularioGrupal = ({ aulaInicial, horaInicial }) => {
       const horasEtiqueta = hora.map(hora => horas.filter(hora1 => hora1.value === hora)[0].label);
       const motivoEtiqueta =  motivos.filter(motivo => motivo.value === detalles)[0].label;
       console.log(docentes);
+      //Modificacion para el envio de IDs de los docentes
+      const usersIdString = `-${docentes.map(docente => docente.id_docente).join('-')}-`;
+
       try {
         const response = axios.post(`${URL_API}/solicitudes-grupales`, {
-          "users_id": docentes.map(docente => docente.id_docente),
+          "users_id": usersIdString,
           "grupos": gruposDocentes,
           "tipo_ambiente": ambiente,
           "materia": materia,
