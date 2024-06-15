@@ -67,7 +67,7 @@ class SolicitudGrupalController extends Controller
     {
         $solicitud_g = SolicitudGrupal::findOrFail($id);
 
-        if ($solicitud_g->estado === 'aceptada') {
+        if ($solicitud_g->estado === 'Aceptada') {
             return response()->json(['error' => 'La solicitud ya ha sido aceptada'], 400);
         }
 
@@ -81,18 +81,21 @@ class SolicitudGrupalController extends Controller
         $solicitud_g = SolicitudGrupal::findOrFail($id);
         $solicitud_g->estado = 'Rechazada';
         $solicitud_g->save();
-
         return response()->json(['message' => 'Solicitud rechazada'], 200);
     }
 
     public function noAceptarAsignacionGrupal($id)
     {
         $solicitud_g = SolicitudGrupal::findOrFail($id);
-        $solicitud_g->estado = 'Asignación rechazada';
-        $solicitud_g->save();
-        return response()->json(['message' => 'Asignación rechazada por el docente'], 200);
+        if ($solicitud_g->estado === 'Asignada') {
+            $solicitud_g->estado = 'Asignación rechazada';
+            $solicitud_g->save();
+            return response()->json(['message' => 'Asignación rechazada por el docente'], 200);
+        }
+        return response()->json(['error' => 'La solicitud aun no tiene aulas asignadas'], 400);
+        
     }
-
+    
     public function solicitudesAceptadasGrupal()
     {
         $solicitudes = SolicitudGrupal::where('estado', 'Aceptada')->get();

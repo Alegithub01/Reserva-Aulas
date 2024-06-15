@@ -44,15 +44,23 @@ class ReservaController extends Controller
     {
         $solicitud = SolicitudGrupal::findOrFail($request->id);
 
-        $reserva = new Reserva();
-        $reserva->solicitable_id = $request->id;
-        $reserva->solicitable_type = SolicitudGrupal::class;
-        $reserva->aulas = json_encode($request->aulas);
+        $reservaExistente = Reserva::where('solicitable_id', $request->id)
+                                ->where('solicitable_type', SolicitudGrupal::class)
+                                ->first();
 
-        $reserva->save();
+        if ($reservaExistente) {
+            $reservaExistente->aulas = json_encode($request->aulas);
+            $reservaExistente->save();
+        } else {
+            $reserva = new Reserva();
+            $reserva->solicitable_id = $request->id;
+            $reserva->solicitable_type = Solicitud::class;
+            $reserva->aulas = json_encode($request->aulas);
+            $reserva->save();
+        }
+
         $solicitud->estado = 'Asignada';
         $solicitud->save();
-
         return response(['message' => 'Aulas asignadas a las reservas'], 200);
     }
 }

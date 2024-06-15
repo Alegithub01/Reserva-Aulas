@@ -179,10 +179,11 @@ class SolicitudController extends Controller
     public function noAceptarAsignacion($id)
     {
         $solicitud = Solicitud::findOrFail($id);
-
-        $solicitud->estado = 'Asignación rechazada';
-        $solicitud->save();
-
-        return response()->json(['message' => 'Asignación rechazada por el docente'], 200);
+        if ($solicitud->estado === 'Asignada') {
+            $solicitud->estado = 'Asignación rechazada';
+            $solicitud->save();
+            return response()->json(['message' => 'Asignación rechazada por el docente'], 200);
+        }
+        return response()->json(['message' => 'Solicitud sin aulas asignadas'], 200);
     }
 }
