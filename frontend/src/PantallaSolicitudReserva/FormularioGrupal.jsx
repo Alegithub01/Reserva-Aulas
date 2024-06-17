@@ -181,17 +181,24 @@ const FormularioGrupal = ({ aulaInicial, horaInicial }) => {
       console.log('No se pudo obtener el ID del docente');
     }
   }
+
   const obtenerDocenteId = async (nombreDocente) => {
     try {
       if (docenteId === null) {
         const response = await axios.get(`${URL_API}/users/${nombreDocente}/id`);
-        return response.data.id;
+        const userId = response.data.id;
+        setUserId(userId); 
+  
+        const response2 = await axios.get(`${URL_API}/docente-id/${userId}`);
+        setDocenteId(response2.data.id);
+  
+        return response2.data.id;
       } else {
-        return docenteId;
+        return docenteId; 
       }
     } catch (error) {
       console.error('Error al obtener el ID del docente desde el backend:', error);
-      return null;
+      return null; 
     }
   };
 
