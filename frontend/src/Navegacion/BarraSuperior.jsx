@@ -77,31 +77,6 @@ const BarraSuperior = () => {
           </Box>
         )}
         <Box sx={{ display: "flex" }}>
-          <Tooltip title="Notificaciones">
-            <IconButton style={{ color: 'white' }} size="large" onClick={manejarAperturaNotificaciones}>
-              <NotificationsIcon />
-            </IconButton>
-          </Tooltip>
-          <Menu
-            id="menu-notificaciones"
-            anchorEl={anchorElNotificaciones}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            open={abiertoNotificaciones}
-            onClose={manejarCierreNotificaciones}
-          >
-            <MenuItem onClick={manejarCierreNotificaciones}>Notificación 1</MenuItem>
-            <MenuItem onClick={manejarCierreNotificaciones}>Notificación 2</MenuItem>
-            <Divider />
-            <MenuItem onClick={manejarCierreNotificaciones}>Ver todas</MenuItem>
-          </Menu>
           <Tooltip title="Perfil">
             <IconButton
               edge="end"
