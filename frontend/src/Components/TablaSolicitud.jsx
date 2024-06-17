@@ -85,7 +85,6 @@ const TablaSolicitudes = () => {
       // Fetch solicitudes-formato
       const responseFormato = await axios.get(`${URL_API}/solicitudes-formato/${id}`);
       const datosFormato = transformarDatos(responseFormato.data);
-
       // Fetch solicitudes-grupales
       const responseGrupales = await axios.get(`${URL_API}/solicitudes-grupales/formatted/${id}`);
       const datosGrupales = transformarDatos(responseGrupales.data);

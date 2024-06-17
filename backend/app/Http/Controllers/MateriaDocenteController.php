@@ -80,7 +80,7 @@ class MateriaDocenteController extends Controller
             // Si el docente tiene un usuario relacionado
             if ($docente && $docente->user) {
                 $nombreDocente = $docente->user->nombres . ' ' . $docente->user->apellidos;
-                $docenteId = $docente->id;
+                $docenteId = $docente->user->id;
             } else {
                 $nombreDocente = 'Docente desconocido'; // Manejar caso donde no hay usuario relacionado
                 $docenteId = null;
