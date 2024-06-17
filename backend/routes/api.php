@@ -76,7 +76,7 @@ Route::post('/ambientes/obtener-id-por-nombre', [AmbienteController::class, 'obt
 
 
 //Rutas de las solicitudes
-
+Route::get('/aceptadasInforme', [SolicitudController::class, 'solicitudesAceptadasInforme'])->name('solicitudes.aceptadasInforme');
 Route::get('/solicitudes', [SolicitudController::class, 'index'])->name('solicitudes.index');
 Route::post('/solicitudes', [SolicitudController::class, 'store'])->name('solicitudes.store');
 Route::get('/solicitudes/{id}', [SolicitudController::class, 'show'])->name('solicitudes.show');
@@ -91,6 +91,7 @@ Route::get('/docentes/{idDocente}/materias', [MateriaDocenteController::class, '
 
 Route::get('/docentes/{idDocente}/materias/{nombreMateria}/grupos-inscritos', [MateriaDocenteController::class, 'obtenerGruposEInscritosPorIdDocenteYNombreMateria']);
 
+Route::get('/aceptadasGrupalesInforme', [SolicitudGrupalController::class, 'solicitudesAceptadasGrupalInforme']);
 Route::get('/solicitudes-grupales', [SolicitudGrupalController::class, 'index'])->name('solicitudesGrupales.index');
 Route::post('/solicitudes-grupales', [SolicitudGrupalController::class, 'store'])->name('solicitudesGrupales.store');
 Route::get('/solicitudes-grupales/{id}', [SolicitudGrupalController::class, 'show'])->name('solicitudesGrupales.show');
