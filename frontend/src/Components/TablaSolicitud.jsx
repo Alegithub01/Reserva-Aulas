@@ -82,26 +82,22 @@ const TablaSolicitudes = () => {
         },
       });
       const id = dataUser.data.id;
-      await axios.get(`${URL_API}/solicitudes-formato/${id}`)
-      .then(response => {
-        // Assign the response data to prueba
-        console.log(response.data);
-        const datosTransformados = transformarDatos(response.data);
-        setFilas(datosTransformados);
-      })
-      .catch(error => {
-        console.error('Error fetching solicitudes:', error);
-      });
-      await axios.get(`${URL_API}/solicitudes-grupales/formatted/${id}`)
-      .then(response => {
-        // Assign the response data to prueba
-        console.log(response.data);
-        const datosTransformados = transformarDatos(response.data);
-        setFilas((filasAnteriores) => [...filasAnteriores, ...datosTransformados]);
-      })
-      .catch(error => {
-        console.error('Error fetching solicitudes:', error);
-      });
+      // Fetch solicitudes-formato
+      const responseFormato = await axios.get(`${URL_API}/solicitudes-formato/${id}`);
+      const datosFormato = transformarDatos(responseFormato.data);
+
+      // Fetch solicitudes-grupales
+      const responseGrupales = await axios.get(`${URL_API}/solicitudes-grupales/formatted/${id}`);
+      const datosGrupales = transformarDatos(responseGrupales.data);
+
+      // Combine the two arrays and remove duplicates
+      const combinedData = [...datosFormato, ...datosGrupales];
+
+      // Assuming each row has a unique identifier, e.g., 'id'
+      const uniqueData = Array.from(new Set(combinedData.map(item => item.id)))
+                              .map(id => combinedData.find(item => item.id === id));
+
+      setFilas(uniqueData);
     }
     datita();
    }, []);
