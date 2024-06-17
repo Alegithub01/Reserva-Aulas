@@ -304,7 +304,7 @@ const RegistroDocente = () => {
           }}
         >
           <DialogContentText id="alert-dialog-description">
-            Registrado exitósamente.
+            Registrado exitosamente
           </DialogContentText>
         </DialogContent>
         <DialogActions
