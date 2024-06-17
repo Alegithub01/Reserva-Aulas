@@ -67,7 +67,7 @@ class CorreoController extends Controller
         // actualizar estado en la base de datos
         $solicitud->estado = $tipo;
         $solicitud->save();
-        return $solicitud;
+
         $datos = $request->only(['subject', 'content', 'receptores']);
         $emails = $this->getEmailsFromReceptores($datos['receptores']);
         $datos2 = [

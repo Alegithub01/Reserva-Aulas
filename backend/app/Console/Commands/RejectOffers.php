@@ -22,7 +22,7 @@ class RejectOffers extends Command
         // quiero imrpimir todas las solicitudes , todas
         $solicitudes = Solicitud::where('estado', 'oferta')->get();
         foreach ($solicitudes as $solicitud) {
-            if ($solicitud->created_at->diffInDays($twoDaysAgo) >= -1) {
+            if ($solicitud->created_at->diffInDays($twoDaysAgo) >= 2) {
                 $solicitud->estado = 'rechazada';
                 $solicitud->save();
             }
