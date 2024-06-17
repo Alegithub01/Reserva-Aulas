@@ -35,7 +35,7 @@ const FormularioGrupal = ({ aulaInicial, horaInicial }) => {
     hora: '',
     detalles: '',
   });
-
+  const [userId, setUserId] = useState(null);
   const [docenteId, setDocenteId] = useState(null);
   const [cargarBDMateria, setCargarBDMateria] = useState([]);
 
