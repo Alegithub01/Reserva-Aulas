@@ -138,7 +138,7 @@ class SolicitudGrupalController extends Controller
                 'id' => $solicitud->id,
                 'nombre' => 'Solicitud Grupal',
                 'materia' => $solicitud->materia,
-                'grupos' => is_array($solicitud->grupos) ? implode(', ', $solicitud->grupos) : $solicitud->grupos,
+                'grupo' => is_array($solicitud->grupos) ? implode(', ', $solicitud->grupos) : $solicitud->grupos,
                 'fecha' => $solicitud->fecha->format('Y-m-d'),
                 'horario' => $this->formatearHoras($horas),
                 'servicios' => $solicitud->servicios,
