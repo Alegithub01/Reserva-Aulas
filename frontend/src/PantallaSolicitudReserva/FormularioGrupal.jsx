@@ -150,7 +150,7 @@ const FormularioGrupal = ({ aulaInicial, horaInicial }) => {
         const response = axios.post(`${URL_API}/solicitudes-grupales`, {
           "users_id": usersIdString,
           "grupos": gruposDocentes,
-          "tipo_ambiente": ambiente,
+          "tipo_ambiente": [ambiente],
           "materia": materia,
           "horas": horasEtiqueta,
           "servicios": serviciosSolicitados,
