@@ -92,6 +92,16 @@ const TablaSolicitudes = () => {
       .catch(error => {
         console.error('Error fetching solicitudes:', error);
       });
+      await axios.get(`${URL_API}/solicitudes-grupales/formatted/${id}`)
+      .then(response => {
+        // Assign the response data to prueba
+        console.log(response.data);
+        const datosTransformados = transformarDatos(response.data);
+        setFilas((filasAnteriores) => [...filasAnteriores, ...datosTransformados]);
+      })
+      .catch(error => {
+        console.error('Error fetching solicitudes:', error);
+      });
     }
     datita();
    }, []);

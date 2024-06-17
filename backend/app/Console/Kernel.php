@@ -15,7 +15,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        // Programa el comando 'RejectOffers' para que se ejecute cada minuto
+        $schedule->command('solicitudes:reject-offers')->everyMinute();
     }
 
     /**
