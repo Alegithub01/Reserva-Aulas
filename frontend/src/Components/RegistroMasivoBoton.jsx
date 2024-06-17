@@ -61,8 +61,8 @@ const RegistroMasivoBoton = () => {
       const leerArchivo = new FileReader();
       leerArchivo.onload = (e) => {
         const texto = e.target.result;
-        const validHeaders = ['Periodos', 'Dia', 'Servicios', 'Ubicacion', 'Planta', 'Tipo', 'Capacidad', 'Nombre'];
-        const headersValidos = validHeaders.every(header => texto.includes(header));
+        const validHeaders = ['nombre', 'capacidad', 'tipo', 'planta', 'ubicación', 'servicios', 'dia', 'horas'];
+        const headersValidos = validHeaders.every(header => texto.toLowerCase().includes(header));
         console.log(texto);
         if (headersValidos) {
           console.log('si entre');
@@ -73,8 +73,7 @@ const RegistroMasivoBoton = () => {
               campos[7] = campos.slice(7).join(',');
               campos = campos.slice(0, 8);
             }
-            campos[7] = campos[7] ? campos[7].split(',') : [];
-            campos[7] = campos[7].map((hora) => hora.replace(/^\"|\"\r$/g, ''));
+            campos[7] = campos[7] ? campos[7].split(/,|\s+/).map(hora => hora.replace(/^"|"$/g, '')) : [];
             return {
               nombre: campos[0],
               capacidad: parseInt(campos[1]),
