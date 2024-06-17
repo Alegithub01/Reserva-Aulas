@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Await, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SplitScreenLayout from "../Components/SplitScreenLayout";
 import TextInput from "../Utils/CampoValidado";
 import StyledText from "../StyledText";
@@ -57,49 +57,48 @@ const PantallaInicioSesionProfesor = () => {
   };
 
   const iniciarSesion = () => {
-  if (validarFormulario()) {
-    setCargando(true);
-    axios
-      .post(`${URL_API}/auth/login`, {
-        email: correoElectronico,
-        password: contrasena,
-      })
-      .then(async (response) => {
-        if (response.data.access_token) {
-          console.log("Token recibido:", response.data.access_token);
-          localStorage.setItem("access_token", response.data.access_token);
-          // Después de iniciar sesión con éxito, obtén el rol del usuario
-          await obtenerRolUsuario();
-        } else {
-          console.error("No se recibió token");
+    if (validarFormulario()) {
+      setCargando(true);
+      axios
+        .post(`${URL_API}/auth/login`, {
+          email: correoElectronico,
+          password: contrasena,
+        })
+        .then(async (response) => {
+          if (response.data.access_token) {
+            console.log("Token recibido:", response.data.access_token);
+            localStorage.setItem("access_token", response.data.access_token);
+            await obtenerRolUsuario();
+          } else {
+            console.error("No se recibió token");
+            setSnackbarMessage("Inicio de sesión fallido");
+            setSnackbarSeverity("error");
+            setSnackbarOpen(true);
+            throw new Error("No se recibió token");
+          }
+        })
+        .catch((error) => {
+          console.error("Error al iniciar sesión:", error);
           setSnackbarMessage("Inicio de sesión fallido");
           setSnackbarSeverity("error");
-          throw new Error("No se recibió token");
-        }
-      })
-      .catch((error) => {
-        console.error("Error al iniciar sesión:", error);
-        setSnackbarMessage("Inicio de sesión fallido");
-        setSnackbarSeverity("error");
-      })
-      .finally(() => {
-        setCargando(false);
-        setSnackbarOpen(true);
-      });
-  }
-};
+          setSnackbarOpen(true);
+        })
+        .finally(() => {
+          setCargando(false);
+        });
+    }
+  };
 
   const obtenerRolUsuario = async () => {
-    // Llama a tu backend para obtener el rol del usuario usando el token
     const token = localStorage.getItem("access_token");
     if (!token) {
       console.error("No se encontró el token");
       return;
     }
-  
+
     axios
       .post(`${URL_API}/auth/get-role-name`, {
-        email: correoElectronico
+        email: correoElectronico,
       })
       .then(async (response) => {
         console.log("Respuesta del servidor:", response.data);
@@ -111,31 +110,37 @@ const PantallaInicioSesionProfesor = () => {
       .catch((error) => {
         console.error("Error al obtener el rol del usuario:", error);
       });
-      
   };
 
   const controlStore = async () => {
     try {
-      const response = await axios.post(`${URL_API}/auth/me`, {}, {
-        headers:
+      const response = await axios.post(
+        `${URL_API}/auth/me`,
+        {},
         {
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-      });
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+        }
+      );
       actualizarNombre(response.data.nombres);
       actualizarCorreo(response.data.email);
-      localStorage.setItem('nombre', response.data.nombres + ' ' + response.data.apellidos);
-      localStorage.setItem('correo', response.data.email);
-      console.log('Datos del usuario:', response.data.rol_id);
+      localStorage.setItem(
+        "nombre",
+        response.data.nombres + " " + response.data.apellidos
+      );
+      localStorage.setItem("correo", response.data.email);
+      console.log("Datos del usuario:", response.data.rol_id);
       //BACKEND
-      const rolNoNulo = response.data.rol_id || "2"; 
-      localStorage.setItem('rol', rolNoNulo);  
+      const rolNoNulo = response.data.rol_id || "2";
+      localStorage.setItem("rol", rolNoNulo);
     } catch (error) {
       console.error(error);
     }
   };
+
   const obtenerDatosUsuario = async () => {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem("access_token");
     if (!token) {
       console.error("No se enconto el token");
       return Promise.reject(new Error("No se enconto el token"));
@@ -143,16 +148,11 @@ const PantallaInicioSesionProfesor = () => {
     await controlStore();
   };
 
-  const manejarAbrirSnackbar = (mensaje) => {
-    setMensajeSnackbar(mensaje);
-    setSnackbarAbierto(true);
-  };
-
   const manejarCerrarSnackbar = (evento, razon) => {
-    if (razon === 'clickaway') {
+    if (razon === "clickaway") {
       return;
     }
-    setSnackbarAbierto(false);
+    setSnackbarOpen(false);
   };
 
   const contenidoIzquierdo = (
@@ -225,7 +225,7 @@ const PantallaInicioSesionProfesor = () => {
         onChange={(e) => setContrasena(e.target.value)}
       />
       <Button onClick={iniciarSesion} fullWidth={true}>
-        Inicio de Sesion
+        Inicio de sesión
       </Button>
 
       <div
@@ -257,10 +257,10 @@ const PantallaInicioSesionProfesor = () => {
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={6000}
-        onClose={() => setSnackbarOpen(false)}
+        onClose={manejarCerrarSnackbar}
       >
         <Alert
-          onClose={() => setSnackbarOpen(false)}
+          onClose={manejarCerrarSnackbar}
           severity={snackbarSeverity}
           sx={{ width: "100%" }}
         >
@@ -271,10 +271,7 @@ const PantallaInicioSesionProfesor = () => {
   );
 
   return (
-    <SplitScreenLayout
-      left={contenidoIzquierdo}
-      right={contenidoDerecho}
-    ></SplitScreenLayout>
+    <SplitScreenLayout left={contenidoIzquierdo} right={contenidoDerecho} />
   );
 };
 

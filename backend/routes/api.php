@@ -14,7 +14,7 @@ use App\Http\Controllers\SolicitudGrupalController;
 use App\Http\Controllers\MateriaController;
 use App\Http\Controllers\AdminSettingsController;
 use App\Http\Controllers\ReservaController;
-
+use App\Http\Controllers\DocenteController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -76,7 +76,7 @@ Route::post('/ambientes/obtener-id-por-nombre', [AmbienteController::class, 'obt
 
 
 //Rutas de las solicitudes
-
+Route::get('/aceptadasInforme', [SolicitudController::class, 'solicitudesAceptadasInforme'])->name('solicitudes.aceptadasInforme');
 Route::get('/solicitudes', [SolicitudController::class, 'index'])->name('solicitudes.index');
 Route::post('/solicitudes', [SolicitudController::class, 'store'])->name('solicitudes.store');
 Route::get('/solicitudes/{id}', [SolicitudController::class, 'show'])->name('solicitudes.show');
@@ -91,6 +91,7 @@ Route::get('/docentes/{idDocente}/materias', [MateriaDocenteController::class, '
 
 Route::get('/docentes/{idDocente}/materias/{nombreMateria}/grupos-inscritos', [MateriaDocenteController::class, 'obtenerGruposEInscritosPorIdDocenteYNombreMateria']);
 
+Route::get('/aceptadasGrupalesInforme', [SolicitudGrupalController::class, 'solicitudesAceptadasGrupalInforme']);
 Route::get('/solicitudes-grupales', [SolicitudGrupalController::class, 'index'])->name('solicitudesGrupales.index');
 Route::post('/solicitudes-grupales', [SolicitudGrupalController::class, 'store'])->name('solicitudesGrupales.store');
 Route::get('/solicitudes-grupales/{id}', [SolicitudGrupalController::class, 'show'])->name('solicitudesGrupales.show');
@@ -122,3 +123,6 @@ Route::post('/rechazarGrupal/{id}', [SolicitudGrupalController::class, 'rechazar
 
 Route::post('/noAceptar/{id}', [SolicitudController::class, 'noAceptarAsignacion']);
 Route::post('/noAceptarGrupal/{id}', [SolicitudGrupalController::class, 'noAceptarAsignacionGrupal']);
+
+//Id del docente dado el Id usuario
+Route::get('/docente-id/{user_id}', [DocenteController::class, 'getDocenteIdByUserId']);

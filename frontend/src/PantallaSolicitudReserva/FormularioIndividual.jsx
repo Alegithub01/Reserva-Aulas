@@ -36,7 +36,9 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
     fecha: '',
     hora: '',
   });
+  const [userId, setUserId] = useState(null);
   const [docenteId, setDocenteId] = useState(null);
+  
   /*datos de prueba para los dropdowns */
 
   const motivos = [
@@ -219,8 +221,13 @@ const FormularioIndividual = ({ aulaInicial, horaInicial }) => {
     try {
       if (docenteId === null) {
         const response = await axios.get(`${URL_API}/users/${nombreDocente}/id`);
-        setDocenteId(response.data.id); 
-        return response.data.id;
+        const userId = response.data.id;
+        setUserId(userId); 
+  
+        const response2 = await axios.get(`${URL_API}/docente-id/${userId}`);
+        setDocenteId(response2.data.id);
+  
+        return response2.data.id;
       } else {
         return docenteId; 
       }

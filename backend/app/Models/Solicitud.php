@@ -55,5 +55,5 @@ class Solicitud extends Model
         return $this->morphMany(Reserva::class, 'solicitable');
     }
 
-    
+
 }
