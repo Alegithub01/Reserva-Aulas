@@ -65,7 +65,7 @@ class CorreoController extends Controller
         // ahora buscar la Soliciutd segun el id
         $solicitud = Solicitud::findOrFail($idSoli);
         // actualizar estado en la base de datos
-        $solicitud->estado = $tipo;
+        //$solicitud->estado = $tipo;
         $solicitud->save();
 
         $datos = $request->only(['subject', 'content', 'receptores']);

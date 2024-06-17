@@ -206,7 +206,15 @@ const TablaSolicitudes = () => {
   const manejarAceptarOfertaBackend = () => () => {
     console.log('Se aceptó la solicitud');
     // PARA BACKEND ----------************-**----------------------
-    
+    try{
+      if(idATratar < 1000){
+        axios.post(`${URL_API}/aceptar/${idATratar}`);
+      }else{
+        axios.post(`${URL_API}/aceptarGrupal/${idATratar}`);
+      }
+    }catch(error){
+      console.error('Error al aceptar la solicitud.', error);
+    }
     setDialogoAbierto(false);
     setidATratar(null);
   }
@@ -335,7 +343,7 @@ const TablaSolicitudes = () => {
         const estado = params.row.estado;
         if (ambiente && ambiente.split(',').length === 1){
           return [];
-        }else if(estado === 'Asignación rechazada' || estado === 'Asignación aceptada'){
+        }else if(estado === 'Rechazada' || estado === 'Aceptada'){
           return []; 
         }else if (ambiente && ambiente.split(',').length > 1){
           return [

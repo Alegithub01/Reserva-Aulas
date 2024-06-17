@@ -216,6 +216,7 @@ const SolicitudAdmin = () => {
     console.log("se confirma");
     setDialogoAbierto({ ...dialogoAbierto, aceptar: false });
     const ambientesFormato = ambienteSeleccionado.split(', ');
+    console.log(ambientesFormato);
     try {
       if (dataRow.tipoDado === "individual") {
         if (ambientesFormato.length > 1) {
