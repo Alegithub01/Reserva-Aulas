@@ -257,7 +257,7 @@ const SolicitudAdmin = () => {
       setSeAceptoSolicitud(true);
       setMostrarPasoCorreo(true);
       if (ambientesFormato.length > 1) {
-        setTipoCorreo('oferta');
+        setTipoCorreo('Asignada');
         setMensajeCorreo(`Se le informa que su solicitud ha sido aceptada. Los ambientes asignados son: ${ambientesFormato.join(', ')}, por favor indique si acepta o no esta oferta de ambientes.\n\nLos horarios elegidos son: ${dataRow.horas.join(', ')}. con fecha ${dateFinal} para la materia ${dataRow.materia} con capacidad de ${dataRow.capacidad} estudiantes.\n\nServicios solicitados: ${dataRow.servicios}.`);
       } else {
         setTipoCorreo('confirmacionDirecta');

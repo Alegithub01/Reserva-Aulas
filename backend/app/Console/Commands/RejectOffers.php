@@ -20,10 +20,10 @@ class RejectOffers extends Command
     {
         $twoDaysAgo = Carbon::now();
         // quiero imrpimir todas las solicitudes , todas
-        $solicitudes = Solicitud::where('estado', 'oferta')->get();
+        $solicitudes = Solicitud::where('estado', 'Asignada')->get();
         foreach ($solicitudes as $solicitud) {
             if ($solicitud->created_at->diffInDays($twoDaysAgo) >= 2) {
-                $solicitud->estado = 'rechazada';
+                $solicitud->estado = 'Rechazada';
                 $solicitud->save();
             }
         }
