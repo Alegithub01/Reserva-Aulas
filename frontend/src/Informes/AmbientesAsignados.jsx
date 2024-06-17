@@ -21,6 +21,7 @@ import {
   Legend,
   ArcElement,
 } from "chart.js";
+import { URL_API } from "../services/const";
 
 ChartJS.register(
   CategoryScale,
@@ -48,7 +49,7 @@ const AmbientesAsignados = () => {
     const fetchAsignacionesIndividuales = async () => {
       try {
         const response = await axios.get(
-          "https://my-json-server.typicode.com/WilliamCallao/Fake-api/solicitudes_individuales"
+          `${URL_API}/aceptadasInforme`
         );
         setAsignacionesIndividuales(response.data);
       } catch (error) {
@@ -59,7 +60,7 @@ const AmbientesAsignados = () => {
     const fetchAsignacionesGrupales = async () => {
       try {
         const response = await axios.get(
-          "https://my-json-server.typicode.com/WilliamCallao/Fake-api/solicitudes_grupales"
+          `${URL_API}/aceptadasGrupalInforme`
         );
         setAsignacionesGrupales(response.data);
       } catch (error) {
@@ -70,7 +71,7 @@ const AmbientesAsignados = () => {
     const fetchAmbientes = async () => {
       try {
         const response = await axios.get(
-          "https://my-json-server.typicode.com/WilliamCallao/Fake-api/ambientes"
+          `${URL_API}/ambientes`
         );
         setAmbientes(response.data);
       } catch (error) {
