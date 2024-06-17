@@ -177,7 +177,12 @@ const TablaSolicitudes = () => {
   const manejoConfirmarEliminar = async () => {
     try {
       // PARA BACKEND ----------************-**----------------------
-      await axios.delete(`${URL_API}/solicitudes/${idATratar}`); //cambiar url
+      if(idATratar < 10000){
+        await axios.delete(`${URL_API}/solicitudes/${idATratar}`); //cambiar url
+      }else{
+        await axios.delete(`${URL_API}/solicitudes-grupales/${idATratar}`); //cambiar url
+      }
+      //await axios.delete(`${URL_API}/solicitudes/${idATratar}`); //cambiar url
       setFilas((filasAnteriores) => filasAnteriores.filter((fila) => fila.id !== idATratar));
       setDialogoAbierto(false);
       setidATratar(null);
