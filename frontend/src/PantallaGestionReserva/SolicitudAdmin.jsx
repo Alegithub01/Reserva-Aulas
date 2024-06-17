@@ -226,6 +226,11 @@ const SolicitudAdmin = () => {
           });
         }
         else {
+          axios.post(`${URL_API}/asignarIndividual`, {
+            id: dataRow.id,
+            aulas: ambientesFormato,
+          });
+
           axios.post(`${URL_API}/aceptar/${dataRow.id}`, {
             id: dataRow.id,
             aulas: ambientesFormato,
@@ -238,6 +243,11 @@ const SolicitudAdmin = () => {
             aulas: ambientesFormato,
           });
         } else {
+          axios.post(`${URL_API}/asignarGrupal`, {
+            id: dataRow.id,
+            aulas: ambientesFormato,
+          });
+
           axios.post(`${URL_API}/aceptarGrupal/${dataRow.id}`, {
             id: dataRow.id,
             aulas: ambientesFormato,
