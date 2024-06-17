@@ -83,7 +83,12 @@ const SolicitudAdmin = () => {
         }
       }
       if (dataRow.tipoDado === "grupal") {
-        const users = JSON.parse(dataRow.users_id);
+        console.log("Usuarios:", dataRow.users_id);
+
+        const users = dataRow.users_id
+          .split('-')         // Dividir la cadena por el carácter '-'
+          .filter(Boolean)    // Filtrar cualquier valor vacío
+          .map(Number);
 
         try {
           const userPromises = users.map(user =>
@@ -211,26 +216,27 @@ const SolicitudAdmin = () => {
     console.log("se confirma");
     setDialogoAbierto({ ...dialogoAbierto, aceptar: false });
     const ambientesFormato = ambienteSeleccionado.split(', ');
-    try{
-      if(dataRow.tipoDado === "individual"){
-        if(ambientesFormato.length > 1){
-        axios.post(`${URL_API}/asignarIndividual`, {
-          id: dataRow.id,
-          aulas: ambientesFormato,
-        });}
-        else{
+    try {
+      if (dataRow.tipoDado === "individual") {
+        if (ambientesFormato.length > 1) {
+          axios.post(`${URL_API}/asignarIndividual`, {
+            id: dataRow.id,
+            aulas: ambientesFormato,
+          });
+        }
+        else {
           axios.post(`${URL_API}/aceptar/${dataRow.id}`, {
             id: dataRow.id,
             aulas: ambientesFormato,
           });
         }
-      }else{
-        if(ambientesFormato.length > 1){
-        axios.post(`${URL_API}/asignarGrupal`, {
-          id: dataRow.id,
-          aulas: ambientesFormato,
-        });
-        }else {
+      } else {
+        if (ambientesFormato.length > 1) {
+          axios.post(`${URL_API}/asignarGrupal`, {
+            id: dataRow.id,
+            aulas: ambientesFormato,
+          });
+        } else {
           axios.post(`${URL_API}/aceptarGrupal/${dataRow.id}`, {
             id: dataRow.id,
             aulas: ambientesFormato,
@@ -239,14 +245,14 @@ const SolicitudAdmin = () => {
       }
       setSeAceptoSolicitud(true);
       setMostrarPasoCorreo(true);
-      if(ambientesFormato.length > 1){
+      if (ambientesFormato.length > 1) {
         setTipoCorreo('oferta');
         setMensajeCorreo(`Se le informa que su solicitud ha sido aceptada. Los ambientes asignados son: ${ambientesFormato.join(', ')}, por favor indique si acepta o no esta oferta de ambientes.\n\nLos horarios elegidos son: ${dataRow.horas.join(', ')}. con fecha ${dateFinal} para la materia ${dataRow.materia} con capacidad de ${dataRow.capacidad} estudiantes.\n\nServicios solicitados: ${dataRow.servicios}.`);
-      }else{
+      } else {
         setTipoCorreo('confirmacionDirecta');
         setMensajeCorreo(`Se le informa que su solicitud ha sido aceptada. El ambiente asignado es: ${ambientesFormato.join(', ')}.\n\nLos horarios elegidos son: ${dataRow.horas.join(', ')}, con fecha ${dateFinal} para la materia ${dataRow.materia} con capacidad de ${dataRow.capacidad} estudiantes.\n\nServicios solicitados: ${dataRow.servicios}.`);
       }
-    }catch(error){
+    } catch (error) {
       console.error("Error al aceptar la solicitud:", error);
     }
     //navigate('/Solicitudes');
@@ -260,24 +266,24 @@ const SolicitudAdmin = () => {
     console.log("se rechaza");
     console.log("Razones:", razones);
     console.log("Especificaciones:", especificaciones);
-    
+
     validarRazones();
-    if(mensajeError.razones === ''){
+    if (mensajeError.razones === '') {
       setDialogoAbierto({ ...dialogoAbierto, rechazar: false });
       //backend acaa
-      try{
-        if(dataRow.tipoDado === "individual"){
+      try {
+        if (dataRow.tipoDado === "individual") {
           axios.post(`${URL_API}/rechazarIndividual/${dataRow.id}`);
-        }else{
+        } else {
           axios.post(`${URL_API}/rechazarGrupal/${dataRow.id}`);
         }
-      }catch(error){
+      } catch (error) {
         console.error("Error al rechazar la solicitud:", error);
       }
       setMostrarPasoCorreo(true);
       setTipoCorreo('rechazo');
       setMensajeCorreo(`Se le informa que su solicitud ha sido rechazada por las siguientes razones: \n\n${razones}\n\n. ${especificaciones}`)
-    }else{
+    } else {
       console.log("Error en razones:", mensajeError.razones);
       setDialogoAbierto({ ...dialogoAbierto, rechazar: true });
     }
@@ -306,7 +312,7 @@ const SolicitudAdmin = () => {
   const validarRazones = () => {
     if (razones.length === 0) {
       setMensajeError(message => ({ ...message, razones: 'Seleccione las razones generales' }));
-    }else{
+    } else {
       setMensajeError(message => ({ ...message, razones: '' }));
     }
   }
@@ -402,14 +408,14 @@ const SolicitudAdmin = () => {
                   </div>
                 </RowPercentage>
                 {dataRow.tipoDado === "grupal" &&
-                <RowPercentage firstChildPercentage={50} >
-                <div style={defaultStyle.textSubtitle}>
-                  <StyledText style={defaultStyle.titles}>Grupos:</StyledText>
-                </div>
-                <div>
-                    <StyledText >{JSON.parse(dataRow.grupos).join(', ')}</StyledText>
-                </div>
-              </RowPercentage>} 
+                  <RowPercentage firstChildPercentage={50} >
+                    <div style={defaultStyle.textSubtitle}>
+                      <StyledText style={defaultStyle.titles}>Grupos:</StyledText>
+                    </div>
+                    <div>
+                      <StyledText >{JSON.parse(dataRow.grupos).join(', ')}</StyledText>
+                    </div>
+                  </RowPercentage>}
                 <RowPercentage firstChildPercentage={50}  >
                   <div style={defaultStyle.textSubtitle}>
                     <StyledText style={defaultStyle.titles}>Servicios:</StyledText>
@@ -433,7 +439,7 @@ const SolicitudAdmin = () => {
               </div>
               <RowPercentage firstChildPercentage={40} gap={10}>
                 <div style={{ marginBlock: '40px' }}>
-                  
+
                 </div>
                 <div style={{ marginBlock: '40px' }}>
                   <RowPercentage firstChildPercentage={10} gap="10px">
@@ -501,36 +507,36 @@ const SolicitudAdmin = () => {
                 }
               }}
             >
-              <DialogTitle>Rechazar solicitud</DialogTitle> 
+              <DialogTitle>Rechazar solicitud</DialogTitle>
               <DialogContent>
                 <DialogContentText id="alert-dialog-description">
                   Se enviará un correo a los solicitantes.
                   Mencione las razones por las cuales se rechaza la solicitud:
-                </DialogContentText> 
-                <div style={{margin:20}}></div>
+                </DialogContentText>
+                <div style={{ margin: 20 }}></div>
                 <div>
-                <SelectorChip 
-                  options= {[
-                    'No existen ambientes para la fecha solicitada',
-                    'No existen ambientes para el horario seleccionado',
-                    'No existen ambientes para la capacidad solicitada',
-                  ]}
-                  label="Razones generales"
-                  changeValor={setRazones}
-                  llenado={validarRazones}
-                  mensajeValidacion={mensajeError.razones}
-                />
+                  <SelectorChip
+                    options={[
+                      'No existen ambientes para la fecha solicitada',
+                      'No existen ambientes para el horario seleccionado',
+                      'No existen ambientes para la capacidad solicitada',
+                    ]}
+                    label="Razones generales"
+                    changeValor={setRazones}
+                    llenado={validarRazones}
+                    mensajeValidacion={mensajeError.razones}
+                  />
                 </div>
-                
-                <div style={{margin:20}}></div>
+
+                <div style={{ margin: 20 }}></div>
                 <div>
                   <TextInput
-                  label="Especificaciones"
-                  fullWidth={true}
-                  onChange={(event) => setEspecificaciones(event.target.value)}
-                  pattern="^.{0,}$"
-                  validationMessage={mensajeError.especificaciones}
-                />
+                    label="Especificaciones"
+                    fullWidth={true}
+                    onChange={(event) => setEspecificaciones(event.target.value)}
+                    pattern="^.{0,}$"
+                    validationMessage={mensajeError.especificaciones}
+                  />
                 </div>
               </DialogContent>
               <DialogActions>
