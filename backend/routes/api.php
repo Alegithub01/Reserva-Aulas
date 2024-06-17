@@ -14,7 +14,7 @@ use App\Http\Controllers\SolicitudGrupalController;
 use App\Http\Controllers\MateriaController;
 use App\Http\Controllers\AdminSettingsController;
 use App\Http\Controllers\ReservaController;
-
+use App\Http\Controllers\DocenteController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -122,3 +122,6 @@ Route::post('/rechazarGrupal/{id}', [SolicitudGrupalController::class, 'rechazar
 
 Route::post('/noAceptar/{id}', [SolicitudController::class, 'noAceptarAsignacion']);
 Route::post('/noAceptarGrupal/{id}', [SolicitudGrupalController::class, 'noAceptarAsignacionGrupal']);
+
+//Id del docente dado el Id usuario
+Route::get('/docente-id/{user_id}', [DocenteController::class, 'getDocenteIdByUserId']);
