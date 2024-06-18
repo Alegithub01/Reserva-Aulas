@@ -67,7 +67,7 @@ const RegistroMasivoBoton = () => {
         if (headersValidos) {
           console.log('si entre');
           const lineas = texto.split('\n').slice(1);
-          const registros = lineas.map((linea) => {
+          const registros = lineas.map((linea) => { 
             let campos = linea.split(',');
             if (campos.length > 8) {
               campos[7] = campos.slice(7).join(',');
