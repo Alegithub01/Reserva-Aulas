@@ -37,7 +37,7 @@ const RegistroDocente = () => {
 
   const manejarCambioNombres = (e) => {
     const valor = e.target.value;
-    if (valor.length <= 50) {
+    if (valor.length <= 50 && /^[a-zA-Z\s]*$/.test(valor)) {
       setNombres(valor);
     }
   };
@@ -53,7 +53,7 @@ const RegistroDocente = () => {
   };
   const manejarCambioApellido = (e) => {
     const valor = e.target.value;
-    if (valor.length <= 50) {
+    if (valor.length <= 50 && /^[a-zA-Z\s]*$/.test(valor)) {
       setApellido(valor);
     }
   };
