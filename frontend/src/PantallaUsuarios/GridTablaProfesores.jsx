@@ -29,7 +29,7 @@ const DataGridStyled = styled(DataGrid)(({ theme }) => ({
 }));
 
 const TableContainer = styled(Box)({
-  height: 'calc(100vh - 64px)',
+  height: '450px',
   width: 'calc(100% - 40px)',
   margin: '20px',
   padding: '20px',
