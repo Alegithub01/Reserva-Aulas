@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { Box, CssBaseline, Drawer, List } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import BarraSuperior from './BarraSuperior';
 import MenuItem from './MenuItem';
 import IconoPersonas from '@mui/icons-material/PeopleAlt';
@@ -8,8 +8,12 @@ import IconoAmbientes from '@mui/icons-material/RoomPreferences';
 import IconoReservas from '@mui/icons-material/EventNote';
 import BookOnlineIcon from '@mui/icons-material/BookOnline';
 import AssessmentIcon from '@mui/icons-material/Assessment';
+import SettingsIcon from '@mui/icons-material/Settings';
+import EventNoteIcon from '@mui/icons-material/EventNote';
+import RoomIcon from '@mui/icons-material/Room';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 
-const menuItems = [
+const menuItemsRol1 = [
   {
     text: 'Gestión de Usuarios',
     icon: <IconoPersonas />,
@@ -76,8 +80,34 @@ const menuItems = [
   },
 ];
 
+const menuItemsRol2 = [
+  {
+    text: 'Solicitud de Reservas',
+    icon: <EventNoteIcon />,
+    route: '/Solicitud',
+  },
+  {
+    text: 'Disponibilidad de Ambientes',
+    icon: <RoomIcon />,
+    route: '/Calendario',
+  },
+  {
+    text: 'Mis Solicitudes',
+    icon: <ListAltIcon />,
+    route: '/Reservas',
+  },
+];
+
 const Layout = ({ children }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [rolActual, setRolActual] = useState("1");
+
+  useEffect(() => {
+    const rol = localStorage.getItem('rol');
+    if (rol) {
+      setRolActual(rol);
+    }
+  }, []);
 
   const handleMouseEnter = () => {
     setIsExpanded(true);
@@ -86,6 +116,8 @@ const Layout = ({ children }) => {
   const handleMouseLeave = () => {
     setIsExpanded(false);
   };
+
+  const menuItems = rolActual === "1" ? menuItemsRol1 : menuItemsRol2;
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', position: 'relative' }}>
