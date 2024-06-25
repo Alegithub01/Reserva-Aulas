@@ -26,15 +26,16 @@ const PantallaMaterias = () => {
   const {idDocente} = location.state;
 
   const materiasDepartamento = [
-    { value: "Dpto. Biología", label: "Dpto. Biología" },
+    { value: "Dpto. Biologia", label: "Dpto. Biología" },
     { value: "Dpto. Civil", label: "Dpto. Civil" },
-    { value: "Dpto. Eléctrica-Electrónica", label: "Dpto. Eléctrica-Electrónica" },
-    { value: "Dpto. Física", label: "Dpto. Física" },
+    { value: "Dpto. Electrica-Electronica", label: "Dpto. Eléctrica-Electrónica" },
+    { value: "Dpto. Fisica", label: "Dpto. Física" },
     { value: "Dpto. Industrial", label: "Dpto. Industrial" },
-    { value: "Dpto. Matemáticas", label: "Dpto. Matemáticas" },
-    { value: "Dpto. Química", label: "Dpto. Química" },
-    { value: "Dpto. Informática-Sistemas", label: "Dpto. Informática-Sistemas" },
-    { value: "Dpto. Mecánica", label: "Dpto. Mecánica" },
+    { value: "Dpto. Matematicas", label: "Dpto. Matemáticas" },
+    { value: "Dpto. Quimica", label: "Dpto. Química" },
+    { value: "Dpto. Informatica-Sistemas", label: "Dpto. Informática-Sistemas" },
+    { value: "Dpto. Mecanica", label: "Dpto. Mecánica" },
+    { value: "Dpto. Otro", label: "Dpto. Otro" },
   ];
 
   useEffect(() => {
@@ -67,13 +68,14 @@ const PantallaMaterias = () => {
       }));
       return;
     }
-    
+    console.log('holita', idDocente, info);
     try {
       const response = await axios.post(`${URL_API}/asignar-materias`, {
-        idDocente,
+        idDocente: idDocente,
         materias: info,
       });
       console.log(response.data.message);
+      navegar("/inicioSesion");
     } catch (error) {
       console.error(error.response.data.error);
     }
