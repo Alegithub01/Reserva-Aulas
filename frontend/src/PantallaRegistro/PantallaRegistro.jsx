@@ -166,7 +166,7 @@ const RegistroDocente = () => {
     axios.post(`${URL_API}/auth/register`, datos)
       .then(response => {
         console.log('Datos registrados exitosamente', response.data);
-        navegar('/inicioSesion');
+        navegar('/materias', {state: {idDocente: response.data.id}});
       })
       .catch(error => {
         console.error('Error al enviar datos al api:', error);

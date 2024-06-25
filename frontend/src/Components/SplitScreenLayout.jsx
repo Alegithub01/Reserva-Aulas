@@ -29,7 +29,7 @@ ShieldImage.propTypes = {
   src: PropTypes.string.isRequired,
 };
 
-const SplitScreenLayout = ({ left, right, style }) => {
+const SplitScreenLayout = ({ left, right, style, fullWidth=false }) => {
   const { theme } = useTheme();
   const defaultStyle = {
     outerContainer: {
@@ -43,8 +43,8 @@ const SplitScreenLayout = ({ left, right, style }) => {
       display: 'flex',
       width: '80%',
       minWidth: '500px',
-      minHeight: '450px',
-      maxWidth: '700px',
+      minHeight: fullWidth?'550px':'450px',
+      maxWidth: fullWidth?'1000px':'700px',
       boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)', 
       borderRadius: '20px',
       overflow: 'hidden',
@@ -60,11 +60,11 @@ const SplitScreenLayout = ({ left, right, style }) => {
       alignItems: 'center',
     },
     leftSection: {
-      width: '40%',
+      width: fullWidth? '30%':'40%',
       backgroundColor: theme.highlight,
     },
     rightSection: {
-      width: '60%',
+      width: fullWidth? '70%':'60%',
       backgroundColor: theme.primary,
       // padding: '50px 20px',
     },
@@ -89,6 +89,7 @@ SplitScreenLayout.propTypes = {
   left: PropTypes.node.isRequired,
   right: PropTypes.node.isRequired,
   style: PropTypes.object,
+  fullWidth: PropTypes.bool,
 };
 
 export default SplitScreenLayout;

@@ -20,7 +20,7 @@ class MateriaFactory extends Factory
             'nombre' => $this->faker->words(),
             'tipo' => $this->faker->words(),
             'electiva' => $this->faker->boolean(),
-            'carrera_id' => Carrera::factory(),
+            'departamento' => $this->faker->words(),
         ];
     }
 }

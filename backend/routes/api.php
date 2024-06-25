@@ -126,3 +126,6 @@ Route::post('/noAceptarGrupal/{id}', [SolicitudGrupalController::class, 'noAcept
 
 //Id del docente dado el Id usuario
 Route::get('/docente-id/{user_id}', [DocenteController::class, 'getDocenteIdByUserId']);
+
+Route::get('/materias/departamento/{departamento}', [MateriaController::class, 'obtenerMateriasPorDepartamento']);
+Route::post('/asignar-materias', [MateriaDocenteController::class, 'asignarMaterias']);

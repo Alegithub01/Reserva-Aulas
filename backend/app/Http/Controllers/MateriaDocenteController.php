@@ -99,5 +99,26 @@ class MateriaDocenteController extends Controller
 
         return $resultados;
     }
+
+    public function asignarMaterias(Request $request)
+    {
+        try {
+            $idDocente = $request->input('idDocente');
+            $materias = $request->input('materias');
+
+            foreach ($materias as $materia) {
+                MateriaDocente::create([
+                    'docente_id' => $idDocente,
+                    'materia_id' => $materia['materia'],
+                    'grupo' => $materia['grupo'],
+                    'inscritos' => $materia['inscritos'],
+                ]);
+            }
+
+            return response()->json(['message' => 'Materias asignadas correctamente.'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Hubo un problema al asignar las materias.'], 500);
+        }
+    }
         
 }
