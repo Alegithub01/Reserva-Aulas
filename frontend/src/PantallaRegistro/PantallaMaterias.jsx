@@ -69,9 +69,16 @@ const PantallaMaterias = () => {
       return;
     }
     console.log('holita', idDocente, info);
+    let idDocenteFinal = idDocente;
+    try{
+      const res = await axios.get(`${URL_API}/docente-id/${idDocente}`);
+      idDocenteFinal = res.data.id;
+    }catch(error){
+      console.error(error.response.data.error);
+    }
     try {
       const response = await axios.post(`${URL_API}/asignar-materias`, {
-        idDocente: idDocente,
+        idDocente: idDocenteFinal,
         materias: info,
       });
       console.log(response.data.message);
