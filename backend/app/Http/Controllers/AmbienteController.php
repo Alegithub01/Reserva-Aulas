@@ -92,7 +92,7 @@ class AmbienteController extends Controller
                 $filteredAmbienteData = array_filter($ambienteData, function($value, $key) {
                     return $value !== null || $key === 'planta';
                 }, ARRAY_FILTER_USE_BOTH);
-    
+
                 Ambiente::create($filteredAmbienteData);
             }
         }
@@ -135,7 +135,7 @@ class AmbienteController extends Controller
     }
 
 
-    #filtros 
+    #filtros
     public function filtrar(Request $request)
     {
         Log::debug('Datos recibidos en la solicitud: ' . json_encode($request->all()));
@@ -153,22 +153,28 @@ class AmbienteController extends Controller
             $query->where('tipo', $request->tipo);
         }
 
+        // Verificar si se ha proporcionado el filtro por servicios
         if ($request->has('servicios')) {
-        $servicios = $request->servicios;
-        $query->where(function($q) use ($servicios) {
-            $q->whereIn('servicios', explode(',', $servicios));
-        });
-    }
+            $servicios = $request->servicios;
+            $query->where(function($q) use ($servicios) {
+                $q->whereIn('servicios', explode(',', $servicios));
+            });
+        }
 
         // Verificar si se ha proporcionado el filtro por día
         if ($request->has('dia')) {
             $query->where('dia', $request->dia);
         }
 
-        //Verificar si se ha proporcionado el filtro por hora 
+        // Verificar si se ha proporcionado el filtro por horas
         if ($request->has('horas')) {
             $horas = $request->horas;
-            $query->whereRaw("jsonb_exists_any(horas::jsonb, ARRAY['$horas'])");
+            $horasArray = explode(',', $horas);
+            if (!empty($horasArray)) {
+                foreach ($horasArray as $hora) {
+                    $query->whereRaw("horas::jsonb @> ?", [json_encode([$hora])]);
+                }
+            }
         }
 
         $resultados = $query->get();
@@ -181,14 +187,14 @@ class AmbienteController extends Controller
     {
         $nombreAmbiente = $request->input('nombre');
 
-        
+
         $ambiente = Ambiente::where('nombre', $nombreAmbiente)->first();
 
         if ($ambiente) {
-            
+
             return response()->json(['id' => $ambiente->id], 200);
         } else {
-            
+
             return response()->json(['error' => 'Ambiente no encontrado'], 404);
         }
     }
