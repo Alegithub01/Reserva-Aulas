@@ -31,6 +31,7 @@ import FechasDemandadas from "./Informes/FechasDemandadas"
 import AjustarPeriodos from "./PantallaAjustes/AjustarPeriodos";
 import AjustarContiguos from "./PantallaAjustes/AjustarContiguos";
 import DeterminarFechas from "./PantallaAjustes/DeterminarFechas";
+import PantallaMaterias from "./PantallaRegistro/PantallaMaterias";
 
 function App() {
   return (
@@ -481,6 +482,21 @@ function App() {
               </Layout>
             }
           />
+          <Route
+            path="/Materias"
+            element={
+              <Layout>
+                <div
+                  style={{
+                    width: "100vw",
+                    height: "100%",
+                  }}
+                >
+                  <PantallaMaterias />
+                </div>
+              </Layout>
+            }
+            />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

@@ -6,7 +6,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB; 
 use App\Models\User;
+use App\Models\Docente; 
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
@@ -114,12 +116,30 @@ class AuthController extends Controller
         if (!isset($userData['rol_id'])) {
             $userData['rol_id'] = 2;
         }
-        $user = User::create($userData);
-
-        return response()->json([
-            'message' => '¡Usuario registrado exitosamente!',
-            'user' => $user
-        ], 201);
+        try {
+            // Iniciar una transacción de base de datos
+            DB::beginTransaction();
+    
+            // Crear el usuario
+            $user = User::create($userData);
+    
+            // Crear la entrada en la tabla Docente
+            Docente::create(['user_id' => $user->id]);
+    
+            // Confirmar la transacción
+            DB::commit();
+    
+            return response()->json([
+                'message' => '¡Usuario registrado exitosamente!',
+                'user' => $user
+            ], 201);
+    
+        } catch (\Exception $e) {
+            // Revertir la transacción en caso de error
+            DB::rollBack();
+    
+            return response()->json(['error' => 'Hubo un problema al registrar el usuario.'], 500);
+        }
     }
 
 

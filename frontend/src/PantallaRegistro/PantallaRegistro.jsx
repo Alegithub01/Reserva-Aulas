@@ -37,7 +37,7 @@ const RegistroDocente = () => {
 
   const manejarCambioNombres = (e) => {
     const valor = e.target.value;
-    if (valor.length <= 50) {
+    if (valor.length <= 50 && /^[a-zA-Z\s]*$/.test(valor)) {
       setNombres(valor);
     }
   };
@@ -53,7 +53,7 @@ const RegistroDocente = () => {
   };
   const manejarCambioApellido = (e) => {
     const valor = e.target.value;
-    if (valor.length <= 50) {
+    if (valor.length <= 50 && /^[a-zA-Z\s]*$/.test(valor)) {
       setApellido(valor);
     }
   };
@@ -166,7 +166,7 @@ const RegistroDocente = () => {
     axios.post(`${URL_API}/auth/register`, datos)
       .then(response => {
         console.log('Datos registrados exitosamente', response.data);
-        navegar('/inicioSesion');
+        navegar('/materias', {state: {idDocente: response.data.user.id}});
       })
       .catch(error => {
         console.error('Error al enviar datos al api:', error);

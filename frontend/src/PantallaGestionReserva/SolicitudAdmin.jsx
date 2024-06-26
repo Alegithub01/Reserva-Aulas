@@ -48,7 +48,7 @@ const SolicitudAdmin = () => {
     rechazar: false,
   });
 
-  const dateFinal = new Date(dataRow.fecha).toISOString().split('T')[0];
+  const dateFinal = dataRow.fecha; //new Date(dataRow.fecha).toISOString().split('T')[0];
   console.log("Fecha final:", dateFinal);
   const [razones, setRazones] = useState([]);
   const [especificaciones, setEspecificaciones] = useState('');

@@ -9,11 +9,13 @@ class Materia extends Model
 {
     use HasFactory;
     protected $table = 'materia';
-
-    public function carrera()
-    {
-        return $this->belongsTo(Carrera::class, 'carrera_id');
-    }
+    protected $fillable = [
+        'nivel',
+        'nombre',
+        'tipo',
+        'electiva',
+        'departamento', 
+    ];
 
     public function docentes()
     {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\MateriaDocente;
 use App\Models\Materia;
+use Illuminate\Support\Facades\Log;
 
 class MateriaDocenteController extends Controller
 {
@@ -98,6 +99,28 @@ class MateriaDocenteController extends Controller
         }
 
         return $resultados;
+    }
+
+    public function asignarMaterias(Request $request)
+    {
+        try {
+            $idDocente = $request->input('idDocente');
+            $materias = $request->input('materias');
+
+            foreach ($materias as $materia) {
+                MateriaDocente::create([
+                    'docente_id' => $idDocente,
+                    'materia_id' => $materia['materia'],
+                    'grupo' => $materia['grupo'],
+                    'inscritos' => $materia['inscritos'],
+                ]);
+            }
+
+            return response()->json(['message' => 'Materias asignadas correctamente.'], 200);
+        } catch (\Exception $e) {
+            \Log::error('Error al asignar las materias: ' . $e->getMessage());
+            return response()->json(['error' => 'Hubo un problema al asignar las materias.'], 500);
+        }
     }
         
 }
