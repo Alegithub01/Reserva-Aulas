@@ -19,7 +19,7 @@ const GestionReservas = () => {
     const fetchData = async () => {
       try {
         let tipoDado = 'individual';
-        const response = await axios.get(`${URL_API}/solicitudes`);
+        const response = await axios.get(`${URL_API}/atender-solicitudes`);
         const data = response.data.map(item => {
           return {
             ...item,
@@ -29,7 +29,7 @@ const GestionReservas = () => {
         }
         });
         tipoDado = 'grupal';
-        const response2 = await axios.get(`${URL_API}/solicitudes-grupales`);
+        const response2 = await axios.get(`${URL_API}/atender-solicitudes-grupal`);
         const data2 = response2.data.map(item => {
           return {
             ...item,

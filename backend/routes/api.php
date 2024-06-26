@@ -85,6 +85,7 @@ Route::delete('/solicitudes/{id}', [SolicitudController::class, 'destroy'])->nam
 Route::post('/aceptar/{id}', [SolicitudController::class, 'aceptar'])->name('solicitudes.aceptar');
 Route::get('/aceptadas', [SolicitudController::class, 'solicitudesAceptadas'])->name('solicitudes.aceptadas');
 Route::get('/solicitudes-formato/{userId}', [SolicitudController::class, 'getSolicitudesFormatted'])->name('solicitudes.getSolicitudesFormatted');
+Route::get('/atender-solicitudes', [SolicitudController::class, 'solicitudesAatender'])->name('solicitudes.solicitudesAatender');
 
 Route::get('/docentes/{idDocente}/materias', [MateriaDocenteController::class, 'obtenerMateriasPorIdDocente']);
 
@@ -102,7 +103,7 @@ Route::get('/aceptadasGrupales', [SolicitudGrupalController::class, 'solicitudes
 Route::get('/materias/nombres', [MateriaController::class, 'getNombres']);
 Route::get('/solicitudes-grupales/formatted/{userId}', [SolicitudGrupalController::class, 'getSolicitudesGrupalesFormatted']);
 Route::get('/materia-docente/grupos/{nombreMateria}', [MateriaDocenteController::class, 'gruposPorMateria']);
-
+Route::get('/atender-solicitudes-grupal', [SolicitudGrupalController::class, 'solicitudesAatenderGrupal']);
 Route::get('/materia-docente/info/{nombreMateria}', [MateriaDocenteController::class, 'obtenerInfoPorMateria']);
 
 // settings

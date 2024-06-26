@@ -156,7 +156,7 @@ const FormularioGrupal = ({ aulaInicial, horaInicial }) => {
           "servicios": serviciosSolicitados,
           "detalle": motivoEtiqueta,
           "fecha": fecha,
-          "estado": "Pendiente",
+          "estado": "En espera",
           "capacidad": capacidad
         });
         console.log(response.data);

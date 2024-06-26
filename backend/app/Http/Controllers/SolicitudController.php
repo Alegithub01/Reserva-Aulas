@@ -188,37 +188,42 @@ class SolicitudController extends Controller
     }
 
     public function solicitudesAceptadasInforme()
-{
-    // Obtener todas las solicitudes aceptadas
-    $solicitudes = Solicitud::where('estado', 'Aceptada')->get();
+    {
+        // Obtener todas las solicitudes aceptadas
+        $solicitudes = Solicitud::where('estado', 'Aceptada')->get();
 
-    // Preparar un array para almacenar la información formateada
-    $resultado = [];
+        // Preparar un array para almacenar la información formateada
+        $resultado = [];
 
-    foreach ($solicitudes as $solicitud) {
-        // Buscar la reserva correspondiente a la solicitud
-        $reserva = Reserva::where('solicitable_id', $solicitud->id)
-                        ->where('solicitable_type', Solicitud::class)
-                        ->first();
+        foreach ($solicitudes as $solicitud) {
+            // Buscar la reserva correspondiente a la solicitud
+            $reserva = Reserva::where('solicitable_id', $solicitud->id)
+                            ->where('solicitable_type', Solicitud::class)
+                            ->first();
 
-        // Añadir la información de la solicitud y la reserva al array de resultados
-        $resultado[] = [
-            'id' => $solicitud->id,
-            'user_id' => $solicitud->user_id,
-            'grupo' => $solicitud->grupo ? json_decode($solicitud->grupo) : [], // Decodificar el grupo si existe
-            'nombre_ambiente' => ['nombre' => $reserva ? json_decode($reserva->aulas)[0] : null], // Obtener el primer elemento de 'aulas' y decodificarlo
-            'materia' => $solicitud->materia,
-            'horas' => json_decode($solicitud->horas), // Asumiendo que la solicitud tiene un campo 'horas' en formato JSON
-            'servicios' => $solicitud->servicios,
-            'detalle' => $solicitud->detalle,
-            'fecha' => $solicitud->fecha->format('Y-m-d'),
-            'created_at' => $solicitud->created_at->toDateTimeString(),
-            'updated_at' => $solicitud->updated_at->toDateTimeString(),
-        ];
+            // Añadir la información de la solicitud y la reserva al array de resultados
+            $resultado[] = [
+                'id' => $solicitud->id,
+                'user_id' => $solicitud->user_id,
+                'grupo' => $solicitud->grupo ? json_decode($solicitud->grupo) : [], // Decodificar el grupo si existe
+                'nombre_ambiente' => ['nombre' => $reserva ? json_decode($reserva->aulas)[0] : null], // Obtener el primer elemento de 'aulas' y decodificarlo
+                'materia' => $solicitud->materia,
+                'horas' => json_decode($solicitud->horas), // Asumiendo que la solicitud tiene un campo 'horas' en formato JSON
+                'servicios' => $solicitud->servicios,
+                'detalle' => $solicitud->detalle,
+                'fecha' => $solicitud->fecha->format('Y-m-d'),
+                'created_at' => $solicitud->created_at->toDateTimeString(),
+                'updated_at' => $solicitud->updated_at->toDateTimeString(),
+            ];
+        }
+
+        // Devolver la información formateada
+        return response()->json($resultado, 200);
     }
 
-    // Devolver la información formateada
-    return response()->json($resultado, 200);
-}
+    public function solicitudesAatender(){
+        $solicitudes = Solicitud::whereIn('estado', ['En espera', 'Asignación rechazada'])->get();
+        return response()->json($solicitudes, 200);
+    }
 
 }
