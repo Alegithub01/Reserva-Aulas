@@ -21,9 +21,10 @@ const ParaCorreo = ({ dialogoAbiertoThere, cerrarDialogoThere, docentes, mensaje
 
   const manejoConfirmar = async () => {
     try{
+      console.log("Enviando correo", mensaje, receptores);
       await axios.post(`${URL_API}/enviar-correo-solicitud`, {
         subject: "Actualización de Solicitud de Reserva de Aula",
-        content : mensaje,
+        content : mensaje ? mensaje: mensajeDefault,
         receptores: receptores,
         tipoCorreo: tipoCorreo,
         idSolicitud: idSolicitud,

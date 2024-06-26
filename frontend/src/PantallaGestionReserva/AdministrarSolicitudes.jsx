@@ -21,22 +21,24 @@ const GestionReservas = () => {
         let tipoDado = 'individual';
         const response = await axios.get(`${URL_API}/solicitudes`);
         const data = response.data.map(item => {
+          const fechita = new Date(item.fecha).toISOString().split('T')[0];
           return {
             ...item,
-          horas: JSON.parse(item.horas), 
-          motivo: item.detalle,
-          tipoDado: tipoDado
-        }
+            horas: JSON.parse(item.horas),
+            motivo: item.detalle,
+            tipoDado: tipoDado,
+            fecha: fechita
+          }
         });
         tipoDado = 'grupal';
         const response2 = await axios.get(`${URL_API}/solicitudes-grupales`);
         const data2 = response2.data.map(item => {
           return {
             ...item,
-          horas: JSON.parse(item.horas), 
-          motivo: item.detalle,
-          tipoDado: tipoDado
-        }
+            horas: JSON.parse(item.horas),
+            motivo: item.detalle,
+            tipoDado: tipoDado,
+          }
         });
         const data3 = [...data, ...data2];
         setReservas(data3);
@@ -85,9 +87,9 @@ const GestionReservas = () => {
 
   const columns = [
     { field: 'fecha', headerName: 'Fecha solicitada', flex: 1, minWidth: 130 },
-    { 
-      field: 'horas', 
-      headerName: 'Horario', 
+    {
+      field: 'horas',
+      headerName: 'Horario',
       flex: 1,
       minWidth: 180,
       renderCell: (params) => {
@@ -96,13 +98,13 @@ const GestionReservas = () => {
     },
     { field: 'materia', headerName: 'Materia', flex: 1.5, minWidth: 250 },
     { field: 'motivo', headerName: 'Motivo', flex: 1.2, minWidth: 200 },
-];
+  ];
 
 
   const handleRowClick = (params) => {
     // redireccionar a pantalla Solicitud Admin 
     setClicks(0);
-    navegar('/SolicitudAdmin', { state:  {dataRow: params.row} });
+    navegar('/SolicitudAdmin', { state: { dataRow: params.row } });
     console.log('Reserva seleccionada:', params.row);
   };
 
@@ -112,7 +114,7 @@ const GestionReservas = () => {
       justifyContent: 'center',
       alignItems: 'center',
       height: '100%',
-      with:'100%',
+      with: '100%',
       background: theme.bgmain,
     },
     container: {
